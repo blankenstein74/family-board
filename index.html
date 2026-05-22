@@ -1,0 +1,511 @@
+<!-- Family Command Center — a DAKboard-style wall display for a family of 3 kids -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Family Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#161210;
+    --ink:#f6f0e6;
+    --muted:#a99e8f;
+    --faint:#6f675c;
+    --panel:rgba(255,251,244,.045);
+    --panel-2:rgba(255,251,244,.07);
+    --line:rgba(255,243,225,.10);
+    --dad:#ff7a59;     /* coral */
+    --mom:#3fd0c9;     /* teal */
+    --max:#ffcf5c;   /* amber */
+    --maya:#9bd17a;   /* green */
+    --matteo:#d6a3ee;   /* lilac */
+    --all:#f6f0e6;
+    --display:"Bricolage Grotesque",sans-serif;
+    --body:"Hanken Grotesk",sans-serif;
+    --serif:"Fraunces",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--body);
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 12% -8%, rgba(255,160,90,.16), transparent 60%),
+      radial-gradient(900px 600px at 105% 110%, rgba(63,208,201,.12), transparent 60%),
+      var(--bg);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* film grain */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.5;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  }
+
+  .board{
+    height:100vh;width:100vw;padding:clamp(14px,2vw,30px);
+    display:grid;gap:clamp(12px,1.4vw,22px);
+    grid-template-columns:0.92fr 1.45fr 1fr;
+    grid-template-rows:auto 1fr;
+    grid-template-areas:
+      "head head head"
+      "left center right";
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:clamp(14px,1.5vw,22px);
+    backdrop-filter:blur(8px);
+    position:relative;
+    opacity:0;transform:translateY(14px);
+    animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:none}}
+  .delay-1{animation-delay:.06s}.delay-2{animation-delay:.12s}.delay-3{animation-delay:.18s}
+  .delay-4{animation-delay:.24s}.delay-5{animation-delay:.3s}.delay-6{animation-delay:.36s}
+
+  .eyebrow{font-size:clamp(.62rem,.72vw,.78rem);letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:.5em}
+
+  /* ---------- HEADER ---------- */
+  .head{grid-area:head;display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:0 6px;opacity:0;animation:rise .6s ease forwards}
+  .greet{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,1.9vw,2.1rem);font-weight:500;letter-spacing:-.01em}
+  .greet b{font-style:normal;font-family:var(--display);font-weight:700;color:var(--dad)}
+  .head-right{display:flex;align-items:center;gap:18px;color:var(--muted);font-weight:500;font-size:clamp(.8rem,1vw,1.05rem)}
+  .pill{display:flex;align-items:center;gap:7px;background:var(--panel-2);border:1px solid var(--line);padding:7px 13px;border-radius:999px}
+  .dot{width:9px;height:9px;border-radius:50%}
+
+  /* ---------- LEFT: clock / countdown / weather ---------- */
+  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr;gap:inherit}
+  .clock{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:clamp(10px,2vh,26px)}
+  .time{font-family:var(--display);font-weight:800;line-height:.86;letter-spacing:-.04em;font-size:clamp(4.2rem,9.5vw,9.5rem);font-variant-numeric:tabular-nums}
+  .time .sec{color:var(--dad);font-size:.32em;vertical-align:super;margin-left:.12em;letter-spacing:0}
+  .date{font-family:var(--display);font-weight:600;font-size:clamp(1.1rem,1.9vw,2rem);margin-top:.15em;letter-spacing:-.01em}
+  .date span{color:var(--muted)}
+
+  .countdown{display:flex;align-items:center;gap:16px}
+  .cd-num{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,5vw,4.4rem);line-height:.8;color:var(--mom);font-variant-numeric:tabular-nums}
+  .cd-text{font-weight:600;font-size:clamp(.95rem,1.2vw,1.25rem);line-height:1.15}
+  .cd-text small{display:block;color:var(--muted);font-weight:500;font-size:.78em;margin-top:.25em}
+
+  .weather{display:flex;flex-direction:column}
+  .wx-now{display:flex;align-items:center;gap:14px;margin:.2em 0 .6em}
+  .wx-temp{font-family:var(--display);font-weight:800;font-size:clamp(2.8rem,5.4vw,4.6rem);line-height:.85;font-variant-numeric:tabular-nums}
+  .wx-now .ico{font-size:clamp(2.4rem,4.6vw,3.6rem)}
+  .wx-desc{color:var(--muted);font-weight:500}
+  .wx-desc b{color:var(--ink);font-weight:700}
+  .wx-row{display:flex;justify-content:space-between;gap:6px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+  .wx-day{text-align:center;flex:1}
+  .wx-day .d{font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.45em}
+  .wx-day .e{font-size:clamp(1.3rem,2vw,1.7rem)}
+  .wx-day .t{font-weight:700;margin-top:.35em;font-size:clamp(.82rem,1vw,1rem)}
+  .wx-day .t i{color:var(--faint);font-style:normal;font-weight:500}
+
+  /* ---------- CENTER: agenda + chores ---------- */
+  .center{grid-area:center;display:grid;grid-template-rows:1.15fr 1fr;gap:inherit}
+  .agenda{display:flex;flex-direction:column;overflow:hidden}
+  .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7em}
+  .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,1.5vw,1.5rem);letter-spacing:-.01em}
+  .legend{display:flex;gap:13px;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:5px;font-size:.74rem;color:var(--muted);font-weight:500}
+  .events{display:flex;flex-direction:column;gap:clamp(6px,.8vh,12px);overflow:auto;padding-right:4px}
+  .events::-webkit-scrollbar{width:6px}.events::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+  .ev{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:clamp(8px,1vh,13px) 14px;border-radius:14px;background:var(--panel-2);border-left:4px solid var(--c);transition:.25s}
+  .ev:hover{background:rgba(255,251,244,.11);transform:translateX(3px)}
+  .ev.now{background:rgba(255,122,89,.10);box-shadow:0 0 0 1px rgba(255,122,89,.25) inset}
+  .ev-time{font-family:var(--display);font-weight:700;font-size:clamp(.95rem,1.2vw,1.25rem);font-variant-numeric:tabular-nums;min-width:62px}
+  .ev-title{font-weight:600;font-size:clamp(.92rem,1.1vw,1.15rem)}
+  .ev-title small{display:block;color:var(--muted);font-weight:500;font-size:.8em;margin-top:1px}
+  .ev-who{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent);padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .live-tag{font-size:.62rem;color:var(--dad);font-weight:800;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--dad);padding:3px 8px;border-radius:999px}
+
+  .chores{display:flex;flex-direction:column;overflow:hidden}
+  .kid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1vw,16px);flex:1;overflow:hidden}
+  .kid{display:flex;flex-direction:column;border-radius:16px;background:var(--panel-2);border:1px solid var(--line);padding:clamp(10px,1.1vw,16px);position:relative;overflow:hidden}
+  .kid::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
+  .kid-head{display:flex;align-items:center;gap:9px;margin-bottom:.7em}
+  .avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;background:var(--c);font-size:1rem;flex:none}
+  .kid-name{font-family:var(--display);font-weight:700;font-size:clamp(.95rem,1.2vw,1.2rem);line-height:1}
+  .kid-name small{display:block;color:var(--muted);font-weight:500;font-size:.62em;letter-spacing:.04em;margin-top:3px;font-family:var(--body)}
+  .tasks{display:flex;flex-direction:column;gap:6px;flex:1}
+  .task{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;padding:5px 4px;border-radius:9px;transition:.18s}
+  .task:hover{background:rgba(255,255,255,.05)}
+  .check{width:21px;height:21px;border-radius:7px;border:2px solid var(--c);flex:none;display:grid;place-items:center;transition:.2s}
+  .check svg{width:13px;height:13px;stroke:#1a140f;stroke-width:3.4;fill:none;opacity:0;transform:scale(.4);transition:.2s}
+  .task.done .check{background:var(--c)}
+  .task.done .check svg{opacity:1;transform:scale(1)}
+  .task .label{font-weight:600;font-size:clamp(.82rem,.95vw,1rem);transition:.2s}
+  .task.done .label{color:var(--faint);text-decoration:line-through}
+  .stars{margin-top:.6em;font-size:1rem;letter-spacing:2px;min-height:1.2em}
+  .done-badge{position:absolute;inset:auto 12px 12px auto;font-size:.66rem;font-weight:800;letter-spacing:.08em;color:var(--c);opacity:0;transition:.3s}
+  .kid.complete .done-badge{opacity:1}
+  .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
+
+  /* ---------- RIGHT: photo / dinner / list ---------- */
+  .right{grid-area:right;display:grid;grid-template-rows:1.3fr auto auto;gap:inherit}
+  .photo{padding:0;overflow:hidden;position:relative}
+  .frame{position:absolute;inset:0}
+  .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease;background-size:cover;background-position:center;animation:kb 16s ease-in-out infinite alternate}
+  .slide.on{opacity:1}
+  @keyframes kb{from{transform:scale(1.04)}to{transform:scale(1.14)}}
+  .photo .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 16px;background:linear-gradient(transparent,rgba(0,0,0,.72));z-index:2}
+  .photo .cap .t{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,1.4vw,1.45rem);font-weight:500}
+  .photo .cap .d{color:var(--muted);font-size:.78rem;font-weight:500;margin-top:3px}
+  .photo-tag{position:absolute;top:14px;left:14px;z-index:2;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:600;background:rgba(0,0,0,.3);padding:5px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+
+  .dinner .meal{display:flex;align-items:center;gap:14px}
+  .dinner .emoji{font-size:clamp(2rem,3.4vw,2.9rem)}
+  .dinner .what{font-family:var(--display);font-weight:700;font-size:clamp(1.1rem,1.6vw,1.55rem);line-height:1.05}
+  .dinner .what small{display:block;font-family:var(--body);color:var(--muted);font-weight:500;font-size:.6em;margin-top:4px;letter-spacing:.02em}
+  .week{display:flex;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .week div{text-align:center;flex:1;font-size:.72rem}
+  .week .wd{color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:.4em}
+  .week .we{font-size:1.25rem}
+
+  .list ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .list li{display:flex;align-items:center;gap:10px;font-weight:500;color:var(--ink);font-size:clamp(.85rem,1vw,1rem)}
+  .list li .b{width:7px;height:7px;border-radius:50%;background:var(--mom);flex:none}
+  .list li.got{color:var(--faint);text-decoration:line-through}
+  .list li.got .b{background:var(--faint)}
+
+  @media (max-width:900px){
+    .board{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"head" "left" "center" "right";height:auto;min-height:100vh;overflow:auto}
+    body{overflow:auto}
+    .kid-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="board">
+
+  <!-- HEADER -->
+  <header class="head">
+    <div class="greet" id="greet">Good evening, <b>the Blankenstein family</b></div>
+    <div class="head-right">
+      <span class="pill"><span class="dot" style="background:var(--dad)"></span>Dad</span>
+      <span class="pill"><span class="dot" style="background:var(--mom)"></span>Mom</span>
+      <span class="pill"><span class="dot" style="background:var(--max)"></span>Max</span>
+      <span class="pill"><span class="dot" style="background:var(--maya)"></span>Maya</span>
+      <span class="pill"><span class="dot" style="background:var(--matteo)"></span>Matteo</span>
+    </div>
+  </header>
+
+  <!-- LEFT COLUMN -->
+  <div class="left">
+    <div class="card clock delay-1">
+      <div class="time" id="time">19:42<span class="sec" id="sec">08</span></div>
+      <div class="date" id="date">Friday, <span>May 22</span></div>
+    </div>
+
+    <div class="card delay-2">
+      <div class="eyebrow">Counting down to</div>
+      <div class="countdown">
+        <div class="cd-num" id="cdNum">28</div>
+        <div class="cd-text">Beach trip 🏖️<small id="cdSub">days to go · June 19</small></div>
+      </div>
+    </div>
+
+    <div class="card weather delay-3">
+      <div class="eyebrow">Mexico City · Today</div>
+      <div class="wx-now">
+        <span class="ico" id="wxIco">⛅</span>
+        <div class="wx-temp" id="wxTemp">26°</div>
+        <div class="wx-desc" id="wxDesc"><b>Partly cloudy</b><br>Afternoon storms likely · feels 27°</div>
+      </div>
+      <div class="wx-row" id="wxRow">
+        <div class="wx-day"><div class="d">Sat</div><div class="e">⛈️</div><div class="t">24° <i>14°</i></div></div>
+        <div class="wx-day"><div class="d">Sun</div><div class="e">🌦️</div><div class="t">25° <i>13°</i></div></div>
+        <div class="wx-day"><div class="d">Mon</div><div class="e">☀️</div><div class="t">27° <i>13°</i></div></div>
+        <div class="wx-day"><div class="d">Tue</div><div class="e">⛅</div><div class="t">26° <i>14°</i></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER COLUMN -->
+  <div class="center">
+    <div class="card agenda delay-2">
+      <div class="head-row">
+        <h2>Today's plan</h2>
+        <div class="legend">
+          <span><span class="dot" style="background:var(--all)"></span>Everyone</span>
+        </div>
+      </div>
+      <div class="events" id="events"></div>
+    </div>
+
+    <div class="card chores delay-4">
+      <div class="head-row">
+        <h2>Chore chart</h2>
+        <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
+      </div>
+      <div class="kid-grid" id="kids"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right">
+    <div class="card photo delay-3">
+      <span class="photo-tag">Family photos</span>
+      <div class="frame" id="frame"></div>
+      <div class="cap"><div class="t" id="capT">Beach day, Tulum</div><div class="d" id="capD">Last summer</div></div>
+    </div>
+
+    <div class="card dinner delay-5">
+      <div class="eyebrow">Dinner tonight</div>
+      <div class="meal">
+        <span class="emoji">🍕</span>
+        <div class="what">Pizza & movie night<small>Friday tradition · 7:30</small></div>
+      </div>
+      <div class="week">
+        <div><div class="wd">Sat</div><div class="we">🌮</div></div>
+        <div><div class="wd">Sun</div><div class="we">🍗</div></div>
+        <div><div class="wd">Mon</div><div class="we">🍝</div></div>
+        <div><div class="wd">Tue</div><div class="we">🐟</div></div>
+        <div><div class="wd">Wed</div><div class="we">🥗</div></div>
+      </div>
+    </div>
+
+    <div class="card list delay-6">
+      <div class="eyebrow">Shopping list</div>
+      <ul id="shop"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — edit this to go live. Everything else updates itself.
+   ============================================================ */
+const CONFIG = {
+  // Weather: Open-Meteo. No API key needed. (Mexico City coords.)
+  weather: { lat: 19.4326, lon: -99.1332, tz: 'America/Mexico_City' },
+
+  // Countdown
+  countdown: { date: '2026-06-19', label: 'Beach trip 🏖️' },
+
+  // Google Calendar (optional). Leave googleApiKey '' to keep the sample agenda.
+  // To go LIVE: 1) make each calendar PUBLIC, 2) create a Google API key,
+  //            3) uncomment the calendars below with a person + colour.
+  googleApiKey: '',
+  calendars: [
+    // { id:'familyid@group.calendar.google.com', who:'All',    color:'var(--all)'    },
+    // { id:'dad@gmail.com',                       who:'Dad',    color:'var(--dad)'    },
+    // { id:'mom@gmail.com',                       who:'Mom',    color:'var(--mom)'    },
+    // { id:'maxid@group.calendar.google.com',     who:'Max',    color:'var(--max)'    },
+    // { id:'mayaid@group.calendar.google.com',    who:'Maya',   color:'var(--maya)'   },
+    // { id:'matteoid@group.calendar.google.com',  who:'Matteo', color:'var(--matteo)' },
+  ],
+};
+
+/* ---------- live clock + date ---------- */
+function tick(){
+  const n=new Date();
+  const h=String(n.getHours()).padStart(2,'0');
+  const m=String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('time').firstChild.textContent=h+':'+m;
+  document.getElementById('sec').textContent=String(n.getSeconds()).padStart(2,'0');
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('date').innerHTML=days[n.getDay()]+', <span>'+mon[n.getMonth()]+' '+n.getDate()+'</span>';
+  const hr=n.getHours();
+  const g=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
+  highlightNow(hr,n.getMinutes());
+}
+
+/* ---------- countdown ---------- */
+function countdown(){
+  const target=new Date(CONFIG.countdown.date+'T00:00:00');
+  const d=Math.max(0,Math.ceil((target-new Date())/86400000));
+  document.getElementById('cdNum').textContent=d;
+}
+
+/* ---------- agenda (sample data; replaced by live calendar if configured) ---------- */
+let events=[
+  {t:'7:30',mins:450,title:'Swim practice',sub:'Drop at the pool',who:'Maya',c:'var(--maya)'},
+  {t:'15:00',mins:900,title:'Ballet class',sub:'Studio B · pickup 16:00',who:'Matteo',c:'var(--matteo)'},
+  {t:'16:30',mins:990,title:'Math tutor',sub:'Online',who:'Max',c:'var(--max)'},
+  {t:'18:00',mins:1080,title:'Yoga',sub:'Back by 19:15',who:'Mom',c:'var(--mom)'},
+  {t:'20:00',mins:1200,title:'Dad lands from MTY',sub:'Flight Y4 712',who:'Dad',c:'var(--dad)'},
+  {t:'19:30',mins:1170,title:'Pizza & movie night',sub:'Everyone — pick the film!',who:'All',c:'var(--all)'},
+];
+const evWrap=document.getElementById('events');
+function renderEvents(){
+  evWrap.innerHTML='';
+  events.slice().sort((a,b)=>a.mins-b.mins).forEach(e=>{
+    const div=document.createElement('div');
+    div.className='ev';div.style.setProperty('--c',e.c);div.dataset.mins=e.mins;
+    div.innerHTML=`<div class="ev-time">${e.t}</div>
+      <div class="ev-title">${e.title}${e.sub?`<small>${e.sub}</small>`:''}</div>
+      <div class="ev-who">${e.who}</div>`;
+    evWrap.appendChild(div);
+  });
+  const n=new Date();highlightNow(n.getHours(),n.getMinutes());
+}
+renderEvents();
+function highlightNow(hr,min){
+  const now=hr*60+min;
+  let best=null,bestDiff=1e9;
+  document.querySelectorAll('.ev').forEach(el=>{
+    el.classList.remove('now');
+    const w=el.querySelector('.ev-who');
+    const old=el.querySelector('.live-tag'); if(old) old.remove();
+    const diff=parseInt(el.dataset.mins)-now;
+    if(diff>=-90&&diff<bestDiff){bestDiff=diff;best=el;}
+  });
+  if(best){best.classList.add('now');
+    const tag=document.createElement('span');tag.className='live-tag';tag.textContent='Up next';
+    best.querySelector('.ev-time').after(tag);}
+}
+
+/* ---------- chore chart (persists daily) ---------- */
+const kidsData=[
+  {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:['Make the bed','Feed the dog','Homework done']},
+  {name:'Maya',age:'7',c:'var(--maya)',init:'My',tasks:['Tidy your room','Set the table','Read 20 minutes']},
+  {name:'Matteo',age:'6',c:'var(--matteo)',init:'Mt',tasks:['Put toys away','Brush teeth','Water the plant']},
+];
+const todayKey=new Date().toISOString().slice(0,10);
+let state={};        // {choreId:true}
+let memOnly=false;
+
+async function loadState(){
+  try{
+    const r=await window.storage.get('chores');
+    const parsed=JSON.parse(r.value);
+    state=(parsed.date===todayKey)?parsed.done:{};
+    if(parsed.date!==todayKey) saveState();
+  }catch(e){ state={}; memOnly=(typeof window.storage==='undefined'); }
+  renderKids();
+}
+async function saveState(){
+  try{ await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); }
+  catch(e){ memOnly=true; }
+}
+function renderKids(){
+  const wrap=document.getElementById('kids');wrap.innerHTML='';
+  kidsData.forEach((k,ki)=>{
+    const div=document.createElement('div');
+    div.className='kid';div.style.setProperty('--c',k.c);
+    let tasksHTML='';
+    k.tasks.forEach((t,ti)=>{
+      const id=ki+'-'+ti;const done=state[id]?'done':'';
+      tasksHTML+=`<div class="task ${done}" data-id="${id}">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="label">${t}</span></div>`;
+    });
+    div.innerHTML=`<div class="kid-head"><div class="avatar">${k.init}</div>
+      <div class="kid-name">${k.name}<small>age ${k.age}</small></div></div>
+      <div class="tasks">${tasksHTML}</div>
+      <div class="stars"></div><div class="done-badge">★ All done!</div>`;
+    wrap.appendChild(div);
+    updateKid(div,ki);
+  });
+  wrap.querySelectorAll('.task').forEach(t=>t.addEventListener('click',()=>{
+    const id=t.dataset.id;state[id]=!state[id];
+    if(!state[id]) delete state[id];
+    t.classList.toggle('done');
+    updateKid(t.closest('.kid'),parseInt(id));
+    saveState();
+  }));
+}
+function updateKid(div,ki){
+  const total=kidsData[ki].tasks.length;
+  let done=0;for(let ti=0;ti<total;ti++) if(state[ki+'-'+ti]) done++;
+  div.querySelector('.stars').textContent='★'.repeat(done)+'☆'.repeat(total-done);
+  div.classList.toggle('complete',done===total);
+}
+
+/* ---------- shopping list ---------- */
+const shop=['Milk & eggs','Bananas','Tortillas','Max — poster board','Dog food','Coffee'];
+const shopWrap=document.getElementById('shop');
+shop.forEach(s=>{const li=document.createElement('li');li.innerHTML=`<span class="b"></span>${s}`;
+  li.addEventListener('click',()=>li.classList.toggle('got'));shopWrap.appendChild(li);});
+
+/* ---------- photo frame (placeholders for your real photos) ---------- */
+const photos=[
+  {g:'linear-gradient(135deg,#f6b26b,#e76f51 55%,#264653)',t:'Beach day, Tulum',d:'Last summer'},
+  {g:'linear-gradient(135deg,#84a98c,#52796f 60%,#2f3e46)',t:'Hiking Desierto de los Leones',d:'March'},
+  {g:'linear-gradient(135deg,#d6a3ee,#9b5de5 55%,#3a0ca3)',t:"Matteo's 6th birthday",d:'February'},
+  {g:'linear-gradient(135deg,#ffd166,#ef8354 60%,#bc4749)',t:'Sunday at Grandma\u2019s',d:'Two weeks ago'},
+];
+const frame=document.getElementById('frame');
+photos.forEach((p,i)=>{const s=document.createElement('div');s.className='slide'+(i===0?' on':'');
+  s.style.background=p.g;frame.appendChild(s);});
+let pi=0;
+setInterval(()=>{
+  const slides=frame.querySelectorAll('.slide');
+  slides[pi].classList.remove('on');
+  pi=(pi+1)%photos.length;
+  slides[pi].classList.add('on');
+  document.getElementById('capT').textContent=photos[pi].t;
+  document.getElementById('capD').textContent=photos[pi].d;
+},6000);
+
+/* ---------- live weather (Open-Meteo, no key) ---------- */
+function wmo(c){
+  const m={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],
+    45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌦️','Drizzle'],
+    56:['🌧️','Freezing drizzle'],57:['🌧️','Freezing drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],
+    65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['❄️','Light snow'],
+    73:['❄️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow grains'],80:['🌦️','Showers'],81:['🌦️','Showers'],
+    82:['🌧️','Heavy showers'],85:['🌨️','Snow showers'],86:['🌨️','Snow showers'],
+    95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm'],99:['⛈️','Thunderstorm']};
+  const x=m[c]||['🌡️','—'];return{e:x[0],t:x[1]};
+}
+async function loadWeather(){
+  const w=CONFIG.weather;if(!w)return;
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${w.lat}&longitude=${w.lon}`
+    +`&timezone=${encodeURIComponent(w.tz)}&current=temperature_2m,apparent_temperature,weather_code`
+    +`&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=5`;
+  try{
+    const r=await fetch(url);if(!r.ok)throw 0;const d=await r.json();
+    const cur=wmo(d.current.weather_code);
+    document.getElementById('wxIco').textContent=cur.e;
+    document.getElementById('wxTemp').textContent=Math.round(d.current.temperature_2m)+'°';
+    document.getElementById('wxDesc').innerHTML=`<b>${cur.t}</b><br>feels ${Math.round(d.current.apparent_temperature)}°`;
+    const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const row=document.getElementById('wxRow');row.innerHTML='';
+    for(let i=1;i<d.daily.time.length;i++){
+      const dt=new Date(d.daily.time[i]+'T12:00:00');const wc=wmo(d.daily.weather_code[i]);
+      row.insertAdjacentHTML('beforeend',
+        `<div class="wx-day"><div class="d">${dn[dt.getDay()]}</div><div class="e">${wc.e}</div>`
+        +`<div class="t">${Math.round(d.daily.temperature_2m_max[i])}° `
+        +`<i>${Math.round(d.daily.temperature_2m_min[i])}°</i></div></div>`);
+    }
+  }catch(e){/* offline / sandboxed: keep the sample weather */}
+}
+
+/* ---------- live calendar (Google Calendar API, optional) ---------- */
+async function loadCalendar(){
+  if(!CONFIG.googleApiKey||!CONFIG.calendars.length)return; // keep the sample agenda
+  const now=new Date();
+  const a=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString();
+  const b=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString();
+  const out=[];
+  for(const cal of CONFIG.calendars){
+    const u=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events`
+      +`?key=${CONFIG.googleApiKey}&timeMin=${a}&timeMax=${b}&singleEvents=true&orderBy=startTime&maxResults=25`;
+    try{
+      const r=await fetch(u);if(!r.ok)throw 0;const d=await r.json();
+      (d.items||[]).forEach(it=>{
+        const allDay=!it.start.dateTime;
+        const dt=new Date(it.start.dateTime||it.start.date+'T00:00:00');
+        out.push({
+          t:allDay?'All day':`${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`,
+          mins:allDay?0:dt.getHours()*60+dt.getMinutes(),
+          title:it.summary||'(busy)',sub:it.location||'',who:cal.who,c:cal.color
+        });
+      });
+    }catch(e){/* skip this calendar */}
+  }
+  if(out.length){events=out;renderEvents();}
+}
+
+/* ---------- boot ---------- */
+tick();setInterval(tick,1000);
+countdown();setInterval(countdown,3600000);
+loadState();
+loadWeather();setInterval(loadWeather,1800000);   // refresh weather every 30 min
+loadCalendar();setInterval(loadCalendar,600000);   // refresh calendar every 10 min
+</script>
