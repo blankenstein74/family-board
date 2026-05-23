@@ -78,7 +78,7 @@
   .dot{width:9px;height:9px;border-radius:50%}
 
   /* ---------- LEFT: clock / countdown / weather ---------- */
-  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr;gap:inherit}
+  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr auto;gap:inherit}
   .clock{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:clamp(10px,2vh,26px)}
   .time{font-family:var(--display);font-weight:800;line-height:.86;letter-spacing:-.04em;font-size:clamp(4.2rem,9.5vw,9.5rem);font-variant-numeric:tabular-nums}
   .time .sec{color:var(--dad);font-size:.32em;vertical-align:super;margin-left:.12em;letter-spacing:0}
@@ -90,21 +90,27 @@
   .cd-text{font-weight:600;font-size:clamp(.95rem,1.2vw,1.25rem);line-height:1.15}
   .cd-text small{display:block;color:var(--muted);font-weight:500;font-size:.78em;margin-top:.25em}
 
-  .weather{display:flex;flex-direction:column}
-  .wx-now{display:flex;align-items:center;gap:14px;margin:.2em 0 .6em}
-  .wx-temp{font-family:var(--display);font-weight:800;font-size:clamp(2.8rem,5.4vw,4.6rem);line-height:.85;font-variant-numeric:tabular-nums}
-  .wx-now .ico{font-size:clamp(2.4rem,4.6vw,3.6rem)}
-  .wx-desc{color:var(--muted);font-weight:500}
-  .wx-desc b{color:var(--ink);font-weight:700}
-  .wx-row{display:flex;justify-content:space-between;gap:6px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
-  .wx-day{text-align:center;flex:1}
-  .wx-day .d{font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.45em}
-  .wx-day .e{font-size:clamp(1.3rem,2vw,1.7rem)}
-  .wx-day .t{font-weight:700;margin-top:.35em;font-size:clamp(.82rem,1vw,1rem)}
-  .wx-day .t i{color:var(--faint);font-style:normal;font-weight:500}
+  .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.3vh,16px)}
+  .wx-city{display:flex;align-items:center;gap:13px}
+  .wx-city+.wx-city{padding-top:clamp(9px,1.3vh,16px);border-top:1px solid var(--line)}
+  .wx-city .ico{font-size:clamp(2rem,3.8vw,3.1rem);flex:none}
+  .wx-temp{font-family:var(--display);font-weight:800;font-size:clamp(2.1rem,4vw,3.4rem);line-height:.85;font-variant-numeric:tabular-nums;flex:none}
+  .wx-meta{min-width:0}
+  .wx-meta .city{font-family:var(--display);font-weight:700;font-size:clamp(.98rem,1.25vw,1.25rem);line-height:1}
+  .wx-meta .cond{color:var(--muted);font-weight:500;font-size:clamp(.76rem,.9vw,.92rem);margin-top:5px}
+  .wx-meta .cond b{color:var(--ink);font-weight:700}
+  /* VLRS stock card */
+  .stock{display:flex;flex-direction:column;justify-content:center}
+  .stock-head{display:flex;align-items:center;justify-content:space-between}
+  .stock-ex{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:3px 9px;border-radius:999px}
+  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,3.8vw,3rem);line-height:.9;font-variant-numeric:tabular-nums;margin:.3em 0 .18em}
+  .stock-chg{font-weight:600;font-size:clamp(.82rem,1vw,1.02rem);color:var(--muted);display:flex;align-items:center;gap:7px}
+  .stock-chg.up{color:#7ddf8e}
+  .stock-chg.down{color:#ff7a7a}
+  .stock-chg .arrow{font-size:.9em}
 
   /* ---------- CENTER: agenda + chores ---------- */
-  .center{grid-area:center;display:grid;grid-template-rows:1.15fr 1fr;gap:inherit}
+  .center{grid-area:center;display:grid;grid-template-rows:1fr;gap:inherit}
   .agenda{display:flex;flex-direction:column;overflow:hidden}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7em}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,1.5vw,1.5rem);letter-spacing:-.01em}
@@ -143,17 +149,22 @@
   .kid.complete .done-badge{opacity:1}
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
-  /* ---------- RIGHT: photo / dinner / list ---------- */
+  /* ---------- RIGHT: school run / dinner / list ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:1.3fr auto auto;gap:inherit}
-  .photo{padding:0;overflow:hidden;position:relative}
-  .frame{position:absolute;inset:0}
-  .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease;background-size:cover;background-position:center;animation:kb 16s ease-in-out infinite alternate}
-  .slide.on{opacity:1}
-  @keyframes kb{from{transform:scale(1.04)}to{transform:scale(1.14)}}
-  .photo .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 16px;background:linear-gradient(transparent,rgba(0,0,0,.72));z-index:2}
-  .photo .cap .t{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,1.4vw,1.45rem);font-weight:500}
-  .photo .cap .d{color:var(--muted);font-size:.78rem;font-weight:500;margin-top:3px}
-  .photo-tag{position:absolute;top:14px;left:14px;z-index:2;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:600;background:rgba(0,0,0,.3);padding:5px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+  .school{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.3vh,16px)}
+  .run-list{display:flex;flex-direction:column;gap:clamp(9px,1.3vh,16px)}
+  .run{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;padding:clamp(10px,1.3vh,16px) 15px;border-radius:16px;background:var(--panel-2);border-left:4px solid var(--c);transition:.3s}
+  .run.urgent{background:rgba(255,122,89,.12);animation:runpulse 1.3s ease-in-out infinite}
+  .run.gone{opacity:.4}
+  @keyframes runpulse{0%,100%{box-shadow:0 0 0 1px rgba(255,122,89,.35) inset}50%{box-shadow:0 0 0 2px rgba(255,122,89,.7) inset}}
+  .run-av{display:flex;align-items:center}
+  .av2{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;font-size:.84rem;border:2px solid var(--bg);flex:none}
+  .run-info .nm{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.3vw,1.3rem);line-height:1}
+  .run-info .lb{color:var(--muted);font-weight:500;font-size:.76rem;margin-top:4px}
+  .run-cd{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1.5rem,2.5vw,2.3rem);line-height:.82;color:var(--c);text-align:right;min-width:104px}
+  .run-cd small{display:block;font-family:var(--body);font-weight:500;font-size:.36em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:5px}
+  .run.urgent .run-cd{color:var(--dad)}
+  .run-msg{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(.95rem,1.2vw,1.15rem);line-height:1.4;padding:10px}
 
   .dinner .meal{display:flex;align-items:center;gap:14px}
   .dinner .emoji{font-size:clamp(2rem,3.4vw,2.9rem)}
@@ -202,39 +213,34 @@
       <div class="eyebrow">Counting down to</div>
       <div class="countdown">
         <div class="cd-num" id="cdNum">28</div>
-        <div class="cd-text">Beach trip 🏖️<small id="cdSub">days to go · June 19</small></div>
+        <div class="cd-text">Europe trip ✈️<small id="cdSub">days to go · July 20</small></div>
       </div>
     </div>
 
     <div class="card weather delay-3">
-      <div class="eyebrow">Mexico City · Today</div>
-      <div class="wx-now">
-        <span class="ico" id="wxIco">⛅</span>
-        <div class="wx-temp" id="wxTemp">26°</div>
-        <div class="wx-desc" id="wxDesc"><b>Partly cloudy</b><br>Afternoon storms likely · feels 27°</div>
+      <div class="eyebrow">Weather · Today</div>
+      <div class="wx-city">
+        <span class="ico" id="wxIco0">⛅</span>
+        <div class="wx-temp" id="wxTemp0">26°</div>
+        <div class="wx-meta"><div class="city">Mexico City</div><div class="cond" id="wxDesc0"><b>Partly cloudy</b> · feels 27°</div></div>
       </div>
-      <div class="wx-row" id="wxRow">
-        <div class="wx-day"><div class="d">Sat</div><div class="e">⛈️</div><div class="t">24° <i>14°</i></div></div>
-        <div class="wx-day"><div class="d">Sun</div><div class="e">🌦️</div><div class="t">25° <i>13°</i></div></div>
-        <div class="wx-day"><div class="d">Mon</div><div class="e">☀️</div><div class="t">27° <i>13°</i></div></div>
-        <div class="wx-day"><div class="d">Tue</div><div class="e">⛅</div><div class="t">26° <i>14°</i></div></div>
+      <div class="wx-city">
+        <span class="ico" id="wxIco1">🌤️</span>
+        <div class="wx-temp" id="wxTemp1">31°</div>
+        <div class="wx-meta"><div class="city">Cancún</div><div class="cond" id="wxDesc1"><b>Mostly sunny</b> · feels 35°</div></div>
       </div>
+    </div>
+
+    <div class="card stock delay-4">
+      <div class="stock-head"><div class="eyebrow" style="margin:0">Volaris · VLRS</div><span class="stock-ex">NYSE · USD</span></div>
+      <div class="stock-price" id="stkPrice">$4.58</div>
+      <div class="stock-chg up" id="stkChg"><span class="arrow">▲</span> +0.12 (2.57%) today</div>
     </div>
   </div>
 
-  <!-- CENTER COLUMN -->
+  <!-- CENTER COLUMN (calendar lives in DAKboard's native block) -->
   <div class="center">
-    <div class="card agenda delay-2">
-      <div class="head-row">
-        <h2>Today's plan</h2>
-        <div class="legend">
-          <span><span class="dot" style="background:var(--all)"></span>Everyone</span>
-        </div>
-      </div>
-      <div class="events" id="events"></div>
-    </div>
-
-    <div class="card chores delay-4">
+    <div class="card chores delay-2">
       <div class="head-row">
         <h2>Chore chart</h2>
         <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
@@ -245,10 +251,10 @@
 
   <!-- RIGHT COLUMN -->
   <div class="right">
-    <div class="card photo delay-3">
-      <span class="photo-tag">Family photos</span>
-      <div class="frame" id="frame"></div>
-      <div class="cap"><div class="t" id="capT">Beach day, Tulum</div><div class="d" id="capD">Last summer</div></div>
+    <div class="card school delay-3">
+      <div class="eyebrow" id="schoolEyebrow">School run · this morning</div>
+      <div class="run-list" id="runList"></div>
+      <div class="run-msg" id="runMsg"></div>
     </div>
 
     <div class="card dinner delay-5">
@@ -278,24 +284,18 @@
    CONFIG — edit this to go live. Everything else updates itself.
    ============================================================ */
 const CONFIG = {
-  // Weather: Open-Meteo. No API key needed. (Mexico City coords.)
-  weather: { lat: 19.4326, lon: -99.1332, tz: 'America/Mexico_City' },
+  // Weather: Open-Meteo. No API key needed. Add/remove cities freely.
+  weather: [
+    { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
+    { name:'Cancún',      lat:21.1619, lon:-86.8515, tz:'America/Cancun'      },
+  ],
 
   // Countdown
-  countdown: { date: '2026-06-19', label: 'Beach trip 🏖️' },
+  countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
 
-  // Google Calendar (optional). Leave googleApiKey '' to keep the sample agenda.
-  // To go LIVE: 1) make each calendar PUBLIC, 2) create a Google API key,
-  //            3) uncomment the calendars below with a person + colour.
-  googleApiKey: '',
-  calendars: [
-    // { id:'familyid@group.calendar.google.com', who:'All',    color:'var(--all)'    },
-    // { id:'dad@gmail.com',                       who:'Dad',    color:'var(--dad)'    },
-    // { id:'mom@gmail.com',                       who:'Mom',    color:'var(--mom)'    },
-    // { id:'maxid@group.calendar.google.com',     who:'Max',    color:'var(--max)'    },
-    // { id:'mayaid@group.calendar.google.com',    who:'Maya',   color:'var(--maya)'   },
-    // { id:'matteoid@group.calendar.google.com',  who:'Matteo', color:'var(--matteo)' },
-  ],
+  // Stock: Volaris (NYSE: VLRS). Add a free Finnhub key (finnhub.io) to go live.
+  finnhub: '', stock: { name:'Volaris', symbol:'VLRS', exchange:'NYSE', currency:'USD' },
+  // Note: the calendar/agenda lives in DAKboard's native Calendar block, not here.
 };
 
 /* ---------- live clock + date ---------- */
@@ -311,7 +311,6 @@ function tick(){
   const hr=n.getHours();
   const g=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
-  highlightNow(hr,n.getMinutes());
 }
 
 /* ---------- countdown ---------- */
@@ -319,44 +318,6 @@ function countdown(){
   const target=new Date(CONFIG.countdown.date+'T00:00:00');
   const d=Math.max(0,Math.ceil((target-new Date())/86400000));
   document.getElementById('cdNum').textContent=d;
-}
-
-/* ---------- agenda (sample data; replaced by live calendar if configured) ---------- */
-let events=[
-  {t:'7:30',mins:450,title:'Swim practice',sub:'Drop at the pool',who:'Maya',c:'var(--maya)'},
-  {t:'15:00',mins:900,title:'Ballet class',sub:'Studio B · pickup 16:00',who:'Matteo',c:'var(--matteo)'},
-  {t:'16:30',mins:990,title:'Math tutor',sub:'Online',who:'Max',c:'var(--max)'},
-  {t:'18:00',mins:1080,title:'Yoga',sub:'Back by 19:15',who:'Mom',c:'var(--mom)'},
-  {t:'20:00',mins:1200,title:'Dad lands from MTY',sub:'Flight Y4 712',who:'Dad',c:'var(--dad)'},
-  {t:'19:30',mins:1170,title:'Pizza & movie night',sub:'Everyone — pick the film!',who:'All',c:'var(--all)'},
-];
-const evWrap=document.getElementById('events');
-function renderEvents(){
-  evWrap.innerHTML='';
-  events.slice().sort((a,b)=>a.mins-b.mins).forEach(e=>{
-    const div=document.createElement('div');
-    div.className='ev';div.style.setProperty('--c',e.c);div.dataset.mins=e.mins;
-    div.innerHTML=`<div class="ev-time">${e.t}</div>
-      <div class="ev-title">${e.title}${e.sub?`<small>${e.sub}</small>`:''}</div>
-      <div class="ev-who">${e.who}</div>`;
-    evWrap.appendChild(div);
-  });
-  const n=new Date();highlightNow(n.getHours(),n.getMinutes());
-}
-renderEvents();
-function highlightNow(hr,min){
-  const now=hr*60+min;
-  let best=null,bestDiff=1e9;
-  document.querySelectorAll('.ev').forEach(el=>{
-    el.classList.remove('now');
-    const w=el.querySelector('.ev-who');
-    const old=el.querySelector('.live-tag'); if(old) old.remove();
-    const diff=parseInt(el.dataset.mins)-now;
-    if(diff>=-90&&diff<bestDiff){bestDiff=diff;best=el;}
-  });
-  if(best){best.classList.add('now');
-    const tag=document.createElement('span');tag.className='live-tag';tag.textContent='Up next';
-    best.querySelector('.ev-time').after(tag);}
 }
 
 /* ---------- chore chart (persists daily) ---------- */
@@ -422,25 +383,63 @@ const shopWrap=document.getElementById('shop');
 shop.forEach(s=>{const li=document.createElement('li');li.innerHTML=`<span class="b"></span>${s}`;
   li.addEventListener('click',()=>li.classList.toggle('got'));shopWrap.appendChild(li);});
 
-/* ---------- photo frame (placeholders for your real photos) ---------- */
-const photos=[
-  {g:'linear-gradient(135deg,#f6b26b,#e76f51 55%,#264653)',t:'Beach day, Tulum',d:'Last summer'},
-  {g:'linear-gradient(135deg,#84a98c,#52796f 60%,#2f3e46)',t:'Hiking Desierto de los Leones',d:'March'},
-  {g:'linear-gradient(135deg,#d6a3ee,#9b5de5 55%,#3a0ca3)',t:"Matteo's 6th birthday",d:'February'},
-  {g:'linear-gradient(135deg,#ffd166,#ef8354 60%,#bc4749)',t:'Sunday at Grandma\u2019s',d:'Two weeks ago'},
+/* ---------- school run countdown (weekday mornings) ---------- */
+const departures=[
+  {nm:'Matteo',     avatars:[['Mt','var(--matteo)']],                  c:'var(--matteo)', h:7, m:19},
+  {nm:'Max & Maya', avatars:[['Mx','var(--max)'],['My','var(--maya)']], c:'var(--max)',    h:7, m:25},
 ];
-const frame=document.getElementById('frame');
-photos.forEach((p,i)=>{const s=document.createElement('div');s.className='slide'+(i===0?' on':'');
-  s.style.background=p.g;frame.appendChild(s);});
-let pi=0;
-setInterval(()=>{
-  const slides=frame.querySelectorAll('.slide');
-  slides[pi].classList.remove('on');
-  pi=(pi+1)%photos.length;
-  slides[pi].classList.add('on');
-  document.getElementById('capT').textContent=photos[pi].t;
-  document.getElementById('capD').textContent=photos[pi].d;
-},6000);
+const runList=document.getElementById('runList');
+const runMsg=document.getElementById('runMsg');
+const schoolEyebrow=document.getElementById('schoolEyebrow');
+departures.forEach((d,i)=>{
+  const row=document.createElement('div');
+  row.className='run';row.style.setProperty('--c',d.c);
+  const avs=d.avatars.map((a,j)=>`<span class="av2" style="background:${a[1]};${j>0?'margin-left:-9px':''}">${a[0]}</span>`).join('');
+  row.innerHTML=`<div class="run-av">${avs}</div>
+    <div class="run-info"><div class="nm">${d.nm}</div><div class="lb">leave by ${d.h}:${String(d.m).padStart(2,'0')}</div></div>
+    <div class="run-cd">--:--<small>to go</small></div>`;
+  runList.appendChild(row);
+});
+function fmtRun(s){
+  if(s>=3600){const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h+':'+String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+function schoolTick(){
+  const now=new Date();const day=now.getDay();
+  const weekend=(day===0||day===6);
+  const rows=runList.querySelectorAll('.run');
+  const last=departures.reduce((a,b)=>(b.h*60+b.m)>(a.h*60+a.m)?b:a);
+  const cutoff=new Date(now);cutoff.setHours(last.h,last.m+30,0,0);
+  const morning=!weekend && now<cutoff;
+  if(morning){
+    runList.style.display='';runMsg.style.display='none';
+    schoolEyebrow.textContent='School run · this morning';
+    departures.forEach((d,i)=>{
+      const t=new Date(now);t.setHours(d.h,d.m,0,0);
+      const diff=Math.round((t-now)/1000);
+      const cd=rows[i].querySelector('.run-cd');
+      if(diff>0){
+        rows[i].classList.remove('gone');
+        rows[i].classList.toggle('urgent',diff<=300);
+        cd.innerHTML=fmtRun(diff)+'<small>to go</small>';
+      }else{
+        rows[i].classList.add('gone');rows[i].classList.remove('urgent');
+        cd.innerHTML='Go! 🎒<small>'+fmtRun(-diff)+' over</small>';
+      }
+    });
+  }else{
+    runList.style.display='none';runMsg.style.display='';
+    schoolEyebrow.textContent='School run';
+    if(weekend){
+      runMsg.textContent='No school today — enjoy the weekend 🌞';
+    }else if(day===5){
+      runMsg.innerHTML='All out the door for the week 🎒<br><span style="color:var(--faint);font-size:.85em">Enjoy the weekend!</span>';
+    }else{
+      runMsg.innerHTML='All out the door 🎒<br><span style="color:var(--faint);font-size:.85em">Tomorrow — Matteo 7:19 · Max &amp; Maya 7:25</span>';
+    }
+  }
+}
+schoolTick();setInterval(schoolTick,1000);
 
 /* ---------- live weather (Open-Meteo, no key) ---------- */
 function wmo(c){
@@ -454,52 +453,35 @@ function wmo(c){
   const x=m[c]||['🌡️','—'];return{e:x[0],t:x[1]};
 }
 async function loadWeather(){
-  const w=CONFIG.weather;if(!w)return;
-  const url=`https://api.open-meteo.com/v1/forecast?latitude=${w.lat}&longitude=${w.lon}`
-    +`&timezone=${encodeURIComponent(w.tz)}&current=temperature_2m,apparent_temperature,weather_code`
-    +`&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=5`;
-  try{
-    const r=await fetch(url);if(!r.ok)throw 0;const d=await r.json();
-    const cur=wmo(d.current.weather_code);
-    document.getElementById('wxIco').textContent=cur.e;
-    document.getElementById('wxTemp').textContent=Math.round(d.current.temperature_2m)+'°';
-    document.getElementById('wxDesc').innerHTML=`<b>${cur.t}</b><br>feels ${Math.round(d.current.apparent_temperature)}°`;
-    const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    const row=document.getElementById('wxRow');row.innerHTML='';
-    for(let i=1;i<d.daily.time.length;i++){
-      const dt=new Date(d.daily.time[i]+'T12:00:00');const wc=wmo(d.daily.weather_code[i]);
-      row.insertAdjacentHTML('beforeend',
-        `<div class="wx-day"><div class="d">${dn[dt.getDay()]}</div><div class="e">${wc.e}</div>`
-        +`<div class="t">${Math.round(d.daily.temperature_2m_max[i])}° `
-        +`<i>${Math.round(d.daily.temperature_2m_min[i])}°</i></div></div>`);
-    }
-  }catch(e){/* offline / sandboxed: keep the sample weather */}
+  const cities=CONFIG.weather;if(!cities||!cities.length)return;
+  for(let i=0;i<cities.length;i++){
+    const w=cities[i];
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${w.lat}&longitude=${w.lon}`
+      +`&timezone=${encodeURIComponent(w.tz)}&current=temperature_2m,apparent_temperature,weather_code`;
+    try{
+      const r=await fetch(url);if(!r.ok)throw 0;const d=await r.json();
+      const cur=wmo(d.current.weather_code);
+      const ico=document.getElementById('wxIco'+i),tmp=document.getElementById('wxTemp'+i),des=document.getElementById('wxDesc'+i);
+      if(ico) ico.textContent=cur.e;
+      if(tmp) tmp.textContent=Math.round(d.current.temperature_2m)+'°';
+      if(des) des.innerHTML=`<b>${cur.t}</b> · feels ${Math.round(d.current.apparent_temperature)}°`;
+    }catch(e){/* offline / sandboxed: keep the sample weather */}
+  }
 }
 
-/* ---------- live calendar (Google Calendar API, optional) ---------- */
-async function loadCalendar(){
-  if(!CONFIG.googleApiKey||!CONFIG.calendars.length)return; // keep the sample agenda
-  const now=new Date();
-  const a=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString();
-  const b=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString();
-  const out=[];
-  for(const cal of CONFIG.calendars){
-    const u=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events`
-      +`?key=${CONFIG.googleApiKey}&timeMin=${a}&timeMax=${b}&singleEvents=true&orderBy=startTime&maxResults=25`;
-    try{
-      const r=await fetch(u);if(!r.ok)throw 0;const d=await r.json();
-      (d.items||[]).forEach(it=>{
-        const allDay=!it.start.dateTime;
-        const dt=new Date(it.start.dateTime||it.start.date+'T00:00:00');
-        out.push({
-          t:allDay?'All day':`${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`,
-          mins:allDay?0:dt.getHours()*60+dt.getMinutes(),
-          title:it.summary||'(busy)',sub:it.location||'',who:cal.who,c:cal.color
-        });
-      });
-    }catch(e){/* skip this calendar */}
-  }
-  if(out.length){events=out;renderEvents();}
+/* ---------- live VLRS quote (Finnhub, optional key) ---------- */
+async function loadStock(){
+  const s=CONFIG.stock;if(!s||!CONFIG.finnhub)return; // no key -> keep sample number
+  const pEl=document.getElementById('stkPrice'),cEl=document.getElementById('stkChg');
+  try{
+    const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
+    if(!r.ok)throw 0;const d=await r.json();
+    if(typeof d.c!=='number'||!d.c)throw 0;
+    const up=(d.d||0)>=0;
+    pEl.textContent='$'+d.c.toFixed(2);
+    cEl.className='stock-chg '+(up?'up':'down');
+    cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
+  }catch(e){/* keep sample */}
 }
 
 /* ---------- boot ---------- */
@@ -507,5 +489,5 @@ tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
 loadState();
 loadWeather();setInterval(loadWeather,1800000);   // refresh weather every 30 min
-loadCalendar();setInterval(loadCalendar,600000);   // refresh calendar every 10 min
+loadStock();setInterval(loadStock,300000);        // refresh VLRS every 5 min
 </script>
