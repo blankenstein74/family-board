@@ -1,0 +1,665 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Family Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#161210;
+    --ink:#f6f0e6;
+    --muted:#a99e8f;
+    --faint:#6f675c;
+    --panel:rgba(255,251,244,.045);
+    --panel-2:rgba(255,251,244,.07);
+    --line:rgba(255,243,225,.10);
+    --dad:#ff7a59;     /* coral */
+    --mom:#3fd0c9;     /* teal */
+    --max:#ffcf5c;   /* amber */
+    --maya:#9bd17a;   /* green */
+    --matteo:#d6a3ee;   /* lilac */
+    --all:#f6f0e6;
+    --display:"Bricolage Grotesque",sans-serif;
+    --body:"Hanken Grotesk",sans-serif;
+    --serif:"Fraunces",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-size:65%; /* Reduced base size for smaller screens */                
+    font-family:var(--body);
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 12% -8%, rgba(255,160,90,.16), transparent 60%),
+      radial-gradient(900px 600px at 105% 110%, rgba(63,208,201,.12), transparent 60%),
+      var(--bg);
+    overflow:hidden; 
+    -webkit-font-smoothing:antialiased;
+  }
+  /* film grain */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.5;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  }
+
+  /* CSS Rotated Portrait Layout */
+  .board {
+    position: absolute;
+    top: 0;
+    left: 100vw;
+    width: 100vh;         
+    height: 100vw;        
+    transform-origin: 0 0;
+    transform: rotate(90deg);
+    overflow-y: auto;     
+    overflow-x: hidden;
+    
+    padding: clamp(12px, 3vw, 40px);
+    display: grid;
+    gap: clamp(10px, 2vw, 24px);
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "head head"
+      "left right"
+      "center center";
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:clamp(12px,1.5vw,22px);
+    backdrop-filter:blur(8px);
+    position:relative;
+    opacity:0;transform:translateY(14px);
+    animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:none}}
+  .delay-1{animation-delay:.06s}.delay-2{animation-delay:.12s}.delay-3{animation-delay:.18s}
+  .delay-4{animation-delay:.24s}.delay-5{animation-delay:.3s}.delay-6{animation-delay:.36s}
+
+  .eyebrow{font-size:clamp(.55rem,.72vw,.78rem);letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:.5em}
+
+  /* ---------- HEADER ---------- */
+  .head{grid-area:head;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 4px;opacity:0;animation:rise .6s ease forwards}
+  .head-left{display:flex;flex-direction:column;gap:clamp(6px,1vh,14px);min-width:0}
+  .pill-row{display:flex;align-items:center;gap:clamp(6px,.9vw,16px);flex-wrap:wrap;color:var(--muted);font-weight:500;font-size:clamp(.75rem,1vw,1.05rem)}
+  
+  /* prominent countdown */
+  .hero-cd{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px);background:var(--panel);
+    border:1px solid var(--line);border-left:6px solid var(--mom);border-radius:18px;
+    padding:clamp(10px,1.4vw,20px) clamp(14px,2vw,30px);flex:none}
+  .hero-num{font-family:var(--display);font-weight:800;line-height:.78;color:var(--mom);
+    font-variant-numeric:tabular-nums;font-size:clamp(2.5rem,6.5vw,6rem)}
+  .hero-text{display:flex;flex-direction:column;line-height:1.05}
+  .hero-lab{font-size:clamp(.65rem,.9vw,1rem);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .hero-trip{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.9vw,2.1rem);letter-spacing:-.01em;margin-top:2px}
+  .hero-text small{color:var(--muted);font-weight:500;font-size:clamp(.7rem,.95vw,1.02rem);margin-top:5px}
+  
+  .greet{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,1.9vw,2.1rem);font-weight:500;letter-spacing:-.01em}
+  .greet b{font-style:normal;font-family:var(--display);font-weight:700;color:var(--dad)}
+  .pill{display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line);padding:5px 11px;border-radius:999px}
+  .dot{width:8px;height:8px;border-radius:50%}
+
+  /* ---------- LEFT: clock / weather / stocks ---------- */
+  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr;gap:inherit}
+  .clock{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:clamp(8px,2vh,26px)}
+  .time{font-family:var(--display);font-weight:800;line-height:.86;letter-spacing:-.04em;font-size:clamp(3.2rem,9.5vw,9.5rem);font-variant-numeric:tabular-nums}
+  .time .sec{color:var(--dad);font-size:.32em;vertical-align:super;margin-left:.12em;letter-spacing:0}
+  .date{font-family:var(--display);font-weight:600;font-size:clamp(1rem,1.9vw,2rem);margin-top:.15em;letter-spacing:-.01em}
+  .date span{color:var(--muted)}
+
+  .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,1.6vh,20px)}
+  .wx-city{display:flex;align-items:center;gap:12px}
+  .wx-city+.wx-city{padding-top:clamp(8px,1.3vh,16px);border-top:1px solid var(--line)}
+  .wx-city .ico{font-size:clamp(1.8rem,3.8vw,3.1rem);flex:none}
+  .wx-temp{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,4vw,3.4rem);line-height:.85;font-variant-numeric:tabular-nums;flex:none}
+  .wx-meta{min-width:0}
+  .wx-meta .city{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.25vw,1.25rem);line-height:1}
+  .wx-meta .cond{color:var(--muted);font-weight:500;font-size:clamp(.65rem,.9vw,.92rem);margin-top:4px}
+  .wx-meta .cond b{color:var(--ink);font-weight:700}
+  
+  /* ---------- STOCKS: VLRS & JEPI ---------- */
+  .stock{display:flex;flex-direction:column;justify-content:center;gap:10px}
+  .stk-row{display:flex;flex-direction:column}
+  .stk-row + .stk-row{padding-top:10px;border-top:1px solid var(--line)}
+  .stock-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+  .stk-name{font-weight:700;font-size:clamp(.85rem,1.1vw,1.1rem)}
+  .stock-ex{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:2px 7px;border-radius:999px}
+  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2.4rem);line-height:.9;font-variant-numeric:tabular-nums;margin:.15em 0 .15em}
+  .stock-chg{font-weight:600;font-size:clamp(.75rem,.9vw,.95rem);color:var(--muted);display:flex;align-items:center;gap:6px}
+  .stock-chg.up{color:#7ddf8e}
+  .stock-chg.down{color:#ff7a7a}
+  .stock-chg .arrow{font-size:.8em}
+
+  /* ---------- CENTER: agenda + chores ---------- */
+  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:inherit}
+  .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7em}
+  .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(.95rem,1.5vw,1.5rem);letter-spacing:-.01em}
+  .legend{display:flex;gap:10px;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);font-weight:500}
+  
+  .chores{display:flex;flex-direction:column;overflow:hidden}
+  .kid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1vw,16px);flex:1;overflow:hidden}
+  .kid{display:flex;flex-direction:column;border-radius:16px;background:var(--panel-2);border:1px solid var(--line);padding:clamp(10px,1.1vw,16px);position:relative;overflow:hidden}
+  .kid::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
+  .kid-head{display:flex;align-items:center;gap:8px;margin-bottom:.6em}
+  .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;background:var(--c);font-size:.85rem;flex:none}
+  .kid-name{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.2rem);line-height:1}
+  .kid-name small{display:block;color:var(--muted);font-weight:500;font-size:.6em;letter-spacing:.04em;margin-top:2px;font-family:var(--body)}
+  .tasks{display:flex;flex-direction:column;gap:5px;flex:1}
+  .task{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:4px 3px;border-radius:8px;transition:.18s}
+  .task:hover{background:rgba(255,255,255,.05)}
+  .check{width:18px;height:18px;border-radius:6px;border:2px solid var(--c);flex:none;display:grid;place-items:center;transition:.2s}
+  .check svg{width:11px;height:11px;stroke:#1a140f;stroke-width:3.4;fill:none;opacity:0;transform:scale(.4);transition:.2s}
+  .task.done .check{background:var(--c)}
+  .task.done .check svg{opacity:1;transform:scale(1)}
+  .task .label{font-weight:600;font-size:clamp(.75rem,.95vw,1rem);transition:.2s}
+  .task.done .label{color:var(--faint);text-decoration:line-through}
+  .stars{margin-top:.5em;font-size:.9rem;letter-spacing:2px;min-height:1.2em}
+  .done-badge{position:absolute;inset:auto 10px 10px auto;font-size:.6rem;font-weight:800;letter-spacing:.08em;color:var(--c);opacity:0;transition:.3s}
+  .kid.complete .done-badge{opacity:1}
+  .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
+
+  /* ---------- RIGHT: school run / trip / glance ---------- */
+  .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit}
+  .school{display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1.3vh,16px)}
+  .school-hero{position:relative;overflow:hidden}
+  .school-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--matteo),var(--max),var(--maya))}
+  .school-hero .run{padding:clamp(10px,1.6vh,20px) clamp(12px,1.5vw,22px)}
+  
+  .trip{display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .trip::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--mom),var(--max))}
+  .trip-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:.4em}
+  .trip-name{font-family:var(--display);font-weight:700;font-size:clamp(.95rem,1.4vw,1.4rem);line-height:1.05}
+  .trip-cd{font-family:var(--display);font-weight:800;color:var(--mom);font-size:clamp(.8rem,1.1vw,1.15rem);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .trip-dest{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600;font-size:clamp(.75rem,1vw,1.05rem);margin-bottom:.2em}
+  .trip-dates{color:var(--faint);font-weight:500;font-size:clamp(.65rem,.9vw,.92rem)}
+  .trip-leg{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:clamp(10px,1.6vh,18px);border-top:1px solid var(--line)}
+  .trip-leg .pl{font-size:clamp(1.3rem,2.2vw,1.9rem);flex:none}
+  .trip-leg .pb{min-width:0;line-height:1.15}
+  .trip-leg .pk{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .trip-leg .pv{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.2rem);margin-top:2px}
+  .trip-leg .pv small{color:var(--muted);font-weight:500;font-size:.75em}
+  .trip-msg{color:var(--muted);font-weight:600;font-size:clamp(.8rem,1.1vw,1.1rem);padding:6px 0}
+  
+  .run-list{display:flex;flex-direction:column;gap:clamp(8px,1.3vh,16px)}
+  .run{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:clamp(8px,1.3vh,16px) 12px;border-radius:14px;background:var(--panel-2);border-left:4px solid var(--c);transition:.3s}
+  .run.urgent{background:rgba(255,122,89,.12);animation:runpulse 1.3s ease-in-out infinite}
+  .run.gone{opacity:.4}
+  @keyframes runpulse{0%,100%{box-shadow:0 0 0 1px rgba(255,122,89,.35) inset}50%{box-shadow:0 0 0 2px rgba(255,122,89,.7) inset}}
+  .run-av{display:flex;align-items:center}
+  .av2{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;font-size:.75rem;border:2px solid var(--bg);flex:none}
+  .run-info .nm{font-family:var(--display);font-weight:700;font-size:clamp(.9rem,1.3vw,1.3rem);line-height:1}
+  .run-info .lb{color:var(--muted);font-weight:500;font-size:.65rem;margin-top:3px}
+  .run-cd{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1.3rem,2.5vw,2.3rem);line-height:.82;color:var(--c);text-align:right;min-width:90px}
+  .run-cd small{display:block;font-family:var(--body);font-weight:500;font-size:.36em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+  .run.urgent .run-cd{color:var(--dad)}
+  .run-msg{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(.85rem,1.2vw,1.15rem);line-height:1.4;padding:8px}
+
+  /* ---------- Today at a glance card ---------- */
+  .glance{display:flex;flex-direction:column}
+  .glance-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1vw,15px);flex:1}
+  .gtile{display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);background:var(--panel-2);
+    border:1px solid var(--line);border-left:4px solid var(--c);border-radius:14px;
+    padding:clamp(10px,1.4vw,20px) clamp(10px,1.4vw,20px)}
+  .gtile.span2{grid-column:1 / -1}
+  .gtile .gi{font-size:clamp(1.6rem,3vw,2.8rem);line-height:1;flex:none}
+  .gtile .gb{min-width:0;line-height:1.1}
+  .gtile .gk{font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .gtile .gv{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.7vw,1.7rem);font-variant-numeric:tabular-nums;margin-top:4px;white-space:nowrap}
+  .gtile .gv b{font-weight:800}
+  .gtile .gv small{color:var(--muted);font-weight:500;font-size:.65em}
+  .aqi-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  
+  @media (max-width:0px){
+    .board{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"head" "left" "center" "right";height:auto;min-height:100vh;overflow:auto}
+    body{overflow:auto}
+    .kid-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="board">
+
+  <header class="head">
+    <div class="head-left">
+      <div class="greet" id="greet">Good evening, <b>the Blankenstein family</b></div>
+      <div class="pill-row">
+        <span class="pill"><span class="dot" style="background:var(--dad)"></span>Dad</span>
+        <span class="pill"><span class="dot" style="background:var(--mom)"></span>Mom</span>
+        <span class="pill"><span class="dot" style="background:var(--max)"></span>Max</span>
+        <span class="pill"><span class="dot" style="background:var(--maya)"></span>Maya</span>
+        <span class="pill"><span class="dot" style="background:var(--matteo)"></span>Matteo</span>
+      </div>
+    </div>
+    <div class="hero-cd">
+      <div class="hero-num" id="cdNum">57</div>
+      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Europe trip ✈️</span><small id="cdSub">July 20, 2026</small></div>
+    </div>
+  </header>
+
+  <div class="left">
+    <div class="card clock delay-1">
+      <div class="time" id="time">19:42<span class="sec" id="sec">08</span></div>
+      <div class="date" id="date">Friday, <span>May 22</span></div>
+    </div>
+
+    <div class="card weather delay-3">
+      <div class="eyebrow">Weather · Today</div>
+      <div class="wx-city">
+        <span class="ico" id="wxIco0">⛅</span>
+        <div class="wx-temp" id="wxTemp0">26°</div>
+        <div class="wx-meta"><div class="city">Mexico City</div><div class="cond" id="wxDesc0"><b>Partly cloudy</b> · feels 27°</div></div>
+      </div>
+      <div class="wx-city">
+        <span class="ico" id="wxIco1">🌤️</span>
+        <div class="wx-temp" id="wxTemp1">31°</div>
+        <div class="wx-meta"><div class="city">Cancún</div><div class="cond" id="wxDesc1"><b>Mostly sunny</b> · feels 35°</div></div>
+      </div>
+    </div>
+
+    <div class="card stock delay-4">
+      <div class="eyebrow" style="margin-bottom:8px">Markets</div>
+      <div class="stk-row">
+        <div class="stock-head"><div class="stk-name">Volaris <span class="stock-ex">VLRS</span></div></div>
+        <div class="stock-price" id="stkPrice0">$4.58</div>
+        <div class="stock-chg up" id="stkChg0"><span class="arrow">▲</span> +0.12 (2.57%) today</div>
+      </div>
+      <div class="stk-row">
+        <div class="stock-head"><div class="stk-name">JPMorgan Premium <span class="stock-ex">JEPI</span></div></div>
+        <div class="stock-price" id="stkPrice1">$54.20</div>
+        <div class="stock-chg up" id="stkChg1"><span class="arrow">▲</span> +0.05 (0.10%) today</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="card school school-hero delay-2">
+      <div class="head-row"><h2 id="schoolEyebrow">School run · this morning</h2></div>
+      <div class="run-list" id="runList"></div>
+      <div class="run-msg" id="runMsg"></div>
+    </div>
+
+    <div class="card chores delay-4">
+      <div class="head-row">
+        <h2>Chore chart</h2>
+        <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
+      </div>
+      <div class="kid-grid" id="kids"></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card glance delay-3">
+      <div class="head-row"><h2>Today at a glance</h2></div>
+      <div class="glance-grid">
+        <div class="gtile" style="--c:var(--max)"><span class="gi">🌅</span><div class="gb"><div class="gk">Daylight · CDMX</div><div class="gv" id="tkSun">6:00 <small>→</small> 20:00</div></div></div>
+        <div class="gtile" style="--c:var(--maya)"><span class="gi">🌫️</span><div class="gb"><div class="gk">Air quality · CDMX</div><div class="gv" id="tkAqi"><span class="aqi-dot" style="background:#7ddf8e"></span>—</div></div></div>
+        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro · for the trip</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
+        <div class="gtile" style="--c:var(--matteo)"><span class="gi">💵</span><div class="gb"><div class="gk">US Dollar</div><div class="gv" id="tkUsd">— <small>MXN</small></div></div></div>
+        <div class="gtile span2" style="--c:var(--dad)"><span class="gi" id="tkMoonIco">🌖</span><div class="gb"><div class="gk">Moon phase</div><div class="gv" id="tkMoon">—</div></div></div>
+      </div>
+    </div>
+
+    <div class="card trip delay-5">
+      <div class="eyebrow">Next trip ✈️</div>
+      <div id="tripBody"><div class="trip-msg" id="tripMsg">Loading trip…</div></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — edit this to go live. Everything else updates itself.
+   ============================================================ */
+const CONFIG = {
+  // Weather: Open-Meteo. No API key needed. Add/remove cities freely.
+  weather: [
+    { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
+    { name:'Cancún',      lat:21.1619, lon:-86.8515, tz:'America/Cancun'      },
+  ],
+
+  // Countdown
+  countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
+
+  // TripIt: a static page can't read TripIt directly (CORS). Host your TripIt
+  // .ics feed next to this file (or via a relay) and put its path/URL here.
+  // Until then, the tile shows the 'fallback' trip below so it's never empty.
+  tripitIcs: 'tripit.ics',
+  tripFallback: {
+    name:'Europe May 2026', dest:'Toulouse, France',
+    start:'2026-05-24', end:'2026-06-02',
+    leg:{ when:'Sun, May 24 · 23:55', text:'IB312 — MEX to MAD' }
+  },
+
+  // Stocks: Add a free Finnhub key (finnhub.io) to go live.
+  finnhub: 'd89hdl1r01qspkc702c0d89hdl1r01qspkc702cg', 
+  stocks: [
+    { name:'Volaris', symbol:'VLRS' },
+    { name:'JEPI', symbol:'JEPI' }
+  ],
+
+};
+
+/* ---------- live clock + date ---------- */
+function tick(){
+  const n=new Date();
+  const h=String(n.getHours()).padStart(2,'0');
+  const m=String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('time').firstChild.textContent=h+':'+m;
+  document.getElementById('sec').textContent=String(n.getSeconds()).padStart(2,'0');
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('date').innerHTML=days[n.getDay()]+', <span>'+mon[n.getMonth()]+' '+n.getDate()+'</span>';
+  const hr=n.getHours();
+  const g=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
+}
+
+/* ---------- countdown ---------- */
+function countdown(){
+  const target=new Date(CONFIG.countdown.date+'T00:00:00');
+  const d=Math.max(0,Math.ceil((target-new Date())/86400000));
+  document.getElementById('cdNum').textContent=d;
+}
+
+/* ---------- chore chart (persists daily) ---------- */
+const kidsData=[
+  {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:['Make the bed','Feed the dog','Homework done']},
+  {name:'Maya',age:'7',c:'var(--maya)',init:'My',tasks:['Tidy your room','Set the table','Read 20 minutes']},
+  {name:'Matteo',age:'6',c:'var(--matteo)',init:'Mt',tasks:['Put toys away','Brush teeth','Water the plant']},
+];
+const todayKey=new Date().toISOString().slice(0,10);
+let state={};        // {choreId:true}
+let memOnly=false;
+
+async function loadState(){
+  try{
+    const r=await window.storage.get('chores');
+    const parsed=JSON.parse(r.value);
+    state=(parsed.date===todayKey)?parsed.done:{};
+    if(parsed.date!==todayKey) saveState();
+  }catch(e){ state={}; memOnly=(typeof window.storage==='undefined'); }
+  renderKids();
+}
+async function saveState(){
+  try{ await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); }
+  catch(e){ memOnly=true; }
+}
+function renderKids(){
+  const wrap=document.getElementById('kids');wrap.innerHTML='';
+  kidsData.forEach((k,ki)=>{
+    const div=document.createElement('div');
+    div.className='kid';div.style.setProperty('--c',k.c);
+    let tasksHTML='';
+    k.tasks.forEach((t,ti)=>{
+      const id=ki+'-'+ti;const done=state[id]?'done':'';
+      tasksHTML+=`<div class="task ${done}" data-id="${id}">
+        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+        <span class="label">${t}</span></div>`;
+    });
+    div.innerHTML=`<div class="kid-head"><div class="avatar">${k.init}</div>
+      <div class="kid-name">${k.name}<small>age ${k.age}</small></div></div>
+      <div class="tasks">${tasksHTML}</div>
+      <div class="stars"></div><div class="done-badge">★ All done!</div>`;
+    wrap.appendChild(div);
+    updateKid(div,ki);
+  });
+  wrap.querySelectorAll('.task').forEach(t=>t.addEventListener('click',()=>{
+    const id=t.dataset.id;state[id]=!state[id];
+    if(!state[id]) delete state[id];
+    t.classList.toggle('done');
+    updateKid(t.closest('.kid'),parseInt(id));
+    saveState();
+  }));
+}
+function updateKid(div,ki){
+  const total=kidsData[ki].tasks.length;
+  let done=0;for(let ti=0;ti<total;ti++) if(state[ki+'-'+ti]) done++;
+  div.querySelector('.stars').textContent='★'.repeat(done)+'☆'.repeat(total-done);
+  div.classList.toggle('complete',done===total);
+}
+
+/* ---------- school run countdown (weekday mornings) ---------- */
+const departures=[
+  {nm:'Matteo',     avatars:[['Mt','var(--matteo)']],                  c:'var(--matteo)', h:7, m:19},
+  {nm:'Max & Maya', avatars:[['Mx','var(--max)'],['My','var(--maya)']], c:'var(--max)',    h:7, m:25},
+];
+const runList=document.getElementById('runList');
+const runMsg=document.getElementById('runMsg');
+const schoolEyebrow=document.getElementById('schoolEyebrow');
+departures.forEach((d,i)=>{
+  const row=document.createElement('div');
+  row.className='run';row.style.setProperty('--c',d.c);
+  const avs=d.avatars.map((a,j)=>`<span class="av2" style="background:${a[1]};${j>0?'margin-left:-9px':''}">${a[0]}</span>`).join('');
+  row.innerHTML=`<div class="run-av">${avs}</div>
+    <div class="run-info"><div class="nm">${d.nm}</div><div class="lb">leave by ${d.h}:${String(d.m).padStart(2,'0')}</div></div>
+    <div class="run-cd">--:--<small>to go</small></div>`;
+  runList.appendChild(row);
+});
+function fmtRun(s){
+  if(s>=3600){const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h+':'+String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+function schoolTick(){
+  const now=new Date();const day=now.getDay();
+  const weekend=(day===0||day===6);
+  const rows=runList.querySelectorAll('.run');
+  const last=departures.reduce((a,b)=>(b.h*60+b.m)>(a.h*60+a.m)?b:a);
+  const cutoff=new Date(now);cutoff.setHours(last.h,last.m+30,0,0);
+  const morning=!weekend && now<cutoff;
+  if(morning){
+    runList.style.display='';runMsg.style.display='none';
+    schoolEyebrow.textContent='School run · this morning';
+    departures.forEach((d,i)=>{
+      const t=new Date(now);t.setHours(d.h,d.m,0,0);
+      const diff=Math.round((t-now)/1000);
+      const cd=rows[i].querySelector('.run-cd');
+      if(diff>0){
+        rows[i].classList.remove('gone');
+        rows[i].classList.toggle('urgent',diff<=300);
+        cd.innerHTML=fmtRun(diff)+'<small>to go</small>';
+      }else{
+        rows[i].classList.add('gone');rows[i].classList.remove('urgent');
+        cd.innerHTML='Go! 🎒<small>'+fmtRun(-diff)+' over</small>';
+      }
+    });
+  }else{
+    runList.style.display='none';runMsg.style.display='';
+    schoolEyebrow.textContent='School run';
+    if(weekend){
+      runMsg.textContent='No school today — enjoy the weekend 🌞';
+    }else if(day===5){
+      runMsg.innerHTML='All out the door for the week 🎒<br><span style="color:var(--faint);font-size:.85em">Enjoy the weekend!</span>';
+    }else{
+      runMsg.innerHTML='All out the door 🎒<br><span style="color:var(--faint);font-size:.85em">Tomorrow — Matteo 7:19 · Max &amp; Maya 7:25</span>';
+    }
+  }
+}
+schoolTick();setInterval(schoolTick,1000);
+
+/* ---------- live weather (Open-Meteo, no key) ---------- */
+function wmo(c){
+  const m={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],
+    45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌦️','Drizzle'],
+    56:['🌧️','Freezing drizzle'],57:['🌧️','Freezing drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],
+    65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['❄️','Light snow'],
+    73:['❄️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow grains'],80:['🌦️','Showers'],81:['🌦️','Showers'],
+    82:['🌧️','Heavy showers'],85:['🌨️','Snow showers'],86:['🌨️','Snow showers'],
+    95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm'],99:['⛈️','Thunderstorm']};
+  const x=m[c]||['🌡️','—'];return{e:x[0],t:x[1]};
+}
+async function loadWeather(){
+  const cities=CONFIG.weather;if(!cities||!cities.length)return;
+  for(let i=0;i<cities.length;i++){
+    const w=cities[i];
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${w.lat}&longitude=${w.lon}`
+      +`&timezone=${encodeURIComponent(w.tz)}&current=temperature_2m,apparent_temperature,weather_code`;
+    try{
+      const r=await fetch(url);if(!r.ok)throw 0;const d=await r.json();
+      const cur=wmo(d.current.weather_code);
+      const ico=document.getElementById('wxIco'+i),tmp=document.getElementById('wxTemp'+i),des=document.getElementById('wxDesc'+i);
+      if(ico) ico.textContent=cur.e;
+      if(tmp) tmp.textContent=Math.round(d.current.temperature_2m)+'°';
+      if(des) des.innerHTML=`<b>${cur.t}</b> · feels ${Math.round(d.current.apparent_temperature)}°`;
+    }catch(e){/* offline / sandboxed: keep the sample weather */}
+  }
+}
+
+/* ---------- live multi-stock quote (Finnhub, optional key) ---------- */
+async function loadStock(){
+  const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
+  for(let i=0;i<list.length;i++){
+    const s=list[i];
+    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
+    if(!pEl || !cEl) continue;
+    try{
+      const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
+      if(!r.ok)throw 0;const d=await r.json();
+      if(typeof d.c!=='number'||!d.c)throw 0;
+      const up=(d.d||0)>=0;
+      pEl.textContent='$'+d.c.toFixed(2);
+      cEl.className='stock-chg '+(up?'up':'down');
+      cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
+    }catch(e){/* keep sample */}
+  }
+}
+
+/* ---------- ticker: sunrise/sunset + air quality (Open-Meteo, no key) ---------- */
+async function loadSunAqi(){
+  const c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
+  // sunrise / sunset
+  try{
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}`
+      +`&timezone=${encodeURIComponent(c.tz)}&daily=sunrise,sunset&forecast_days=1`;
+    const r=await fetch(u);if(r.ok){const d=await r.json();
+      const f=t=>{const x=new Date(t);return x.getHours()+':'+String(x.getMinutes()).padStart(2,'0');};
+      const el=document.getElementById('tkSun');
+      if(el) el.innerHTML=`${f(d.daily.sunrise[0])} <small>→</small> ${f(d.daily.sunset[0])}`;
+    }
+  }catch(e){}
+  // US AQI
+  try{
+    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}`
+      +`&timezone=${encodeURIComponent(c.tz)}&current=us_aqi`;
+    const r=await fetch(u);if(r.ok){const d=await r.json();
+      const a=Math.round(d.current.us_aqi);
+      let label,color;
+      if(a<=50){label='Good';color='#7ddf8e';}
+      else if(a<=100){label='Moderate';color='#ffd166';}
+      else if(a<=150){label='Unhealthy (sensitive)';color='#ef8354';}
+      else if(a<=200){label='Unhealthy';color='#ff7a7a';}
+      else if(a<=300){label='Very unhealthy';color='#d6a3ee';}
+      else {label='Hazardous';color='#bc4749';}
+      const el=document.getElementById('tkAqi');
+      if(el) el.innerHTML=`<span class="aqi-dot" style="background:${color}"></span><b>${a}</b> <small>${label}</small>`;
+    }
+  }catch(e){}
+}
+
+/* ---------- ticker: exchange rates (Frankfurter / ECB, no key) ---------- */
+async function loadFx(){
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=EUR&to=MXN,USD');
+    if(!r.ok)throw 0;const d=await r.json();
+    const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; // MXN per EUR, MXN per USD
+    const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
+    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
+    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
+  }catch(e){}
+}
+
+/* ---------- ticker: moon phase (computed locally, no network) ---------- */
+function moonPhase(){
+  const now=new Date();
+  // days since a known new moon (2000-01-06 18:14 UTC), synodic month 29.53059 days
+  const synodic=29.53058867;
+  const ref=Date.UTC(2000,0,6,18,14)/86400000;
+  const days=(now.getTime()/86400000)-ref;
+  let age=days%synodic; if(age<0) age+=synodic;
+  const phases=[
+    [1.85,'🌑','New moon'],[5.54,'🌒','Waxing crescent'],[9.23,'🌓','First quarter'],
+    [12.91,'🌔','Waxing gibbous'],[16.61,'🌕','Full moon'],[20.30,'🌖','Waning gibbous'],
+    [23.99,'🌗','Last quarter'],[27.68,'🌘','Waning crescent'],[29.54,'🌑','New moon']];
+  const p=phases.find(x=>age<x[0])||phases[phases.length-1];
+  const ico=document.getElementById('tkMoonIco'),txt=document.getElementById('tkMoon');
+  if(ico) ico.textContent=p[1];
+  if(txt) txt.textContent=p[2];
+}
+
+/* ---------- next trip (parse a TripIt .ics feed) ---------- */
+function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
+function icsEvents(raw){
+  const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
+  for(const ln of lines){
+    if(ln==='BEGIN:VEVENT'){cur={};continue;}
+    if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
+    if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
+    let k=ln.slice(0,i),v=ln.slice(i+1);const s=k.indexOf(';');
+    const params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
+    v=v.replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+    cur[k]={val:v,params};
+  }
+  return out;
+}
+function icsDate(f){
+  if(!f)return null;const v=f.val,p=f.params||'';
+  if(p.includes('DATE')&&!v.includes('T')) return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8)));
+  const m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);
+  if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]));
+  return new Date(v);
+}
+function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function renderTrip(t){
+  const body=document.getElementById('tripBody');if(!body)return;
+  const now=new Date();
+  const start=new Date(t.start+'T00:00:00'), end=new Date(t.end+'T00:00:00');
+  const days=Math.ceil((start-now)/86400000);
+  let cd = days>1?`in ${days} days` : days===1?'tomorrow' : (now<=end?'now':'');
+  const cdHtml = cd?`<div class="trip-cd">${cd}</div>`:'';
+  const leg = t.leg ? `<div class="trip-leg"><span class="pl">🛫</span><div class="pb">
+      <div class="pk">${now<=end&&days<=0?'In progress':'First flight'}</div>
+      <div class="pv">${t.leg.text}<small> · ${t.leg.when}</small></div></div></div>` : '';
+  body.innerHTML=`<div class="trip-head"><div class="trip-name">${t.name}</div>${cdHtml}</div>
+    <div class="trip-dest">📍 ${t.dest}</div>
+    <div class="trip-dates">${fmtTripDate(start)} – ${fmtTripDate(end)}, ${end.getFullYear()}</div>${leg}`;
+}
+async function loadTrip(){
+  const fb=CONFIG.tripFallback;
+  try{
+    const r=await fetch(CONFIG.tripitIcs,{cache:'no-store'});if(!r.ok)throw 0;
+    const raw=await r.text();const evs=icsEvents(raw);
+    if(!evs.length)throw 0;
+    const trips=evs.filter(e=>e.DTSTART&&(e.DTSTART.params||'').includes('DATE'));
+    const flights=evs.filter(e=>e.SUMMARY&&/ to /i.test(e.SUMMARY.val)&&/[A-Z]{2,3}\d{2,4}/.test(e.SUMMARY.val));
+    const now=new Date();
+    const cand=trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)}))
+      .filter(x=>x.e>=now).sort((a,b)=>a.s-b.s)[0] || trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)})).sort((a,b)=>b.s-a.s)[0];
+    if(!cand)throw 0;
+    const fl=flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val,loc:f.LOCATION&&f.LOCATION.val}))
+      .filter(f=>f.s>=new Date(now.getTime()-3*3600000)).sort((a,b)=>a.s-b.s)[0]
+      || flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val})).sort((a,b)=>a.s-b.s)[0];
+    const leg=fl?{text:fl.sum,when:fl.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}:null;
+    renderTrip({name:cand.t.SUMMARY.val,
+      dest:(cand.t.LOCATION&&cand.t.LOCATION.val)||'',
+      start:cand.s.toISOString().slice(0,10), end:cand.e.toISOString().slice(0,10), leg});
+    return;
+  }catch(e){}
+  if(fb) renderTrip(fb); else {const m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
+}
+
+/* ---------- boot ---------- */
+tick();setInterval(tick,1000);
+countdown();setInterval(countdown,3600000);
+loadState();
+loadWeather();setInterval(loadWeather,1800000);   // refresh weather every 30 min
+loadStock();setInterval(loadStock,300000);        // refresh stocks every 5 min
+loadSunAqi();setInterval(loadSunAqi,1800000);     // sun + air quality every 30 min
+loadFx();setInterval(loadFx,3600000);             // exchange rates hourly
+moonPhase();setInterval(moonPhase,3600000);       // moon phase hourly
+loadTrip();setInterval(loadTrip,1800000);         // refresh trip every 30 min
+</script>
