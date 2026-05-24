@@ -27,14 +27,14 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
-    font-size:80%;                 /* PORTRAIT/low-res: shrink the whole UI to fit */
+    font-size:80%;                 
     font-family:var(--body);
     color:var(--ink);
     background:
       radial-gradient(1200px 700px at 12% -8%, rgba(255,160,90,.16), transparent 60%),
       radial-gradient(900px 600px at 105% 110%, rgba(63,208,201,.12), transparent 60%),
       var(--bg);
-    overflow:auto;
+    overflow:hidden; /* Keep body hidden so landscape window doesn't scroll natively */
     -webkit-font-smoothing:antialiased;
   }
   /* film grain */
@@ -43,17 +43,22 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   }
 
-  /* Native Portrait TV Layout */
+  /* CSS Rotated Portrait Layout */
   .board {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 100vh;
+    left: 100vw;
+    width: 100vh;         /* Width maps to the physical height of the TV */
+    height: 100vw;        /* Height maps to the physical width of the TV */
+    transform-origin: 0 0;
+    transform: rotate(90deg);
+    overflow-y: auto;     /* Allows internal scrolling if items are too tall */
+    overflow-x: hidden;
+    
     padding: clamp(20px, 3vw, 40px);
     display: grid;
     gap: clamp(16px, 2vw, 24px);
-    /* 2-column layout optimized for vertical screens */
+    /* 2-column layout optimized for vertical display */
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
