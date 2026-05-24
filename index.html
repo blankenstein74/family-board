@@ -1,4 +1,3 @@
-<!-- Family Command Center — a DAKboard-style wall display for a family of 3 kids -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Family Board</title>
@@ -35,7 +34,7 @@
       radial-gradient(1200px 700px at 12% -8%, rgba(255,160,90,.16), transparent 60%),
       radial-gradient(900px 600px at 105% 110%, rgba(63,208,201,.12), transparent 60%),
       var(--bg);
-    overflow:hidden;
+    overflow:auto;
     -webkit-font-smoothing:antialiased;
   }
   /* film grain */
@@ -44,30 +43,24 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   }
 
-  /* PORTRAIT: the landscape design is rotated 90° to fill an upright screen.
-     Default = 90° CLOCKWISE. If it's upside down for your mount, swap to the
-     COUNTER-CLOCKWISE block in the comment just below. */
-  .board{
-    position:absolute;top:0;left:100vw;
-    width:100vh;height:100vw;
-    transform-origin:0 0;transform:rotate(90deg);
-    padding:clamp(10px,1.4vw,18px);
-    display:grid;gap:clamp(9px,1vw,14px);
-    grid-template-columns:0.92fr 1.45fr 1fr;
-    grid-template-rows:auto 1fr;
+  /* Native Portrait TV Layout */
+  .board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    padding: clamp(20px, 3vw, 40px);
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    /* 2-column layout optimized for vertical screens */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      "head head head"
-      "left center right";
+      "head head"
+      "left right"
+      "center center";
   }
-  /* COUNTER-CLOCKWISE alternative — delete the rule above, uncomment this:
-  .board{
-    position:absolute;top:100vh;left:0;
-    width:100vh;height:100vw;
-    transform-origin:0 0;transform:rotate(-90deg);
-    padding:clamp(14px,2vw,30px);display:grid;gap:clamp(12px,1.4vw,22px);
-    grid-template-columns:0.92fr 1.45fr 1fr;grid-template-rows:auto 1fr;
-    grid-template-areas:"head head head" "left center right";
-  } */
 
   .card{
     background:var(--panel);
@@ -253,7 +246,6 @@
 
 <div class="board">
 
-  <!-- HEADER -->
   <header class="head">
     <div class="head-left">
       <div class="greet" id="greet">Good evening, <b>the Blankenstein family</b></div>
@@ -271,7 +263,6 @@
     </div>
   </header>
 
-  <!-- LEFT COLUMN -->
   <div class="left">
     <div class="card clock delay-1">
       <div class="time" id="time">19:42<span class="sec" id="sec">08</span></div>
@@ -299,7 +290,6 @@
     </div>
   </div>
 
-  <!-- CENTER COLUMN -->
   <div class="center">
     <div class="card school school-hero delay-2">
       <div class="head-row"><h2 id="schoolEyebrow">School run · this morning</h2></div>
@@ -316,7 +306,6 @@
     </div>
   </div>
 
-  <!-- RIGHT COLUMN -->
   <div class="right">
     <div class="card glance delay-3">
       <div class="head-row"><h2>Today at a glance</h2></div>
