@@ -28,6 +28,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
+    font-size:88%;                 /* PORTRAIT/low-res: shrink the whole UI to fit */
     font-family:var(--body);
     color:var(--ink);
     background:
@@ -43,15 +44,30 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   }
 
+  /* PORTRAIT: the landscape design is rotated 90° to fill an upright screen.
+     Default = 90° CLOCKWISE. If it's upside down for your mount, swap to the
+     COUNTER-CLOCKWISE block in the comment just below. */
   .board{
-    height:100vh;width:100vw;padding:clamp(14px,2vw,30px);
-    display:grid;gap:clamp(12px,1.4vw,22px);
+    position:absolute;top:0;left:100vw;
+    width:100vh;height:100vw;
+    transform-origin:0 0;transform:rotate(90deg);
+    padding:clamp(10px,1.4vw,18px);
+    display:grid;gap:clamp(9px,1vw,14px);
     grid-template-columns:0.92fr 1.45fr 1fr;
     grid-template-rows:auto 1fr;
     grid-template-areas:
       "head head head"
       "left center right";
   }
+  /* COUNTER-CLOCKWISE alternative — delete the rule above, uncomment this:
+  .board{
+    position:absolute;top:100vh;left:0;
+    width:100vh;height:100vw;
+    transform-origin:0 0;transform:rotate(-90deg);
+    padding:clamp(14px,2vw,30px);display:grid;gap:clamp(12px,1.4vw,22px);
+    grid-template-columns:0.92fr 1.45fr 1fr;grid-template-rows:auto 1fr;
+    grid-template-areas:"head head head" "left center right";
+  } */
 
   .card{
     background:var(--panel);
@@ -70,7 +86,19 @@
   .eyebrow{font-size:clamp(.62rem,.72vw,.78rem);letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:.5em}
 
   /* ---------- HEADER ---------- */
-  .head{grid-area:head;display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:0 6px;opacity:0;animation:rise .6s ease forwards}
+  .head{grid-area:head;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 6px;opacity:0;animation:rise .6s ease forwards}
+  .head-left{display:flex;flex-direction:column;gap:clamp(8px,1vh,14px);min-width:0}
+  .pill-row{display:flex;align-items:center;gap:clamp(8px,.9vw,16px);flex-wrap:wrap;color:var(--muted);font-weight:500;font-size:clamp(.8rem,1vw,1.05rem)}
+  /* prominent countdown */
+  .hero-cd{display:flex;align-items:center;gap:clamp(14px,1.6vw,22px);background:var(--panel);
+    border:1px solid var(--line);border-left:6px solid var(--mom);border-radius:18px;
+    padding:clamp(12px,1.4vw,20px) clamp(18px,2vw,30px);flex:none}
+  .hero-num{font-family:var(--display);font-weight:800;line-height:.78;color:var(--mom);
+    font-variant-numeric:tabular-nums;font-size:clamp(3.4rem,6.5vw,6rem)}
+  .hero-text{display:flex;flex-direction:column;line-height:1.05}
+  .hero-lab{font-size:clamp(.72rem,.9vw,1rem);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .hero-trip{font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,1.9vw,2.1rem);letter-spacing:-.01em;margin-top:2px}
+  .hero-text small{color:var(--muted);font-weight:500;font-size:clamp(.78rem,.95vw,1.02rem);margin-top:5px}
   .greet{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,1.9vw,2.1rem);font-weight:500;letter-spacing:-.01em}
   .greet b{font-style:normal;font-family:var(--display);font-weight:700;color:var(--dad)}
   .head-right{display:flex;align-items:center;gap:18px;color:var(--muted);font-weight:500;font-size:clamp(.8rem,1vw,1.05rem)}
@@ -78,7 +106,7 @@
   .dot{width:9px;height:9px;border-radius:50%}
 
   /* ---------- LEFT: clock / countdown / weather ---------- */
-  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr auto;gap:inherit}
+  .left{grid-area:left;display:grid;grid-template-rows:auto auto 1fr;gap:inherit}
   .clock{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:clamp(10px,2vh,26px)}
   .time{font-family:var(--display);font-weight:800;line-height:.86;letter-spacing:-.04em;font-size:clamp(4.2rem,9.5vw,9.5rem);font-variant-numeric:tabular-nums}
   .time .sec{color:var(--dad);font-size:.32em;vertical-align:super;margin-left:.12em;letter-spacing:0}
@@ -90,7 +118,7 @@
   .cd-text{font-weight:600;font-size:clamp(.95rem,1.2vw,1.25rem);line-height:1.15}
   .cd-text small{display:block;color:var(--muted);font-weight:500;font-size:.78em;margin-top:.25em}
 
-  .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.3vh,16px)}
+  .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(12px,1.6vh,20px)}
   .wx-city{display:flex;align-items:center;gap:13px}
   .wx-city+.wx-city{padding-top:clamp(9px,1.3vh,16px);border-top:1px solid var(--line)}
   .wx-city .ico{font-size:clamp(2rem,3.8vw,3.1rem);flex:none}
@@ -110,7 +138,7 @@
   .stock-chg .arrow{font-size:.9em}
 
   /* ---------- CENTER: agenda + chores ---------- */
-  .center{grid-area:center;display:grid;grid-template-rows:1fr;gap:inherit}
+  .center{grid-area:center;display:grid;grid-template-rows:1.15fr 1fr;gap:inherit}
   .agenda{display:flex;flex-direction:column;overflow:hidden}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7em}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,1.5vw,1.5rem);letter-spacing:-.01em}
@@ -150,8 +178,23 @@
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
   /* ---------- RIGHT: school run / dinner / list ---------- */
-  .right{grid-area:right;display:grid;grid-template-rows:1.3fr auto auto;gap:inherit}
+  .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit}
   .school{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.3vh,16px)}
+  /* ---------- next trip (TripIt) ---------- */
+  .trip{display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .trip::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--mom),var(--max))}
+  .trip-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:.5em}
+  .trip-name{font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,1.4vw,1.4rem);line-height:1.05}
+  .trip-cd{font-family:var(--display);font-weight:800;color:var(--mom);font-size:clamp(.9rem,1.1vw,1.15rem);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .trip-dest{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600;font-size:clamp(.85rem,1vw,1.05rem);margin-bottom:.2em}
+  .trip-dates{color:var(--faint);font-weight:500;font-size:clamp(.76rem,.9vw,.92rem)}
+  .trip-leg{display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:clamp(12px,1.6vh,18px);border-top:1px solid var(--line)}
+  .trip-leg .pl{font-size:clamp(1.5rem,2.2vw,1.9rem);flex:none}
+  .trip-leg .pb{min-width:0;line-height:1.15}
+  .trip-leg .pk{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .trip-leg .pv{font-family:var(--display);font-weight:700;font-size:clamp(.95rem,1.2vw,1.2rem);margin-top:3px}
+  .trip-leg .pv small{color:var(--muted);font-weight:500;font-size:.8em}
+  .trip-msg{color:var(--muted);font-weight:600;font-size:clamp(.9rem,1.1vw,1.1rem);padding:6px 0}
   .run-list{display:flex;flex-direction:column;gap:clamp(9px,1.3vh,16px)}
   .run{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;padding:clamp(10px,1.3vh,16px) 15px;border-radius:16px;background:var(--panel-2);border-left:4px solid var(--c);transition:.3s}
   .run.urgent{background:rgba(255,122,89,.12);animation:runpulse 1.3s ease-in-out infinite}
@@ -181,7 +224,21 @@
   .list li.got{color:var(--faint);text-decoration:line-through}
   .list li.got .b{background:var(--faint)}
 
-  @media (max-width:900px){
+  /* ---------- Today at a glance card ---------- */
+  .glance{display:flex;flex-direction:column}
+  .glance-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px,1vw,15px);flex:1}
+  .gtile{display:flex;align-items:center;gap:clamp(11px,1.2vw,16px);background:var(--panel-2);
+    border:1px solid var(--line);border-left:4px solid var(--c);border-radius:16px;
+    padding:clamp(12px,1.4vw,20px) clamp(14px,1.4vw,20px)}
+  .gtile.span2{grid-column:1 / -1}
+  .gtile .gi{font-size:clamp(2rem,3vw,2.8rem);line-height:1;flex:none}
+  .gtile .gb{min-width:0;line-height:1.1}
+  .gtile .gk{font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .gtile .gv{font-family:var(--display);font-weight:700;font-size:clamp(1.15rem,1.7vw,1.7rem);font-variant-numeric:tabular-nums;margin-top:5px;white-space:nowrap}
+  .gtile .gv b{font-weight:800}
+  .gtile .gv small{color:var(--muted);font-weight:500;font-size:.72em}
+  .aqi-dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  @media (max-width:0px){
     .board{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"head" "left" "center" "right";height:auto;min-height:100vh;overflow:auto}
     body{overflow:auto}
     .kid-grid{grid-template-columns:1fr}
@@ -192,13 +249,19 @@
 
   <!-- HEADER -->
   <header class="head">
-    <div class="greet" id="greet">Good evening, <b>the Blankenstein family</b></div>
-    <div class="head-right">
-      <span class="pill"><span class="dot" style="background:var(--dad)"></span>Dad</span>
-      <span class="pill"><span class="dot" style="background:var(--mom)"></span>Mom</span>
-      <span class="pill"><span class="dot" style="background:var(--max)"></span>Max</span>
-      <span class="pill"><span class="dot" style="background:var(--maya)"></span>Maya</span>
-      <span class="pill"><span class="dot" style="background:var(--matteo)"></span>Matteo</span>
+    <div class="head-left">
+      <div class="greet" id="greet">Good evening, <b>the Blankenstein family</b></div>
+      <div class="pill-row">
+        <span class="pill"><span class="dot" style="background:var(--dad)"></span>Dad</span>
+        <span class="pill"><span class="dot" style="background:var(--mom)"></span>Mom</span>
+        <span class="pill"><span class="dot" style="background:var(--max)"></span>Max</span>
+        <span class="pill"><span class="dot" style="background:var(--maya)"></span>Maya</span>
+        <span class="pill"><span class="dot" style="background:var(--matteo)"></span>Matteo</span>
+      </div>
+    </div>
+    <div class="hero-cd">
+      <div class="hero-num" id="cdNum">57</div>
+      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Europe trip ✈️</span><small id="cdSub">July 20, 2026</small></div>
     </div>
   </header>
 
@@ -207,14 +270,6 @@
     <div class="card clock delay-1">
       <div class="time" id="time">19:42<span class="sec" id="sec">08</span></div>
       <div class="date" id="date">Friday, <span>May 22</span></div>
-    </div>
-
-    <div class="card delay-2">
-      <div class="eyebrow">Counting down to</div>
-      <div class="countdown">
-        <div class="cd-num" id="cdNum">28</div>
-        <div class="cd-text">Europe trip ✈️<small id="cdSub">days to go · July 20</small></div>
-      </div>
     </div>
 
     <div class="card weather delay-3">
@@ -238,9 +293,20 @@
     </div>
   </div>
 
-  <!-- CENTER COLUMN (calendar lives in DAKboard's native block) -->
+  <!-- CENTER COLUMN -->
   <div class="center">
-    <div class="card chores delay-2">
+    <div class="card glance delay-2">
+      <div class="head-row"><h2>Today at a glance</h2></div>
+      <div class="glance-grid">
+        <div class="gtile" style="--c:var(--max)"><span class="gi">🌅</span><div class="gb"><div class="gk">Daylight · CDMX</div><div class="gv" id="tkSun">6:00 <small>→</small> 20:00</div></div></div>
+        <div class="gtile" style="--c:var(--maya)"><span class="gi">🌫️</span><div class="gb"><div class="gk">Air quality · CDMX</div><div class="gv" id="tkAqi"><span class="aqi-dot" style="background:#7ddf8e"></span>—</div></div></div>
+        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro · for the trip</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
+        <div class="gtile" style="--c:var(--matteo)"><span class="gi">💵</span><div class="gb"><div class="gk">US Dollar</div><div class="gv" id="tkUsd">— <small>MXN</small></div></div></div>
+        <div class="gtile span2" style="--c:var(--dad)"><span class="gi" id="tkMoonIco">🌖</span><div class="gb"><div class="gk">Moon phase</div><div class="gv" id="tkMoon">—</div></div></div>
+      </div>
+    </div>
+
+    <div class="card chores delay-4">
       <div class="head-row">
         <h2>Chore chart</h2>
         <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
@@ -257,26 +323,13 @@
       <div class="run-msg" id="runMsg"></div>
     </div>
 
-    <div class="card dinner delay-5">
-      <div class="eyebrow">Dinner tonight</div>
-      <div class="meal">
-        <span class="emoji">🍕</span>
-        <div class="what">Pizza & movie night<small>Friday tradition · 7:30</small></div>
-      </div>
-      <div class="week">
-        <div><div class="wd">Sat</div><div class="we">🌮</div></div>
-        <div><div class="wd">Sun</div><div class="we">🍗</div></div>
-        <div><div class="wd">Mon</div><div class="we">🍝</div></div>
-        <div><div class="wd">Tue</div><div class="we">🐟</div></div>
-        <div><div class="wd">Wed</div><div class="we">🥗</div></div>
-      </div>
+    <div class="card trip delay-5">
+      <div class="eyebrow">Next trip ✈️</div>
+      <div id="tripBody"><div class="trip-msg" id="tripMsg">Loading trip…</div></div>
     </div>
 
-    <div class="card list delay-6">
-      <div class="eyebrow">Shopping list</div>
-      <ul id="shop"></ul>
-    </div>
   </div>
+
 </div>
 
 <script>
@@ -293,9 +346,19 @@ const CONFIG = {
   // Countdown
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
 
+  // TripIt: a static page can't read TripIt directly (CORS). Host your TripIt
+  // .ics feed next to this file (or via a relay) and put its path/URL here.
+  // Until then, the tile shows the 'fallback' trip below so it's never empty.
+  tripitIcs: 'tripit.ics',
+  tripFallback: {
+    name:'Europe May 2026', dest:'Toulouse, France',
+    start:'2026-05-24', end:'2026-06-02',
+    leg:{ when:'Sun, May 24 · 23:55', text:'IB312 — MEX to MAD' }
+  },
+
   // Stock: Volaris (NYSE: VLRS). Add a free Finnhub key (finnhub.io) to go live.
-  finnhub: 'd89hdl1r01qspkc702c0d89hdl1r01qspkc702cg', stock: { name:'Volaris', symbol:'VLRS', exchange:'NYSE', currency:'USD' },
-  // Note: the calendar/agenda lives in DAKboard's native Calendar block, not here.
+  finnhub: '', stock: { name:'Volaris', symbol:'VLRS', exchange:'NYSE', currency:'USD' },
+
 };
 
 /* ---------- live clock + date ---------- */
@@ -376,12 +439,6 @@ function updateKid(div,ki){
   div.querySelector('.stars').textContent='★'.repeat(done)+'☆'.repeat(total-done);
   div.classList.toggle('complete',done===total);
 }
-
-/* ---------- shopping list ---------- */
-const shop=['Milk & eggs','Bananas','Tortillas','Max — poster board','Dog food','Coffee'];
-const shopWrap=document.getElementById('shop');
-shop.forEach(s=>{const li=document.createElement('li');li.innerHTML=`<span class="b"></span>${s}`;
-  li.addEventListener('click',()=>li.classList.toggle('got'));shopWrap.appendChild(li);});
 
 /* ---------- school run countdown (weekday mornings) ---------- */
 const departures=[
@@ -484,10 +541,139 @@ async function loadStock(){
   }catch(e){/* keep sample */}
 }
 
+/* ---------- ticker: sunrise/sunset + air quality (Open-Meteo, no key) ---------- */
+async function loadSunAqi(){
+  const c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
+  // sunrise / sunset
+  try{
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}`
+      +`&timezone=${encodeURIComponent(c.tz)}&daily=sunrise,sunset&forecast_days=1`;
+    const r=await fetch(u);if(r.ok){const d=await r.json();
+      const f=t=>{const x=new Date(t);return x.getHours()+':'+String(x.getMinutes()).padStart(2,'0');};
+      const el=document.getElementById('tkSun');
+      if(el) el.innerHTML=`${f(d.daily.sunrise[0])} <small>→</small> ${f(d.daily.sunset[0])}`;
+    }
+  }catch(e){}
+  // US AQI
+  try{
+    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}`
+      +`&timezone=${encodeURIComponent(c.tz)}&current=us_aqi`;
+    const r=await fetch(u);if(r.ok){const d=await r.json();
+      const a=Math.round(d.current.us_aqi);
+      let label,color;
+      if(a<=50){label='Good';color='#7ddf8e';}
+      else if(a<=100){label='Moderate';color='#ffd166';}
+      else if(a<=150){label='Unhealthy (sensitive)';color='#ef8354';}
+      else if(a<=200){label='Unhealthy';color='#ff7a7a';}
+      else if(a<=300){label='Very unhealthy';color='#d6a3ee';}
+      else {label='Hazardous';color='#bc4749';}
+      const el=document.getElementById('tkAqi');
+      if(el) el.innerHTML=`<span class="aqi-dot" style="background:${color}"></span><b>${a}</b> <small>${label}</small>`;
+    }
+  }catch(e){}
+}
+
+/* ---------- ticker: exchange rates (Frankfurter / ECB, no key) ---------- */
+async function loadFx(){
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=EUR&to=MXN,USD');
+    if(!r.ok)throw 0;const d=await r.json();
+    const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; // MXN per EUR, MXN per USD
+    const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
+    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
+    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
+  }catch(e){}
+}
+
+/* ---------- ticker: moon phase (computed locally, no network) ---------- */
+function moonPhase(){
+  const now=new Date();
+  // days since a known new moon (2000-01-06 18:14 UTC), synodic month 29.53059 days
+  const synodic=29.53058867;
+  const ref=Date.UTC(2000,0,6,18,14)/86400000;
+  const days=(now.getTime()/86400000)-ref;
+  let age=days%synodic; if(age<0) age+=synodic;
+  const phases=[
+    [1.85,'🌑','New moon'],[5.54,'🌒','Waxing crescent'],[9.23,'🌓','First quarter'],
+    [12.91,'🌔','Waxing gibbous'],[16.61,'🌕','Full moon'],[20.30,'🌖','Waning gibbous'],
+    [23.99,'🌗','Last quarter'],[27.68,'🌘','Waning crescent'],[29.54,'🌑','New moon']];
+  const p=phases.find(x=>age<x[0])||phases[phases.length-1];
+  const ico=document.getElementById('tkMoonIco'),txt=document.getElementById('tkMoon');
+  if(ico) ico.textContent=p[1];
+  if(txt) txt.textContent=p[2];
+}
+
+/* ---------- next trip (parse a TripIt .ics feed) ---------- */
+function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
+function icsEvents(raw){
+  const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
+  for(const ln of lines){
+    if(ln==='BEGIN:VEVENT'){cur={};continue;}
+    if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
+    if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
+    let k=ln.slice(0,i),v=ln.slice(i+1);const s=k.indexOf(';');
+    const params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
+    v=v.replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+    cur[k]={val:v,params};
+  }
+  return out;
+}
+function icsDate(f){
+  if(!f)return null;const v=f.val,p=f.params||'';
+  if(p.includes('DATE')&&!v.includes('T')) return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8)));
+  const m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);
+  if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]));
+  return new Date(v);
+}
+function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function renderTrip(t){
+  const body=document.getElementById('tripBody');if(!body)return;
+  const now=new Date();
+  const start=new Date(t.start+'T00:00:00'), end=new Date(t.end+'T00:00:00');
+  const days=Math.ceil((start-now)/86400000);
+  let cd = days>1?`in ${days} days` : days===1?'tomorrow' : (now<=end?'now':'');
+  const cdHtml = cd?`<div class="trip-cd">${cd}</div>`:'';
+  const leg = t.leg ? `<div class="trip-leg"><span class="pl">🛫</span><div class="pb">
+      <div class="pk">${now<=end&&days<=0?'In progress':'First flight'}</div>
+      <div class="pv">${t.leg.text}<small> · ${t.leg.when}</small></div></div></div>` : '';
+  body.innerHTML=`<div class="trip-head"><div class="trip-name">${t.name}</div>${cdHtml}</div>
+    <div class="trip-dest">📍 ${t.dest}</div>
+    <div class="trip-dates">${fmtTripDate(start)} – ${fmtTripDate(end)}, ${end.getFullYear()}</div>${leg}`;
+}
+async function loadTrip(){
+  const fb=CONFIG.tripFallback;
+  // try the live feed; fall back to the configured trip on any failure
+  try{
+    const r=await fetch(CONFIG.tripitIcs,{cache:'no-store'});if(!r.ok)throw 0;
+    const raw=await r.text();const evs=icsEvents(raw);
+    if(!evs.length)throw 0;
+    const trips=evs.filter(e=>e.DTSTART&&(e.DTSTART.params||'').includes('DATE'));
+    const flights=evs.filter(e=>e.SUMMARY&&/ to /i.test(e.SUMMARY.val)&&/[A-Z]{2,3}\d{2,4}/.test(e.SUMMARY.val));
+    const now=new Date();
+    // pick the trip that's upcoming or currently active, soonest first
+    const cand=trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)}))
+      .filter(x=>x.e>=now).sort((a,b)=>a.s-b.s)[0] || trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)})).sort((a,b)=>b.s-a.s)[0];
+    if(!cand)throw 0;
+    const fl=flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val,loc:f.LOCATION&&f.LOCATION.val}))
+      .filter(f=>f.s>=new Date(now.getTime()-3*3600000)).sort((a,b)=>a.s-b.s)[0]
+      || flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val})).sort((a,b)=>a.s-b.s)[0];
+    const leg=fl?{text:fl.sum,when:fl.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}:null;
+    renderTrip({name:cand.t.SUMMARY.val,
+      dest:(cand.t.LOCATION&&cand.t.LOCATION.val)||'',
+      start:cand.s.toISOString().slice(0,10), end:cand.e.toISOString().slice(0,10), leg});
+    return;
+  }catch(e){}
+  if(fb) renderTrip(fb); else {const m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
+}
+
 /* ---------- boot ---------- */
 tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
 loadState();
 loadWeather();setInterval(loadWeather,1800000);   // refresh weather every 30 min
 loadStock();setInterval(loadStock,300000);        // refresh VLRS every 5 min
+loadSunAqi();setInterval(loadSunAqi,1800000);     // sun + air quality every 30 min
+loadFx();setInterval(loadFx,3600000);             // exchange rates hourly
+moonPhase();setInterval(moonPhase,3600000);       // moon phase hourly
+loadTrip();setInterval(loadTrip,1800000);         // refresh trip every 30 min
 </script>
