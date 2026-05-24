@@ -28,7 +28,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
-    font-size:88%;                 /* PORTRAIT/low-res: shrink the whole UI to fit */
+    font-size:74%;                 /* PORTRAIT/low-res: shrink the whole UI to fit */
     font-family:var(--body);
     color:var(--ink);
     background:
@@ -138,7 +138,7 @@
   .stock-chg .arrow{font-size:.9em}
 
   /* ---------- CENTER: agenda + chores ---------- */
-  .center{grid-area:center;display:grid;grid-template-rows:1.15fr 1fr;gap:inherit}
+  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:inherit}
   .agenda{display:flex;flex-direction:column;overflow:hidden}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7em}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,1.5vw,1.5rem);letter-spacing:-.01em}
@@ -180,6 +180,12 @@
   /* ---------- RIGHT: school run / dinner / list ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit}
   .school{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.3vh,16px)}
+  /* ---------- school run as a prominent hero ---------- */
+  .school-hero{position:relative;overflow:hidden}
+  .school-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--matteo),var(--max),var(--maya))}
+  .school-hero .run{padding:clamp(12px,1.6vh,20px) clamp(15px,1.5vw,22px)}
+  .school-hero .run-cd{font-size:clamp(1.9rem,3vw,2.9rem);min-width:130px}
+  .school-hero .run-info .nm{font-size:clamp(1.15rem,1.5vw,1.5rem)}
   /* ---------- next trip (TripIt) ---------- */
   .trip{display:flex;flex-direction:column;position:relative;overflow:hidden}
   .trip::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--mom),var(--max))}
@@ -295,15 +301,10 @@
 
   <!-- CENTER COLUMN -->
   <div class="center">
-    <div class="card glance delay-2">
-      <div class="head-row"><h2>Today at a glance</h2></div>
-      <div class="glance-grid">
-        <div class="gtile" style="--c:var(--max)"><span class="gi">🌅</span><div class="gb"><div class="gk">Daylight · CDMX</div><div class="gv" id="tkSun">6:00 <small>→</small> 20:00</div></div></div>
-        <div class="gtile" style="--c:var(--maya)"><span class="gi">🌫️</span><div class="gb"><div class="gk">Air quality · CDMX</div><div class="gv" id="tkAqi"><span class="aqi-dot" style="background:#7ddf8e"></span>—</div></div></div>
-        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro · for the trip</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
-        <div class="gtile" style="--c:var(--matteo)"><span class="gi">💵</span><div class="gb"><div class="gk">US Dollar</div><div class="gv" id="tkUsd">— <small>MXN</small></div></div></div>
-        <div class="gtile span2" style="--c:var(--dad)"><span class="gi" id="tkMoonIco">🌖</span><div class="gb"><div class="gk">Moon phase</div><div class="gv" id="tkMoon">—</div></div></div>
-      </div>
+    <div class="card school school-hero delay-2">
+      <div class="head-row"><h2 id="schoolEyebrow">School run · this morning</h2></div>
+      <div class="run-list" id="runList"></div>
+      <div class="run-msg" id="runMsg"></div>
     </div>
 
     <div class="card chores delay-4">
@@ -317,10 +318,15 @@
 
   <!-- RIGHT COLUMN -->
   <div class="right">
-    <div class="card school delay-3">
-      <div class="eyebrow" id="schoolEyebrow">School run · this morning</div>
-      <div class="run-list" id="runList"></div>
-      <div class="run-msg" id="runMsg"></div>
+    <div class="card glance delay-3">
+      <div class="head-row"><h2>Today at a glance</h2></div>
+      <div class="glance-grid">
+        <div class="gtile" style="--c:var(--max)"><span class="gi">🌅</span><div class="gb"><div class="gk">Daylight · CDMX</div><div class="gv" id="tkSun">6:00 <small>→</small> 20:00</div></div></div>
+        <div class="gtile" style="--c:var(--maya)"><span class="gi">🌫️</span><div class="gb"><div class="gk">Air quality · CDMX</div><div class="gv" id="tkAqi"><span class="aqi-dot" style="background:#7ddf8e"></span>—</div></div></div>
+        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro · for the trip</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
+        <div class="gtile" style="--c:var(--matteo)"><span class="gi">💵</span><div class="gb"><div class="gk">US Dollar</div><div class="gv" id="tkUsd">— <small>MXN</small></div></div></div>
+        <div class="gtile span2" style="--c:var(--dad)"><span class="gi" id="tkMoonIco">🌖</span><div class="gb"><div class="gk">Moon phase</div><div class="gv" id="tkMoon">—</div></div></div>
+      </div>
     </div>
 
     <div class="card trip delay-5">
@@ -357,7 +363,7 @@ const CONFIG = {
   },
 
   // Stock: Volaris (NYSE: VLRS). Add a free Finnhub key (finnhub.io) to go live.
-  finnhub: 'd89hdl1r01qspkc702c0d89hdl1r01qspkc702cg', stock: { name:'Volaris', symbol:'VLRS', exchange:'NYSE', currency:'USD' },
+  finnhub: '', stock: { name:'Volaris', symbol:'VLRS', exchange:'NYSE', currency:'USD' },
 
 };
 
