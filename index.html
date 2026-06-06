@@ -176,17 +176,19 @@
   .trip-cd{font-family:var(--display);font-weight:800;color:var(--mom);font-size:clamp(.7rem,.9vw,1rem);font-variant-numeric:tabular-nums;flex:none}
   .trip-dest{display:flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:clamp(.65rem,.8vw,.95rem);margin-bottom:.2em;word-wrap:break-word}
   .trip-dates{color:var(--faint);font-weight:500;font-size:clamp(.55rem,.7vw,.85rem)}
-  .trip-leg{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:clamp(8px,1vh,14px);border-top:1px solid var(--line)}
-  .trip-leg .pl{font-size:clamp(1.1rem,1.8vw,1.6rem);flex:none}
-  .trip-leg .pb{min-width:0;line-height:1.15}
-  .trip-leg .pk{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
-  .trip-leg .pv{font-family:var(--display);font-weight:700;font-size:clamp(.75rem,1vw,1.1rem);margin-top:2px;word-wrap:break-word}
-  .trip-leg .pv small{color:var(--muted);font-weight:500;font-size:.7em}
+  
+  /* Multi-leg list instead of just one */
+  .trip-legs{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:clamp(6px,1vh,10px);border-top:1px solid var(--line);overflow:hidden}
+  .leg-item{display:flex;align-items:center;gap:8px}
+  .leg-item .pl{font-size:clamp(.9rem,1.5vw,1.2rem);flex:none;text-align:center;width:1.5em}
+  .leg-item .pb{min-width:0;line-height:1.15}
+  .leg-item .pk{font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:1px}
+  .leg-item .pv{font-family:var(--display);font-weight:700;font-size:clamp(.7rem,1vw,1rem);word-wrap:break-word}
+  .leg-item .pv small{color:var(--muted);font-weight:500;font-size:.65em}
   .trip-msg{color:var(--muted);font-weight:600;font-size:clamp(.7rem,.9vw,1rem);padding:4px 0}
   
   /* ---------- Today at a glance card ---------- */
   .glance{display:flex;flex-direction:column;min-width:0}
-  /* FIX: minmax applied here as well */
   .glance-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(6px,.8vw,12px);flex:1}
   .gtile{display:flex;align-items:center;gap:clamp(6px,1vw,10px);background:var(--panel-2);
     border:1px solid var(--line);border-left:3px solid var(--c);border-radius:12px;
@@ -195,7 +197,6 @@
   .gtile .gi{font-size:clamp(1.2rem,2vw,2.2rem);line-height:1;flex:none}
   .gtile .gb{min-width:0;line-height:1.1}
   .gtile .gk{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
-  /* FIX: Allowed text wrapping if values are too long */
   .gtile .gv{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.4vw,1.5rem);font-variant-numeric:tabular-nums;margin-top:3px;word-wrap:break-word}
   .gtile .gv b{font-weight:800}
   .gtile .gv small{color:var(--muted);font-weight:500;font-size:.6em}
@@ -284,7 +285,7 @@
       <div class="glance-grid">
         <div class="gtile" style="--c:var(--max)"><span class="gi">🌅</span><div class="gb"><div class="gk">Daylight · CDMX</div><div class="gv" id="tkSun">6:00 <small>→</small> 20:00</div></div></div>
         <div class="gtile" style="--c:var(--maya)"><span class="gi">🌫️</span><div class="gb"><div class="gk">Air quality · CDMX</div><div class="gv" id="tkAqi"><span class="aqi-dot" style="background:#7ddf8e"></span>—</div></div></div>
-        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro · for the trip</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
+        <div class="gtile" style="--c:var(--mom)"><span class="gi">💶</span><div class="gb"><div class="gk">Euro</div><div class="gv" id="tkEur">— <small>MXN</small></div></div></div>
         <div class="gtile" style="--c:var(--matteo)"><span class="gi">💵</span><div class="gb"><div class="gk">US Dollar</div><div class="gv" id="tkUsd">— <small>MXN</small></div></div></div>
         <div class="gtile span2" style="--c:var(--dad)"><span class="gi" id="tkMoonIco">🌖</span><div class="gb"><div class="gk">Moon phase</div><div class="gv" id="tkMoon">—</div></div></div>
       </div>
@@ -316,11 +317,14 @@ const CONFIG = {
   // TripIt: a static page can't read TripIt directly (CORS). Host your TripIt
   // .ics feed next to this file (or via a relay) and put its path/URL here.
   // Until then, the tile shows the 'fallback' trip below so it's never empty.
-  tripitIcs: 'tripit.ics',
+  tripitIcs: 'tripit_Jun12_to_Jun15.ics',
   tripFallback: {
-    name:'Europe May 2026', dest:'Toulouse, France',
-    start:'2026-05-24', end:'2026-06-02',
-    leg:{ when:'Sun, May 24 · 23:55', text:'IB312 — MEX to MAD' }
+    name:'Houston JUN 26', dest:'Houston, TX',
+    start:'2026-06-12', end:'2026-06-16',
+    legs: [
+      { text:'Y4730 — MEX to IAH', when:'Fri, Jun 12 · 16:10', icon:'🛫' },
+      { text:'Y4731 — IAH to MEX', when:'Mon, Jun 15 · 20:55', icon:'🛫' }
+    ]
   },
 
   // Stocks: Add a free Finnhub key (finnhub.io) to go live.
@@ -548,10 +552,11 @@ async function loadSunAqi(){
   }catch(e){}
 }
 
-/* ---------- ticker: exchange rates (Frankfurter / ECB, no key) ---------- */
+/* ---------- ticker: exchange rates (ER-API, no key) ---------- */
 async function loadFx(){
   try{
-    const r=await fetch('https://api.frankfurter.app/latest?from=EUR&to=MXN,USD');
+    // Using reliable, keyless open.er-api since ECB dropped MXN references
+    const r=await fetch('https://open.er-api.com/v6/latest/EUR');
     if(!r.ok)throw 0;const d=await r.json();
     const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; // MXN per EUR, MXN per USD
     const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
@@ -601,6 +606,7 @@ function icsDate(f){
   return new Date(v);
 }
 function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+
 function renderTrip(t){
   const body=document.getElementById('tripBody');if(!body)return;
   const now=new Date();
@@ -608,32 +614,63 @@ function renderTrip(t){
   const days=Math.ceil((start-now)/86400000);
   let cd = days>1?`in ${days} days` : days===1?'tomorrow' : (now<=end?'now':'');
   const cdHtml = cd?`<div class="trip-cd">${cd}</div>`:'';
-  const leg = t.leg ? `<div class="trip-leg"><span class="pl">🛫</span><div class="pb">
-      <div class="pk">${now<=end&&days<=0?'In progress':'First flight'}</div>
-      <div class="pv">${t.leg.text}<small> · ${t.leg.when}</small></div></div></div>` : '';
+  
+  let legsHtml = '';
+  if(t.legs && t.legs.length > 0) {
+     legsHtml = '<div class="trip-legs">' + t.legs.map((leg, i) => `
+        <div class="leg-item">
+          <span class="pl">${leg.icon||'📍'}</span>
+          <div class="pb">
+            ${i===0 ? `<div class="pk">${now<=end&&days<=0?'Next up':'First up'}</div>` : ''}
+            <div class="pv">${leg.text}<small> · ${leg.when}</small></div>
+          </div>
+        </div>
+     `).join('') + '</div>';
+  }
+
   body.innerHTML=`<div class="trip-head"><div class="trip-name">${t.name}</div>${cdHtml}</div>
     <div class="trip-dest">📍 ${t.dest}</div>
-    <div class="trip-dates">${fmtTripDate(start)} – ${fmtTripDate(end)}, ${end.getFullYear()}</div>${leg}`;
+    <div class="trip-dates">${fmtTripDate(start)} – ${fmtTripDate(end)}, ${end.getFullYear()}</div>${legsHtml}`;
 }
+
 async function loadTrip(){
   const fb=CONFIG.tripFallback;
   try{
     const r=await fetch(CONFIG.tripitIcs,{cache:'no-store'});if(!r.ok)throw 0;
     const raw=await r.text();const evs=icsEvents(raw);
     if(!evs.length)throw 0;
+    
+    // Find the main trip (a multi-day event)
     const trips=evs.filter(e=>e.DTSTART&&(e.DTSTART.params||'').includes('DATE'));
-    const flights=evs.filter(e=>e.SUMMARY&&/ to /i.test(e.SUMMARY.val)&&/[A-Z]{2,3}\d{2,4}/.test(e.SUMMARY.val));
     const now=new Date();
     const cand=trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)}))
       .filter(x=>x.e>=now).sort((a,b)=>a.s-b.s)[0] || trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)})).sort((a,b)=>b.s-a.s)[0];
     if(!cand)throw 0;
-    const fl=flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val,loc:f.LOCATION&&f.LOCATION.val}))
-      .filter(f=>f.s>=new Date(now.getTime()-3*3600000)).sort((a,b)=>a.s-b.s)[0]
-      || flights.map(f=>({s:icsDate(f.DTSTART),sum:f.SUMMARY.val})).sort((a,b)=>a.s-b.s)[0];
-    const leg=fl?{text:fl.sum,when:fl.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}:null;
+    
+    // Find all sub-events (events with times) and select the next 2 upcoming ones
+    const subEvents = evs.filter(e=> e.DTSTART && !(e.DTSTART.params||'').includes('DATE'));
+    const upcoming = subEvents.map(e => ({ s: icsDate(e.DTSTART), sum: (e.SUMMARY||{}).val || 'Event' }))
+                              .filter(e => e.s >= new Date(now.getTime()-3600000))
+                              .sort((a,b) => a.s - b.s)
+                              .slice(0, 2);
+
+    const legs = upcoming.map(u => {
+       let icon = '📅';
+       if(/ to /i.test(u.sum)) icon = '🛫';
+       else if(/hotel|resort|inn/i.test(u.sum)) icon = '🏨';
+       else if(/car|rental/i.test(u.sum)) icon = '🚗';
+       else if(/restaurant|dinner|lunch|reservation/i.test(u.sum)) icon = '🍽️';
+       
+       return { 
+           text: u.sum, 
+           when: u.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}), 
+           icon: icon 
+       };
+    });
+
     renderTrip({name:cand.t.SUMMARY.val,
       dest:(cand.t.LOCATION&&cand.t.LOCATION.val)||'',
-      start:cand.s.toISOString().slice(0,10), end:cand.e.toISOString().slice(0,10), leg});
+      start:cand.s.toISOString().slice(0,10), end:cand.e.toISOString().slice(0,10), legs: legs});
     return;
   }catch(e){}
   if(fb) renderTrip(fb); else {const m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
