@@ -136,14 +136,19 @@
   .stock-chg.down{color:#ff7a7a}
   .stock-chg .arrow{font-size:.8em}
 
-  /* ---------- CENTER: agenda + chores ---------- */
-  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
+  /* ---------- CENTER: agenda + chores + carousel ---------- */
+  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0; position:relative;}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5em;gap:6px}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.3rem);letter-spacing:-.01em}
   .legend{display:flex;gap:8px;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
   
-  .chores{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+  /* Carousel Container */
+  .carousel-wrapper { display:grid; grid-template-columns: 1fr; grid-template-rows: 1fr; flex:1; min-height:0; position: relative;}
+  .carousel-item { grid-area: 1 / 1; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateY(10px); z-index: 1;}
+  .carousel-item.active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); z-index: 2;}
+
+  .chores{display:flex;flex-direction:column;overflow:hidden;min-width:0; height:100%;}
   .kid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,.8vw,12px);flex:1;overflow:hidden}
   .kid{display:flex;flex-direction:column;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);padding:clamp(6px,.9vw,10px);position:relative;overflow:hidden}
   .kid::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c)}
@@ -154,16 +159,26 @@
   .tasks{display:flex;flex-direction:column;gap:4px;flex:1}
   .task{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:3px 2px;border-radius:6px;transition:.18s}
   .task:hover{background:rgba(255,255,255,.05)}
+  .task.dimmed{opacity:0.4; order:10;} 
+  .task.golden{background:rgba(255,207,92,.08)} 
   .check{width:16px;height:16px;border-radius:5px;border:2px solid var(--c);flex:none;display:grid;place-items:center;transition:.2s}
   .check svg{width:10px;height:10px;stroke:#1a140f;stroke-width:3.4;fill:none;opacity:0;transform:scale(.4);transition:.2s}
   .task.done .check{background:var(--c)}
   .task.done .check svg{opacity:1;transform:scale(1)}
   .task .label{font-weight:600;font-size:clamp(.65rem,.8vw,.9rem);transition:.2s;word-wrap:break-word;line-height:1.1}
+  .task.golden .label::after{content:" 🌟";font-size:.85em;margin-left:4px}
   .task.done .label{color:var(--faint);text-decoration:line-through}
+  .task.done.golden .label::after{filter:grayscale(1);opacity:.5}
   .stars{margin-top:.4em;font-size:.8rem;letter-spacing:1px;min-height:1.2em}
   .done-badge{position:absolute;inset:auto 8px 8px auto;font-size:.55rem;font-weight:800;letter-spacing:.08em;color:var(--c);opacity:0;transition:.3s}
   .kid.complete .done-badge{opacity:1}
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
+
+  /* World Cup Placeholder Card */
+  .world-cup-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: clamp(16px, 2vw, 32px); height: 100%; border-left: 5px solid #ffcf5c; }
+  .wc-hero { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
+  .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
+  .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
 
   /* ---------- RIGHT: school run / trip / glance ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
@@ -283,12 +298,20 @@
       <div class="run-msg" id="runMsg"></div>
     </div>
 
-    <div class="card chores delay-4">
-      <div class="head-row">
-        <h2>Chore chart</h2>
-        <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
-      </div>
-      <div class="kid-grid" id="kids"></div>
+    <div class="carousel-wrapper" id="lowerCarousel">
+        <div class="card chores carousel-item active delay-4">
+          <div class="head-row">
+            <h2>Chore chart</h2>
+            <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
+          </div>
+          <div class="kid-grid" id="kids"></div>
+        </div>
+        
+        <div class="card world-cup-card carousel-item delay-4">
+            <div class="wc-hero">⚽</div>
+            <div class="wc-title">FIFA World Cup 2026</div>
+            <div class="wc-sub">Tournament kicks off June 11, 2026! Yesterday's match results and league standings will populate here natively once games begin.</div>
+        </div>
     </div>
   </div>
 
@@ -348,18 +371,24 @@ const CONFIG = {
 };
 
 /* ---------- live clock + date ---------- */
+let lastHour = -1;
 function tick(){
   const n=new Date();
-  const h=String(n.getHours()).padStart(2,'0');
+  const h=n.getHours();
   const m=String(n.getMinutes()).padStart(2,'0');
-  document.getElementById('time').firstChild.textContent=h+':'+m;
+  document.getElementById('time').firstChild.textContent=String(h).padStart(2,'0')+':'+m;
   document.getElementById('sec').textContent=String(n.getSeconds()).padStart(2,'0');
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('date').innerHTML=days[n.getDay()]+', <span>'+mon[n.getMonth()]+' '+n.getDate()+'</span>';
-  const hr=n.getHours();
-  const g=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
   document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
+  
+  // Automatically re-render chores if the hour changes to catch the 12:00 PM shift
+  if(lastHour !== -1 && lastHour !== h) {
+     renderKids();
+  }
+  lastHour = h;
 }
 
 /* ---------- countdown ---------- */
@@ -369,17 +398,33 @@ function countdown(){
   document.getElementById('cdNum').textContent=d;
 }
 
-/* ---------- chore chart (persists daily) ---------- */
+/* ---------- chore chart (persists daily, sorts by time, features golden ticket) ---------- */
 const kidsData=[
-  {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:['Make the bed','Feed the dog','Homework done']},
-  {name:'Maya',age:'7',c:'var(--maya)',init:'My',tasks:['Tidy your room','Set the table','Read 20 minutes']},
-  {name:'Matteo',age:'6',c:'var(--matteo)',init:'Mt',tasks:['Put toys away','Brush teeth','Water the plant']},
+  {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:[
+    {txt:'Make the bed', time:'morning', type:'all'},
+    {txt:'Feed the dog', time:'morning', type:'all'},
+    {txt:'Homework done', time:'evening', type:'weekday'},
+    {txt:'Yard work', time:'any', type:'weekend'}
+  ]},
+  {name:'Maya',age:'7',c:'var(--maya)',init:'My',tasks:[
+    {txt:'Tidy your room', time:'morning', type:'all'},
+    {txt:'Read 20 minutes', time:'evening', type:'all'},
+    {txt:'Set the table', time:'evening', type:'weekday'},
+    {txt:'Organize books', time:'any', type:'weekend'}
+  ]},
+  {name:'Matteo',age:'6',c:'var(--matteo)',init:'Mt',tasks:[
+    {txt:'Brush teeth', time:'morning', type:'all'},
+    {txt:'Put toys away', time:'evening', type:'all'},
+    {txt:'Water the plant', time:'evening', type:'weekday'},
+    {txt:'Help dust', time:'any', type:'weekend'}
+  ]},
 ];
-const todayKey=new Date().toISOString().slice(0,10);
+
 let state={};        // {choreId:true}
 let memOnly=false;
 
 async function loadState(){
+  const todayKey=new Date().toISOString().slice(0,10);
   try{
     const r=await window.storage.get('chores');
     const parsed=JSON.parse(r.value);
@@ -388,42 +433,80 @@ async function loadState(){
   }catch(e){ state={}; memOnly=(typeof window.storage==='undefined'); }
   renderKids();
 }
+
 async function saveState(){
+  const todayKey=new Date().toISOString().slice(0,10);
   try{ await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); }
   catch(e){ memOnly=true; }
 }
+
 function renderKids(){
   const wrap=document.getElementById('kids');wrap.innerHTML='';
+  const d = new Date();
+  const hr = d.getHours();
+  const todayKey = d.toISOString().slice(0,10);
+  const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+  const dayType = isWeekend ? 'weekend' : 'weekday';
+
+  // Seeded random function to ensure the Golden Ticket stays the same all day
+  const getBonusId = (kidStr, count) => {
+     let hash = 0; const s = todayKey + kidStr;
+     for(let i=0; i<s.length; i++) hash = Math.imul(31, hash) + s.charCodeAt(i) | 0;
+     return Math.abs(hash) % count;
+  };
+
   kidsData.forEach((k,ki)=>{
     const div=document.createElement('div');
     div.className='kid';div.style.setProperty('--c',k.c);
     let tasksHTML='';
-    k.tasks.forEach((t,ti)=>{
-      const id=ki+'-'+ti;const done=state[id]?'done':'';
-      tasksHTML+=`<div class="task ${done}" data-id="${id}">
+    
+    // Filter out chores that do not belong to the current day type (weekend vs weekday)
+    const activeTasks = k.tasks.map((t, i) => ({...t, origIdx: i}))
+                               .filter(t => t.type === 'all' || t.type === dayType);
+    
+    // Pick the one daily Golden Ticket chore for this child
+    const bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
+
+    activeTasks.forEach((t, i)=>{
+      const id = ki + '-' + t.origIdx; 
+      const done = state[id] ? 'done' : '';
+      
+      let dimClass = '';
+      // If it is past 12pm, dim morning tasks (unless they are already done)
+      if (hr >= 12 && t.time === 'morning' && !state[id]) dimClass = 'dimmed';
+      // If it is before 12pm, dim evening tasks so kids focus on the morning
+      if (hr < 12 && t.time === 'evening') dimClass = 'dimmed';
+
+      const isGolden = i === bonusIndex ? 'golden' : '';
+
+      tasksHTML+=`<div class="task ${done} ${dimClass} ${isGolden}" data-id="${id}">
         <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
-        <span class="label">${t}</span></div>`;
+        <span class="label">${t.txt}</span></div>`;
     });
+
     div.innerHTML=`<div class="kid-head"><div class="avatar">${k.init}</div>
       <div class="kid-name">${k.name}<small>age ${k.age}</small></div></div>
       <div class="tasks">${tasksHTML}</div>
       <div class="stars"></div><div class="done-badge">★ All done!</div>`;
     wrap.appendChild(div);
-    updateKid(div,ki);
+    updateKidDOM(div);
   });
+
   wrap.querySelectorAll('.task').forEach(t=>t.addEventListener('click',()=>{
     const id=t.dataset.id;state[id]=!state[id];
     if(!state[id]) delete state[id];
     t.classList.toggle('done');
-    updateKid(t.closest('.kid'),parseInt(id));
+    updateKidDOM(t.closest('.kid'));
     saveState();
   }));
 }
-function updateKid(div,ki){
-  const total=kidsData[ki].tasks.length;
-  let done=0;for(let ti=0;ti<total;ti++) if(state[ki+'-'+ti]) done++;
+
+function updateKidDOM(div){
+  const tasks = div.querySelectorAll('.task');
+  const total = tasks.length;
+  const done = div.querySelectorAll('.task.done').length;
   div.querySelector('.stars').textContent='★'.repeat(done)+'☆'.repeat(total-done);
-  div.classList.toggle('complete',done===total);
+  div.classList.toggle('complete',done===total && total>0);
 }
 
 /* ---------- school run countdown (weekday mornings) ---------- */
@@ -725,6 +808,19 @@ async function loadTrip(){
   if(fb) renderTrip(fb); else {const m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
 }
 
+/* ---------- automated vertical carousel ---------- */
+function startCarousel() {
+    const items = document.querySelectorAll('#lowerCarousel .carousel-item');
+    if(items.length < 2) return;
+    let currentIndex = 0;
+    
+    setInterval(() => {
+        items[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % items.length;
+        items[currentIndex].classList.add('active');
+    }, 15000); // Swaps every 15 seconds natively
+}
+
 /* ---------- boot ---------- */
 tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
@@ -735,4 +831,5 @@ loadSunAqi();setInterval(loadSunAqi,1800000);     // sun + air quality every 30 
 loadFx();setInterval(loadFx,3600000);             // exchange rates hourly
 moonPhase();setInterval(moonPhase,3600000);       // moon phase hourly
 loadTrip();setInterval(loadTrip,1800000);         // refresh trip every 30 min
+startCarousel();                                  // initialize the lower grid carousel
 </script>
