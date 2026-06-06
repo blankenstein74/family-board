@@ -174,11 +174,19 @@
   .kid.complete .done-badge{opacity:1}
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
-  /* World Cup Placeholder Card */
+  /* World Cup Live Scores */
   .world-cup-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: clamp(16px, 2vw, 32px); height: 100%; border-left: 5px solid #ffcf5c; }
   .wc-hero { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
   .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
   .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
+  
+  .wc-matches { display:flex; flex-direction:column; gap:6px; width:100%; }
+  .wc-match { display:flex; align-items:center; justify-content:space-between; background:var(--panel-2); border:1px solid var(--line); padding:6px 10px; border-radius:10px; }
+  .wc-team { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1rem); }
+  .wc-score { font-family:var(--display); font-weight:800; font-size:clamp(1rem,1.5vw,1.3rem); color:var(--ink); width: 24px; text-align: center; }
+  .wc-status { font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; font-weight:800; text-align:center; width:46px; color:var(--muted); }
+  .wc-status.live { color:#ff7a7a; animation:pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity:1; } 50% { opacity:.4; } 100% { opacity:1; } }
 
   /* ---------- RIGHT: school run / trip / glance ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
@@ -307,7 +315,7 @@
           <div class="kid-grid" id="kids"></div>
         </div>
         
-        <div class="card world-cup-card carousel-item delay-4">
+        <div class="card world-cup-card carousel-item delay-4" id="wcContainer">
             <div class="wc-hero">⚽</div>
             <div class="wc-title">FIFA World Cup 2026</div>
             <div class="wc-sub">Tournament kicks off June 11, 2026! Yesterday's match results and league standings will populate here natively once games begin.</div>
@@ -368,6 +376,8 @@ const CONFIG = {
     { name:'JEPI', symbol:'JEPI' }
   ],
 
+  // Sports API Configuration (football-data.org)
+  footballApi: 'YOUR_API_KEY', // <--- Paste your free football-data.org API key here
 };
 
 /* ---------- live clock + date ---------- */
@@ -821,6 +831,70 @@ function startCarousel() {
     }, 15000); // Swaps every 15 seconds natively
 }
 
+/* ---------- live world cup scores (football-data.org) ---------- */
+async function loadWorldCup() {
+  const container = document.getElementById('wcContainer');
+  if(!container) return;
+
+  try {
+    // We use football-data.org API as it natively supports the World Cup (Competition ID: 2000)
+    // IMPORTANT: It will not fetch anything until you add your key to the CONFIG object above.
+    if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') return; 
+
+    const today = new Date().toISOString().slice(0, 10);
+    const r = await fetch(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${today}&dateTo=${today}`, {
+      headers: { 'X-Auth-Token': CONFIG.footballApi }
+    });
+    
+    if(!r.ok) throw 0;
+    const d = await r.json();
+    const matches = d.matches || [];
+
+    // If there are actual matches today, overwrite the "Waiting for Kickoff" placeholder natively
+    if(matches.length > 0) {
+       container.className = 'card chores carousel-item delay-4';
+       
+       let html = `
+          <div class="head-row" style="margin-bottom:.5em">
+             <h2>FIFA World Cup 2026</h2>
+             <div class="legend"><span style="color:#ff7a7a;font-weight:700;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff7a7a;animation:pulse 2s infinite"></span> MATCHES TODAY</span></div>
+          </div>
+          <div class="wc-matches">
+       `;
+       
+       matches.forEach(m => {
+          // Use the short 3-letter acronym if available, otherwise truncate the name
+          const home = m.homeTeam.tla || (m.homeTeam.name ? m.homeTeam.name.substring(0,3).toUpperCase() : 'TBD');
+          const away = m.awayTeam.tla || (m.awayTeam.name ? m.awayTeam.name.substring(0,3).toUpperCase() : 'TBD');
+          
+          const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
+          const isFinished = m.status === 'FINISHED';
+          
+          let hScore = m.score?.fullTime?.home !== undefined && m.score.fullTime.home !== null ? m.score.fullTime.home : '-';
+          let aScore = m.score?.fullTime?.away !== undefined && m.score.fullTime.away !== null ? m.score.fullTime.away : '-';
+          
+          // Format the start time if the match hasn't started yet
+          const matchTime = new Date(m.utcDate);
+          let statusText = isLive ? 'LIVE' : (isFinished ? 'FT' : matchTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+
+          html += `
+             <div class="wc-match">
+                <div style="display:flex;align-items:center;gap:6px;flex:1"><span class="wc-team">${home}</span></div>
+                <div class="wc-score">${hScore}</div>
+                <div class="wc-status ${isLive ? 'live' : ''}">${statusText}</div>
+                <div class="wc-score">${aScore}</div>
+                <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:flex-end"><span class="wc-team">${away}</span></div>
+             </div>
+          `;
+       });
+       html += `</div>`;
+       container.innerHTML = html;
+    }
+  } catch(e) {
+    // Silently fail and keep the default placeholder visible if the API drops out
+  }
+}
+
 /* ---------- boot ---------- */
 tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
@@ -832,4 +906,5 @@ loadFx();setInterval(loadFx,3600000);             // exchange rates hourly
 moonPhase();setInterval(moonPhase,3600000);       // moon phase hourly
 loadTrip();setInterval(loadTrip,1800000);         // refresh trip every 30 min
 startCarousel();                                  // initialize the lower grid carousel
+loadWorldCup();setInterval(loadWorldCup, 60000);  // check for updated match scores every minute
 </script>
