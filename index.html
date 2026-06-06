@@ -59,7 +59,7 @@
     display: grid;
     gap: clamp(8px, 1.5vw, 16px);
     
-    /* FIX: minmax(0, 1fr) strictly prevents the grid from blowing past 50% width */
+    /* minmax(0, 1fr) strictly prevents the grid from blowing past 50% width */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
@@ -113,24 +113,24 @@
   .date{font-family:var(--display);font-weight:600;font-size:clamp(.85rem,1.5vw,1.6rem);margin-top:.1em;letter-spacing:-.01em}
   .date span{color:var(--muted)}
 
+  /* WEATHER WIDGET: Side-by-side Destination Layout */
   .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1vh,14px);min-width:0}
-  .wx-city{display:flex;align-items:center;gap:10px}
-  .wx-city+.wx-city{padding-top:clamp(6px,1vh,12px);border-top:1px solid var(--line)}
-  .wx-city .ico{font-size:clamp(1.4rem,3vw,2.5rem);flex:none}
-  .wx-temp{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,3vw,2.8rem);line-height:.85;font-variant-numeric:tabular-nums;flex:none}
-  .wx-meta{min-width:0}
-  .wx-meta .city{font-family:var(--display);font-weight:700;font-size:clamp(.75rem,1vw,1.1rem);line-height:1;word-wrap: break-word}
-  .wx-meta .cond{color:var(--muted);font-weight:500;font-size:clamp(.55rem,.7vw,.8rem);margin-top:3px;word-wrap: break-word}
-  .wx-meta .cond b{color:var(--ink);font-weight:700}
+  .wx-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 8px;}
+  .wx-city-col { display:flex; flex-direction:column; justify-content:center; min-width:0; }
+  .wx-city-col .city { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1.1rem); line-height:1; word-wrap: break-word }
   
-  /* ---------- STOCKS: VLRS & JEPI ---------- */
+  /* STOCKS: With Mini-Sparklines */
   .stock{display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
   .stk-row{display:flex;flex-direction:column}
   .stk-row + .stk-row{padding-top:8px;border-top:1px solid var(--line)}
   .stock-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
   .stk-name{font-weight:700;font-size:clamp(.75rem,.9vw,1rem);word-wrap:break-word}
   .stock-ex{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:2px 6px;border-radius:999px;flex:none}
-  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums;margin:.1em 0 .1em}
+  
+  .stk-price-row { display:flex; align-items:center; justify-content:space-between; margin:.1em 0 }
+  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums}
+  .sparkline { width: 60px; height: 22px; flex:none; margin-left:8px; }
+  
   .stock-chg{font-weight:600;font-size:clamp(.65rem,.8vw,.85rem);color:var(--muted);display:flex;align-items:center;gap:5px}
   .stock-chg.up{color:#7ddf8e}
   .stock-chg.down{color:#ff7a7a}
@@ -144,7 +144,6 @@
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
   
   .chores{display:flex;flex-direction:column;overflow:hidden;min-width:0}
-  /* FIX: applied minmax to kid grid to prevent chore cards forcing wide layouts */
   .kid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,.8vw,12px);flex:1;overflow:hidden}
   .kid{display:flex;flex-direction:column;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);padding:clamp(6px,.9vw,10px);position:relative;overflow:hidden}
   .kid::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c)}
@@ -177,7 +176,7 @@
   .trip-dest{display:flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:clamp(.65rem,.8vw,.95rem);margin-bottom:.2em;word-wrap:break-word}
   .trip-dates{color:var(--faint);font-weight:500;font-size:clamp(.55rem,.7vw,.85rem)}
   
-  /* Multi-leg list instead of just one */
+  /* Multi-leg list */
   .trip-legs{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:clamp(6px,1vh,10px);border-top:1px solid var(--line);overflow:hidden}
   .leg-item{display:flex;align-items:center;gap:8px}
   .leg-item .pl{font-size:clamp(.9rem,1.5vw,1.2rem);flex:none;text-align:center;width:1.5em}
@@ -235,16 +234,24 @@
     </div>
 
     <div class="card weather delay-3">
-      <div class="eyebrow">Weather · Today</div>
-      <div class="wx-city">
-        <span class="ico" id="wxIco0">⛅</span>
-        <div class="wx-temp" id="wxTemp0">26°</div>
-        <div class="wx-meta"><div class="city">Mexico City</div><div class="cond" id="wxDesc0"><b>Partly cloudy</b> · feels 27°</div></div>
-      </div>
-      <div class="wx-city">
-        <span class="ico" id="wxIco1">🌤️</span>
-        <div class="wx-temp" id="wxTemp1">31°</div>
-        <div class="wx-meta"><div class="city">Cancún</div><div class="cond" id="wxDesc1"><b>Mostly sunny</b> · feels 35°</div></div>
+      <div class="eyebrow">Weather</div>
+      <div class="wx-grid">
+        <div class="wx-city-col">
+          <div class="wx-meta"><div class="city">Mexico City <small style="color:var(--faint);font-size:.6em;letter-spacing:.05em;background:var(--panel-2);padding:2px 4px;border-radius:4px;vertical-align:middle">LOCAL</small></div></div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+            <span class="ico" id="wxIco0" style="font-size:clamp(1.4rem,2.5vw,2.2rem)">⛅</span>
+            <div class="wx-temp" id="wxTemp0" style="font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:800; font-family:var(--display)">--°</div>
+          </div>
+          <div class="cond" id="wxDesc0" style="font-size:clamp(.55rem,.7vw,.8rem); color:var(--muted); margin-top:4px; line-height:1.1">Loading...</div>
+        </div>
+        <div class="wx-city-col" style="border-left: 1px solid var(--line); padding-left: 8px;">
+          <div class="wx-meta"><div class="city">Houston <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+            <span class="ico" id="wxIco1" style="font-size:clamp(1.4rem,2.5vw,2.2rem)">☁️</span>
+            <div class="wx-temp" id="wxTemp1" style="font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:800; font-family:var(--display)">--°</div>
+          </div>
+          <div class="cond" id="wxDesc1" style="font-size:clamp(.55rem,.7vw,.8rem); color:var(--muted); margin-top:4px; line-height:1.1">Loading...</div>
+        </div>
       </div>
     </div>
 
@@ -252,12 +259,18 @@
       <div class="eyebrow" style="margin-bottom:6px">Markets</div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">Volaris <span class="stock-ex">VLRS</span></div></div>
-        <div class="stock-price" id="stkPrice0">$4.58</div>
+        <div class="stk-price-row">
+            <div class="stock-price" id="stkPrice0">$4.58</div>
+            <svg class="sparkline" id="stkSpark0" viewBox="0 0 60 22"></svg>
+        </div>
         <div class="stock-chg up" id="stkChg0"><span class="arrow">▲</span> +0.12 (2.57%) today</div>
       </div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">JPMorgan Premium <span class="stock-ex">JEPI</span></div></div>
-        <div class="stock-price" id="stkPrice1">$54.20</div>
+        <div class="stk-price-row">
+            <div class="stock-price" id="stkPrice1">$54.20</div>
+            <svg class="sparkline" id="stkSpark1" viewBox="0 0 60 22"></svg>
+        </div>
         <div class="stock-chg up" id="stkChg1"><span class="arrow">▲</span> +0.05 (0.10%) today</div>
       </div>
     </div>
@@ -305,18 +318,16 @@
    CONFIG — edit this to go live. Everything else updates itself.
    ============================================================ */
 const CONFIG = {
-  // Weather: Open-Meteo. No API key needed. Add/remove cities freely.
+  // Destination Weather updated to include Houston alongside local Mexico City
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
-    { name:'Cancún',      lat:21.1619, lon:-86.8515, tz:'America/Cancun'      },
+    { name:'Houston',     lat:29.7633, lon:-95.3633, tz:'America/Chicago'     },
   ],
 
   // Countdown
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
 
-  // TripIt: a static page can't read TripIt directly (CORS). Host your TripIt
-  // .ics feed next to this file (or via a relay) and put its path/URL here.
-  // Until then, the tile shows the 'fallback' trip below so it's never empty.
+  // TripIt
   tripitIcs: 'tripit_Jun12_to_Jun15.ics',
   tripFallback: {
     name:'Houston JUN 26', dest:'Houston, TX',
@@ -327,7 +338,7 @@ const CONFIG = {
     ]
   },
 
-  // Stocks: Add a free Finnhub key (finnhub.io) to go live.
+  // Stocks
   finnhub: 'd89hdl1r01qspkc702c0d89hdl1r01qspkc702cg', 
   stocks: [
     { name:'Volaris', symbol:'VLRS' },
@@ -501,12 +512,15 @@ async function loadWeather(){
   }
 }
 
-/* ---------- live multi-stock quote (Finnhub, optional key) ---------- */
+/* ---------- live multi-stock quote + Sparklines (Finnhub) ---------- */
 async function loadStock(){
   const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
+  const to = Math.floor(Date.now() / 1000);
+  const from = to - (86400 * 4); // fetch trailing 4 days for reliable trend history
+  
   for(let i=0;i<list.length;i++){
     const s=list[i];
-    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
+    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i), spk=document.getElementById('stkSpark'+i);
     if(!pEl || !cEl) continue;
     try{
       const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
@@ -516,6 +530,24 @@ async function loadStock(){
       pEl.textContent='$'+d.c.toFixed(2);
       cEl.className='stock-chg '+(up?'up':'down');
       cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
+      
+      // Inject automated sparklines if container exists
+      if(spk) {
+         const r2 = await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${s.symbol}&resolution=60&from=${from}&to=${to}&token=${CONFIG.finnhub}`);
+         if(r2.ok) {
+             const d2 = await r2.json();
+             if(d2.s === 'ok' && d2.c && d2.c.length > 0) {
+                 const prices = d2.c;
+                 const min = Math.min(...prices), max = Math.max(...prices);
+                 const range = max - min || 1;
+                 const w = 60, h = 22;
+                 const step = w / (prices.length - 1 || 1);
+                 const pts = prices.map((val, idx) => `${idx * step},${h - ((val - min) / range) * h}`).join(' L ');
+                 const color = up ? '#7ddf8e' : '#ff7a7a';
+                 spk.innerHTML = `<path d="M ${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+             }
+         }
+      }
     }catch(e){/* keep sample */}
   }
 }
@@ -523,7 +555,6 @@ async function loadStock(){
 /* ---------- ticker: sunrise/sunset + air quality (Open-Meteo, no key) ---------- */
 async function loadSunAqi(){
   const c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
-  // sunrise / sunset
   try{
     const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}`
       +`&timezone=${encodeURIComponent(c.tz)}&daily=sunrise,sunset&forecast_days=1`;
@@ -533,7 +564,6 @@ async function loadSunAqi(){
       if(el) el.innerHTML=`${f(d.daily.sunrise[0])} <small>→</small> ${f(d.daily.sunset[0])}`;
     }
   }catch(e){}
-  // US AQI
   try{
     const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}`
       +`&timezone=${encodeURIComponent(c.tz)}&current=us_aqi`;
@@ -552,23 +582,44 @@ async function loadSunAqi(){
   }catch(e){}
 }
 
-/* ---------- ticker: exchange rates (ER-API, no key) ---------- */
+/* ---------- ticker: exchange rates (ER-API) + Yahoo Sparklines ---------- */
 async function loadFx(){
   try{
-    // Using reliable, keyless open.er-api since ECB dropped MXN references
     const r=await fetch('https://open.er-api.com/v6/latest/EUR');
     if(!r.ok)throw 0;const d=await r.json();
-    const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; // MXN per EUR, MXN per USD
+    const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
     const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
-    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
-    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
+    
+    // Add tiny sparkline SVG containers directly below the numbers
+    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small><svg id="spkEur" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
+    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small><svg id="spkUsd" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
+    
+    // Fetch historical forex data to draw the sparklines
+    const fetchSpk = async (sym, elId) => {
+       try {
+         const rs = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1h`);
+         const dt = await rs.json();
+         const p = dt.chart.result[0].indicators.quote[0].close.filter(x => x !== null);
+         if(p.length > 0) {
+             const min = Math.min(...p), max = Math.max(...p);
+             const rng = max - min || 1;
+             const w = 40, h = 12;
+             const stp = w / (p.length - 1 || 1);
+             const pts = p.map((val, idx) => `${idx * stp},${h - ((val - min) / rng) * h}`).join(' L ');
+             const col = p[p.length-1] >= p[0] ? '#7ddf8e' : '#ff7a7a';
+             document.getElementById(elId).innerHTML = `<path d="M ${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+         }
+       } catch(err){}
+    };
+    fetchSpk('EURMXN=X', 'spkEur');
+    fetchSpk('USDMXN=X', 'spkUsd');
+    
   }catch(e){}
 }
 
 /* ---------- ticker: moon phase (computed locally, no network) ---------- */
 function moonPhase(){
   const now=new Date();
-  // days since a known new moon (2000-01-06 18:14 UTC), synodic month 29.53059 days
   const synodic=29.53058867;
   const ref=Date.UTC(2000,0,6,18,14)/86400000;
   const days=(now.getTime()/86400000)-ref;
@@ -640,14 +691,12 @@ async function loadTrip(){
     const raw=await r.text();const evs=icsEvents(raw);
     if(!evs.length)throw 0;
     
-    // Find the main trip (a multi-day event)
     const trips=evs.filter(e=>e.DTSTART&&(e.DTSTART.params||'').includes('DATE'));
     const now=new Date();
     const cand=trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)}))
       .filter(x=>x.e>=now).sort((a,b)=>a.s-b.s)[0] || trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)})).sort((a,b)=>b.s-a.s)[0];
     if(!cand)throw 0;
     
-    // Find all sub-events (events with times) and select the next 2 upcoming ones
     const subEvents = evs.filter(e=> e.DTSTART && !(e.DTSTART.params||'').includes('DATE'));
     const upcoming = subEvents.map(e => ({ s: icsDate(e.DTSTART), sum: (e.SUMMARY||{}).val || 'Event' }))
                               .filter(e => e.s >= new Date(now.getTime()-3600000))
