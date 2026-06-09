@@ -89,7 +89,6 @@
   .head-left{display:flex;flex-direction:column;gap:clamp(4px,1vh,10px);min-width:0}
   .pill-row{display:flex;align-items:center;gap:clamp(4px,.8vw,12px);flex-wrap:wrap;color:var(--muted);font-weight:500;font-size:clamp(.65rem,.9vw,1rem)}
   
-  /* prominent countdown */
   .hero-cd{display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);background:var(--panel);
     border:1px solid var(--line);border-left:5px solid var(--mom);border-radius:14px;
     padding:clamp(8px,1vw,14px) clamp(10px,1.5vw,20px);flex:none}
@@ -113,24 +112,22 @@
   .date{font-family:var(--display);font-weight:600;font-size:clamp(.85rem,1.5vw,1.6rem);margin-top:.1em;letter-spacing:-.01em}
   .date span{color:var(--muted)}
 
-  /* WEATHER WIDGET: Side-by-side Destination Layout */
+  /* WEATHER WIDGET */
   .weather{display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1vh,14px);min-width:0}
   .wx-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 8px;}
   .wx-city-col { display:flex; flex-direction:column; justify-content:center; min-width:0; }
   .wx-city-col .city { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1.1rem); line-height:1; word-wrap: break-word }
   
-  /* STOCKS: With Mini-Sparklines */
+  /* STOCKS */
   .stock{display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
   .stk-row{display:flex;flex-direction:column}
   .stk-row + .stk-row{padding-top:8px;border-top:1px solid var(--line)}
   .stock-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
   .stk-name{font-weight:700;font-size:clamp(.75rem,.9vw,1rem);word-wrap:break-word}
   .stock-ex{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:2px 6px;border-radius:999px;flex:none}
-  
   .stk-price-row { display:flex; align-items:center; justify-content:space-between; margin:.1em 0 }
   .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums}
   .sparkline { width: 60px; height: 22px; flex:none; margin-left:8px; }
-  
   .stock-chg{font-weight:600;font-size:clamp(.65rem,.8vw,.85rem);color:var(--muted);display:flex;align-items:center;gap:5px}
   .stock-chg.up{color:#7ddf8e}
   .stock-chg.down{color:#ff7a7a}
@@ -143,7 +140,7 @@
   .legend{display:flex;gap:8px;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
 
-  /* WORLD CUP API SCHEDULE CARD */
+  /* HARDCODED WORLD CUP SCHEDULE CARD */
   .wc-sched{display:flex;flex-direction:column;justify-content:center;gap:clamp(6px,1vh,12px)}
   .wc-hero{position:relative;overflow:hidden}
   .wc-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, #006847, #ffffff, #ce1126)}
@@ -186,19 +183,11 @@
   .kid.complete .done-badge{opacity:1}
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
-  /* World Cup Live Scores */
+  /* World Cup Content */
   .world-cup-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: clamp(16px, 2vw, 32px); height: 100%; border-left: 5px solid #ffcf5c; }
   .wc-hero-ico { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
   .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
   .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
-  
-  .wc-matches { display:flex; flex-direction:column; gap:6px; width:100%; }
-  .wc-match { display:flex; align-items:center; justify-content:space-between; background:var(--panel-2); border:1px solid var(--line); padding:6px 10px; border-radius:10px; }
-  .wc-team { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1rem); }
-  .wc-score { font-family:var(--display); font-weight:800; font-size:clamp(1rem,1.5vw,1.3rem); color:var(--ink); width: 24px; text-align: center; }
-  .wc-status { font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; font-weight:800; text-align:center; width:46px; color:var(--muted); }
-  .wc-status.live { color:#ff7a7a; animation:pulse 2s infinite; }
-  @keyframes pulse { 0% { opacity:1; } 50% { opacity:.4; } 100% { opacity:1; } }
 
   /* ---------- RIGHT: trip / glance ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
@@ -313,8 +302,8 @@
 
   <div class="center">
     <div class="card wc-sched wc-hero delay-2">
-      <div class="head-row"><h2 id="wcSchedEyebrow">World Cup Schedule</h2></div>
-      <div class="wc-list" id="wcSchedList"><div class="msg-text">Loading matches...</div></div>
+      <div class="head-row"><h2 id="wcSchedEyebrow">World Cup Matches</h2></div>
+      <div class="wc-list" id="wcSchedList"></div>
     </div>
 
     <div class="carousel-wrapper" id="lowerCarousel">
@@ -326,10 +315,10 @@
           <div class="kid-grid" id="kids"></div>
         </div>
         
-        <div class="card world-cup-card carousel-item delay-4" id="wcContainer">
+        <div class="card world-cup-card carousel-item delay-4">
             <div class="wc-hero-ico">⚽</div>
             <div class="wc-title">FIFA World Cup 2026</div>
-            <div class="wc-sub">Tournament kicks off June 11, 2026! Yesterday's match results and league standings will populate here natively once games begin.</div>
+            <div class="wc-sub">Tournament kicks off June 11, 2026!</div>
         </div>
     </div>
   </div>
@@ -366,7 +355,6 @@ const CONFIG = {
   ],
 
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
-
   tripitIcs: 'tripit_Jun12_to_Jun15.ics',
   
   tripFallback: {
@@ -384,34 +372,101 @@ const CONFIG = {
     { name:'JEPI', symbol:'JEPI' }
   ],
 
-  // Provided API Key for football-data.org
-  footballApi: '0ce0f6a59976461b9b134e6c1d255ea2', 
+  // FIFA WORLD CUP 2026 — GROUP STAGE (all 72 matches)
+  // Official schedule (USA TODAY / FOX Sports). Times shown in Central (CDMX, -06:00).
+  // All 48 teams confirmed (UEFA + inter-confederation playoffs resolved March 31, 2026).
+  worldCupMatches: [
+    // June 11 — Matchday 1
+    { date: '2026-06-11T14:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Africa 🇿🇦' },
+    { date: '2026-06-11T21:00:00-06:00', home: 'South Korea 🇰🇷', away: 'Czechia 🇨🇿' },
+    // June 12
+    { date: '2026-06-12T14:00:00-06:00', home: 'Canada 🇨🇦', away: 'Bosnia & Herzegovina 🇧🇦' },
+    { date: '2026-06-12T20:00:00-06:00', home: 'USA 🇺🇸', away: 'Paraguay 🇵🇾' },
+    // June 13
+    { date: '2026-06-13T14:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Morocco 🇲🇦' },
+    { date: '2026-06-13T17:00:00-06:00', home: 'Australia 🇦🇺', away: 'Türkiye 🇹🇷' },
+    { date: '2026-06-13T20:00:00-06:00', home: 'Haiti 🇭🇹', away: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
+    { date: '2026-06-13T23:00:00-06:00', home: 'Qatar 🇶🇦', away: 'Switzerland 🇨🇭' },
+    // June 14
+    { date: '2026-06-14T12:00:00-06:00', home: 'Germany 🇩🇪', away: 'Curaçao 🇨🇼' },
+    { date: '2026-06-14T15:00:00-06:00', home: 'Ivory Coast 🇨🇮', away: 'Ecuador 🇪🇨' },
+    { date: '2026-06-14T18:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Japan 🇯🇵' },
+    { date: '2026-06-14T21:00:00-06:00', home: 'Sweden 🇸🇪', away: 'Tunisia 🇹🇳' },
+    // June 15
+    { date: '2026-06-15T11:00:00-06:00', home: 'Spain 🇪🇸', away: 'Cape Verde 🇨🇻' },
+    { date: '2026-06-15T14:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Egypt 🇪🇬' },
+    { date: '2026-06-15T17:00:00-06:00', home: 'Saudi Arabia 🇸🇦', away: 'Uruguay 🇺🇾' },
+    { date: '2026-06-15T20:00:00-06:00', home: 'Iran 🇮🇷', away: 'New Zealand 🇳🇿' },
+    // June 16
+    { date: '2026-06-16T14:00:00-06:00', home: 'France 🇫🇷', away: 'Senegal 🇸🇳' },
+    { date: '2026-06-16T17:00:00-06:00', home: 'Iraq 🇮🇶', away: 'Norway 🇳🇴' },
+    { date: '2026-06-16T20:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Algeria 🇩🇿' },
+    { date: '2026-06-16T23:00:00-06:00', home: 'Austria 🇦🇹', away: 'Jordan 🇯🇴' },
+    // June 17
+    { date: '2026-06-17T12:00:00-06:00', home: 'Portugal 🇵🇹', away: 'DR Congo 🇨🇩' },
+    { date: '2026-06-17T15:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Croatia 🇭🇷' },
+    { date: '2026-06-17T18:00:00-06:00', home: 'Ghana 🇬🇭', away: 'Panama 🇵🇦' },
+    { date: '2026-06-17T21:00:00-06:00', home: 'Uzbekistan 🇺🇿', away: 'Colombia 🇨🇴' },
+    // June 18 — Matchday 2
+    { date: '2026-06-18T11:00:00-06:00', home: 'Czechia 🇨🇿', away: 'South Africa 🇿🇦' },
+    { date: '2026-06-18T14:00:00-06:00', home: 'Switzerland 🇨🇭', away: 'Bosnia & Herzegovina 🇧🇦' },
+    { date: '2026-06-18T17:00:00-06:00', home: 'Canada 🇨🇦', away: 'Qatar 🇶🇦' },
+    { date: '2026-06-18T20:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Korea 🇰🇷' },
+    // June 19
+    { date: '2026-06-19T14:00:00-06:00', home: 'USA 🇺🇸', away: 'Australia 🇦🇺' },
+    { date: '2026-06-19T17:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Morocco 🇲🇦' },
+    { date: '2026-06-19T20:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Haiti 🇭🇹' },
+    { date: '2026-06-19T23:00:00-06:00', home: 'Türkiye 🇹🇷', away: 'Paraguay 🇵🇾' },
+    // June 20
+    { date: '2026-06-20T12:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Sweden 🇸🇪' },
+    { date: '2026-06-20T15:00:00-06:00', home: 'Germany 🇩🇪', away: 'Ivory Coast 🇨🇮' },
+    { date: '2026-06-20T19:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Curaçao 🇨🇼' },
+    { date: '2026-06-20T23:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Japan 🇯🇵' },
+    // June 21
+    { date: '2026-06-21T11:00:00-06:00', home: 'Spain 🇪🇸', away: 'Saudi Arabia 🇸🇦' },
+    { date: '2026-06-21T14:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Iran 🇮🇷' },
+    { date: '2026-06-21T17:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Cape Verde 🇨🇻' },
+    { date: '2026-06-21T20:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Egypt 🇪🇬' },
+    // June 22
+    { date: '2026-06-22T12:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Austria 🇦🇹' },
+    { date: '2026-06-22T16:00:00-06:00', home: 'France 🇫🇷', away: 'Iraq 🇮🇶' },
+    { date: '2026-06-22T19:00:00-06:00', home: 'Norway 🇳🇴', away: 'Senegal 🇸🇳' },
+    { date: '2026-06-22T22:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Algeria 🇩🇿' },
+    // June 23
+    { date: '2026-06-23T12:00:00-06:00', home: 'Portugal 🇵🇹', away: 'Uzbekistan 🇺🇿' },
+    { date: '2026-06-23T15:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Ghana 🇬🇭' },
+    { date: '2026-06-23T18:00:00-06:00', home: 'Panama 🇵🇦', away: 'Croatia 🇭🇷' },
+    { date: '2026-06-23T21:00:00-06:00', home: 'Colombia 🇨🇴', away: 'DR Congo 🇨🇩' },
+    // June 24 — Matchday 3
+    { date: '2026-06-24T14:00:00-06:00', home: 'Canada 🇨🇦', away: 'Switzerland 🇨🇭' },
+    { date: '2026-06-24T14:00:00-06:00', home: 'Bosnia & Herzegovina 🇧🇦', away: 'Qatar 🇶🇦' },
+    { date: '2026-06-24T17:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Brazil 🇧🇷' },
+    { date: '2026-06-24T17:00:00-06:00', home: 'Morocco 🇲🇦', away: 'Haiti 🇭🇹' },
+    { date: '2026-06-24T20:00:00-06:00', home: 'Mexico 🇲🇽', away: 'Czechia 🇨🇿' },
+    { date: '2026-06-24T20:00:00-06:00', home: 'South Korea 🇰🇷', away: 'South Africa 🇿🇦' },
+    // June 25
+    { date: '2026-06-25T15:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Germany 🇩🇪' },
+    { date: '2026-06-25T15:00:00-06:00', home: 'Curaçao 🇨🇼', away: 'Ivory Coast 🇨🇮' },
+    { date: '2026-06-25T18:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Netherlands 🇳🇱' },
+    { date: '2026-06-25T18:00:00-06:00', home: 'Japan 🇯🇵', away: 'Sweden 🇸🇪' },
+    { date: '2026-06-25T21:00:00-06:00', home: 'USA 🇺🇸', away: 'Türkiye 🇹🇷' },
+    { date: '2026-06-25T21:00:00-06:00', home: 'Paraguay 🇵🇾', away: 'Australia 🇦🇺' },
+    // June 26
+    { date: '2026-06-26T14:00:00-06:00', home: 'Norway 🇳🇴', away: 'France 🇫🇷' },
+    { date: '2026-06-26T14:00:00-06:00', home: 'Senegal 🇸🇳', away: 'Iraq 🇮🇶' },
+    { date: '2026-06-26T19:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Belgium 🇧🇪' },
+    { date: '2026-06-26T19:00:00-06:00', home: 'Egypt 🇪🇬', away: 'Iran 🇮🇷' },
+    { date: '2026-06-26T12:00:00-06:00', home: 'Cape Verde 🇨🇻', away: 'Saudi Arabia 🇸🇦' },
+    { date: '2026-06-26T22:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Spain 🇪🇸' },
+    // June 27
+    { date: '2026-06-27T16:00:00-06:00', home: 'Panama 🇵🇦', away: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+    { date: '2026-06-27T16:00:00-06:00', home: 'Croatia 🇭🇷', away: 'Ghana 🇬🇭' },
+    { date: '2026-06-27T18:30:00-06:00', home: 'Colombia 🇨🇴', away: 'Portugal 🇵🇹' },
+    { date: '2026-06-27T18:30:00-06:00', home: 'DR Congo 🇨🇩', away: 'Uzbekistan 🇺🇿' },
+    { date: '2026-06-27T21:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Argentina 🇦🇷' },
+    { date: '2026-06-27T21:00:00-06:00', home: 'Algeria 🇩🇿', away: 'Austria 🇦🇹' }
+  ]
 };
-
-/* ---------- API Rate Limiter Wrapper (Direct Fetch) ---------- */
-let footballApiBlockedUntil = 0;
-
-async function fetchFootball(url) {
-  if (Date.now() < footballApiBlockedUntil) {
-     throw new Error('Rate limit paused');
-  }
-  
-  // Fetching DIRECTLY from the API (no proxy)
-  const r = await fetch(url, {
-    headers: { 'X-Auth-Token': CONFIG.footballApi }
-  });
-
-  const available = r.headers.get('X-Requests-Available-Minute');
-  const resetSeconds = r.headers.get('X-RequestCounter-Reset');
-
-  if (r.status === 429 || (available !== null && parseInt(available) <= 1)) {
-     const delayMs = resetSeconds ? (parseInt(resetSeconds) * 1000) : 60000;
-     footballApiBlockedUntil = Date.now() + delayMs;
-  }
-  
-  if (!r.ok) throw new Error('API Error: ' + r.status);
-  return r.json();
-}
 
 /* ---------- live clock + date ---------- */
 let lastHour = -1;
@@ -693,7 +748,52 @@ function moonPhase(){
   if(txt) txt.textContent=p[2];
 }
 
-/* ---------- general .ics parser for calendars and trips ---------- */
+/* ---------- Hardcoded World Cup Widget ---------- */
+function renderHardcodedWorldCup() {
+  const list = document.getElementById('wcSchedList');
+  if(!list) return;
+
+  const now = new Date();
+  
+  // Find the next 3 matches that haven't ended yet (allowing a 2-hour match window)
+  const upcoming = CONFIG.worldCupMatches
+      .map(m => ({ ...m, parsedDate: new Date(m.date) }))
+      .filter(m => m.parsedDate >= new Date(now.getTime() - 7200000))
+      .sort((a,b) => a.parsedDate - b.parsedDate)
+      .slice(0, 3);
+      
+  if(!upcoming.length){ 
+     list.innerHTML='<div class="msg-text">Tournament finished!</div>'; 
+     return; 
+  }
+  
+  let html='';
+  const colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
+  
+  upcoming.forEach((u, i) => {
+     const timeStr = u.parsedDate.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit', hour12:false});
+     
+     let dateStr = u.parsedDate.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+     const tmrw = new Date(); tmrw.setDate(now.getDate() + 1);
+     if(u.parsedDate.toDateString() === now.toDateString()) dateStr = 'Today';
+     else if(u.parsedDate.toDateString() === tmrw.toDateString()) dateStr = 'Tomorrow';
+
+     const c = colors[i % colors.length];
+
+     html += `
+        <div class="wc-item" style="--c:${c}">
+           <div class="wc-item-time">${timeStr}<small>CST</small></div>
+           <div>
+              <div class="wc-item-match">${u.home} vs ${u.away}</div>
+              <div class="wc-item-date">${dateStr}</div>
+           </div>
+        </div>
+     `;
+  });
+  list.innerHTML = html;
+}
+
+/* ---------- general .ics parser for trips ---------- */
 function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
 function icsEvents(raw){
   const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
@@ -702,9 +802,7 @@ function icsEvents(raw){
     if(ln==='BEGIN:VEVENT'){cur={};continue;}
     if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
     if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
-    
     let k=ln.slice(0,i).trim(),v=ln.slice(i+1).trim();
-    
     const s=k.indexOf(';');
     const params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
     v=v.replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
@@ -720,65 +818,6 @@ function icsDate(f){
   return new Date(v);
 }
 function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
-
-/* ---------- Automated World Cup Schedule (API based w/ custom fetchWrapper) ---------- */
-async function loadWorldCupSchedule(){
-  const list = document.getElementById('wcSchedList');
-  if(!list) return;
-
-  if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') {
-     list.innerHTML='<div class="msg-text">Waiting for API key...</div>';
-     return;
-  }
-
-  try{
-    const today = new Date();
-    const fromDate = today.toISOString().slice(0, 10);
-    const future = new Date(today.getTime() + 21 * 86400000).toISOString().slice(0, 10);
-    
-    // Using the rate-limit-aware fetcher
-    const d = await fetchFootball(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${fromDate}&dateTo=${future}`);
-    const evs = d.matches || [];
-    
-    const upcoming = evs.filter(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'IN_PLAY' || m.status === 'PAUSED').slice(0, 3);
-    
-    if(!upcoming.length){ list.innerHTML='<div class="msg-text">No upcoming matches</div>'; return; }
-    
-    let html='';
-    const colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
-    
-    upcoming.forEach((u, i) => {
-       const matchTime = new Date(u.utcDate);
-       const timeStr = matchTime.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit', hour12:false});
-       
-       let dateStr = matchTime.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
-       const tmrw = new Date(); tmrw.setDate(today.getDate() + 1);
-       if(matchTime.toDateString() === today.toDateString()) dateStr = 'Today';
-       else if(matchTime.toDateString() === tmrw.toDateString()) dateStr = 'Tomorrow';
-
-       const c = colors[i % colors.length];
-       
-       const home = u.homeTeam.name ? u.homeTeam.name : 'TBD';
-       const away = u.awayTeam.name ? u.awayTeam.name : 'TBD';
-
-       html += `
-          <div class="wc-item" style="--c:${c}">
-             <div class="wc-item-time">${timeStr}<small>CST</small></div>
-             <div>
-                <div class="wc-item-match">${home} vs ${away}</div>
-                <div class="wc-item-date">${dateStr}</div>
-             </div>
-          </div>
-       `;
-    });
-    list.innerHTML = html;
-  }catch(e){
-    if(e.message !== 'Rate limit paused') {
-       console.error("World Cup Schedule Error:", e);
-       list.innerHTML='<div class="msg-text">Unable to load schedule. Check console for details.</div>';
-    }
-  }
-}
 
 /* ---------- next trip (TripIt rendering) ---------- */
 function renderTrip(t){
@@ -861,60 +900,6 @@ function startCarousel() {
     }, 15000); 
 }
 
-/* ---------- live world cup scores ---------- */
-async function loadWorldCup() {
-  const container = document.getElementById('wcContainer');
-  if(!container) return;
-
-  if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') return; 
-
-  try {
-    const today = new Date().toISOString().slice(0, 10);
-    
-    // Using the rate-limit-aware fetcher
-    const d = await fetchFootball(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${today}&dateTo=${today}`);
-    const matches = d.matches || [];
-
-    if(matches.length > 0) {
-       container.className = 'card chores carousel-item delay-4';
-       
-       let html = `
-          <div class="head-row" style="margin-bottom:.5em">
-             <h2>FIFA World Cup 2026</h2>
-             <div class="legend"><span style="color:#ff7a7a;font-weight:700;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff7a7a;animation:pulse 2s infinite"></span> MATCHES TODAY</span></div>
-          </div>
-          <div class="wc-matches">
-       `;
-       
-       matches.forEach(m => {
-          const home = m.homeTeam.tla || (m.homeTeam.name ? m.homeTeam.name.substring(0,3).toUpperCase() : 'TBD');
-          const away = m.awayTeam.tla || (m.awayTeam.name ? m.awayTeam.name.substring(0,3).toUpperCase() : 'TBD');
-          
-          const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
-          const isFinished = m.status === 'FINISHED';
-          
-          let hScore = m.score?.fullTime?.home !== undefined && m.score.fullTime.home !== null ? m.score.fullTime.home : '-';
-          let aScore = m.score?.fullTime?.away !== undefined && m.score.fullTime.away !== null ? m.score.fullTime.away : '-';
-          
-          const matchTime = new Date(m.utcDate);
-          let statusText = isLive ? 'LIVE' : (isFinished ? 'FT' : matchTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
-
-          html += `
-             <div class="wc-match">
-                <div style="display:flex;align-items:center;gap:6px;flex:1"><span class="wc-team">${home}</span></div>
-                <div class="wc-score">${hScore}</div>
-                <div class="wc-status ${isLive ? 'live' : ''}">${statusText}</div>
-                <div class="wc-score">${aScore}</div>
-                <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:flex-end"><span class="wc-team">${away}</span></div>
-             </div>
-          `;
-       });
-       html += `</div>`;
-       container.innerHTML = html;
-    }
-  } catch(e) { }
-}
-
 /* ---------- boot ---------- */
 tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
@@ -925,7 +910,10 @@ loadSunAqi();setInterval(loadSunAqi,1800000);
 loadFx();setInterval(loadFx,3600000);             
 moonPhase();setInterval(moonPhase,3600000);       
 loadTrip();setInterval(loadTrip,1800000);         
-loadWorldCupSchedule();setInterval(loadWorldCupSchedule, 3600000); 
+
+// Execute the hardcoded World Cup render immediately
+renderHardcodedWorldCup(); 
+setInterval(renderHardcodedWorldCup, 60000); 
+
 startCarousel();                                  
-loadWorldCup();setInterval(loadWorldCup, 60000);  
 </script>
