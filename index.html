@@ -142,7 +142,19 @@
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.3rem);letter-spacing:-.01em}
   .legend{display:flex;gap:8px;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
-  
+
+  /* WORLD CUP API SCHEDULE CARD */
+  .wc-sched{display:flex;flex-direction:column;justify-content:center;gap:clamp(6px,1vh,12px)}
+  .wc-hero{position:relative;overflow:hidden}
+  .wc-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, #006847, #ffffff, #ce1126)}
+  .wc-list{display:flex;flex-direction:column;gap:clamp(6px,1vh,12px)}
+  .wc-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(6px,1vh,12px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
+  .wc-item-time{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1.1rem,2vw,1.6rem);line-height:.82;color:var(--c);min-width:55px;text-align:center;}
+  .wc-item-time small{display:block;font-family:var(--body);font-weight:500;font-size:.4em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+  .wc-item-match{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.1rem);line-height:1;word-wrap:break-word;}
+  .wc-item-date{color:var(--muted);font-weight:500;font-size:.55rem;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+  .msg-text{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(.75rem,1vw,1.05rem);line-height:1.4;padding:6px}
+
   /* Carousel Container */
   .carousel-wrapper { display:grid; grid-template-columns: 1fr; grid-template-rows: 1fr; flex:1; min-height:0; position: relative;}
   .carousel-item { grid-area: 1 / 1; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateY(10px); z-index: 1;}
@@ -176,7 +188,7 @@
 
   /* World Cup Live Scores */
   .world-cup-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: clamp(16px, 2vw, 32px); height: 100%; border-left: 5px solid #ffcf5c; }
-  .wc-hero { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
+  .wc-hero-ico { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
   .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
   .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
   
@@ -188,7 +200,7 @@
   .wc-status.live { color:#ff7a7a; animation:pulse 2s infinite; }
   @keyframes pulse { 0% { opacity:1; } 50% { opacity:.4; } 100% { opacity:1; } }
 
-  /* ---------- RIGHT: school run / trip / glance ---------- */
+  /* ---------- RIGHT: trip / glance ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
   
   .trip{display:flex;flex-direction:column;position:relative;overflow:hidden;min-width:0}
@@ -300,10 +312,9 @@
   </div>
 
   <div class="center">
-    <div class="card school school-hero delay-2">
-      <div class="head-row"><h2 id="schoolEyebrow">School run · this morning</h2></div>
-      <div class="run-list" id="runList"></div>
-      <div class="run-msg" id="runMsg"></div>
+    <div class="card wc-sched wc-hero delay-2">
+      <div class="head-row"><h2 id="wcSchedEyebrow">World Cup Schedule</h2></div>
+      <div class="wc-list" id="wcSchedList"><div class="msg-text">Waiting for API key...</div></div>
     </div>
 
     <div class="carousel-wrapper" id="lowerCarousel">
@@ -316,7 +327,7 @@
         </div>
         
         <div class="card world-cup-card carousel-item delay-4" id="wcContainer">
-            <div class="wc-hero">⚽</div>
+            <div class="wc-hero-ico">⚽</div>
             <div class="wc-title">FIFA World Cup 2026</div>
             <div class="wc-sub">Tournament kicks off June 11, 2026! Yesterday's match results and league standings will populate here natively once games begin.</div>
         </div>
@@ -349,17 +360,15 @@
    CONFIG — edit this to go live. Everything else updates itself.
    ============================================================ */
 const CONFIG = {
-  // Destination Weather updated to include Houston alongside local Mexico City
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
     { name:'Houston',     lat:29.7633, lon:-95.3633, tz:'America/Chicago'     },
   ],
 
-  // Countdown
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
 
-  // TripIt
   tripitIcs: 'tripit_Jun12_to_Jun15.ics',
+  
   tripFallback: {
     name:'Houston JUN 26', dest:'Houston, TX',
     start:'2026-06-12', end:'2026-06-16',
@@ -369,14 +378,12 @@ const CONFIG = {
     ]
   },
 
-  // Stocks
   finnhub: 'd89hdl1r01qspkc702c0d89hdl1r01qspkc702cg', 
   stocks: [
     { name:'Volaris', symbol:'VLRS' },
     { name:'JEPI', symbol:'JEPI' }
   ],
 
-  // Sports API Configuration (football-data.org)
   footballApi: 'YOUR_API_KEY', // <--- Paste your free football-data.org API key here
 };
 
@@ -394,7 +401,6 @@ function tick(){
   const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
   document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
   
-  // Automatically re-render chores if the hour changes to catch the 12:00 PM shift
   if(lastHour !== -1 && lastHour !== h) {
      renderKids();
   }
@@ -408,7 +414,7 @@ function countdown(){
   document.getElementById('cdNum').textContent=d;
 }
 
-/* ---------- chore chart (persists daily, sorts by time, features golden ticket) ---------- */
+/* ---------- chore chart ---------- */
 const kidsData=[
   {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:[
     {txt:'Make the bed', time:'morning', type:'all'},
@@ -430,7 +436,7 @@ const kidsData=[
   ]},
 ];
 
-let state={};        // {choreId:true}
+let state={};        
 let memOnly=false;
 
 async function loadState(){
@@ -458,7 +464,6 @@ function renderKids(){
   const isWeekend = d.getDay() === 0 || d.getDay() === 6;
   const dayType = isWeekend ? 'weekend' : 'weekday';
 
-  // Seeded random function to ensure the Golden Ticket stays the same all day
   const getBonusId = (kidStr, count) => {
      let hash = 0; const s = todayKey + kidStr;
      for(let i=0; i<s.length; i++) hash = Math.imul(31, hash) + s.charCodeAt(i) | 0;
@@ -470,11 +475,9 @@ function renderKids(){
     div.className='kid';div.style.setProperty('--c',k.c);
     let tasksHTML='';
     
-    // Filter out chores that do not belong to the current day type (weekend vs weekday)
     const activeTasks = k.tasks.map((t, i) => ({...t, origIdx: i}))
                                .filter(t => t.type === 'all' || t.type === dayType);
     
-    // Pick the one daily Golden Ticket chore for this child
     const bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
 
     activeTasks.forEach((t, i)=>{
@@ -482,9 +485,7 @@ function renderKids(){
       const done = state[id] ? 'done' : '';
       
       let dimClass = '';
-      // If it is past 12pm, dim morning tasks (unless they are already done)
       if (hr >= 12 && t.time === 'morning' && !state[id]) dimClass = 'dimmed';
-      // If it is before 12pm, dim evening tasks so kids focus on the morning
       if (hr < 12 && t.time === 'evening') dimClass = 'dimmed';
 
       const isGolden = i === bonusIndex ? 'golden' : '';
@@ -519,65 +520,7 @@ function updateKidDOM(div){
   div.classList.toggle('complete',done===total && total>0);
 }
 
-/* ---------- school run countdown (weekday mornings) ---------- */
-const departures=[
-  {nm:'Matteo',     avatars:[['Mt','var(--matteo)']],                  c:'var(--matteo)', h:7, m:19},
-  {nm:'Max & Maya', avatars:[['Mx','var(--max)'],['My','var(--maya)']], c:'var(--max)',    h:7, m:25},
-];
-const runList=document.getElementById('runList');
-const runMsg=document.getElementById('runMsg');
-const schoolEyebrow=document.getElementById('schoolEyebrow');
-departures.forEach((d,i)=>{
-  const row=document.createElement('div');
-  row.className='run';row.style.setProperty('--c',d.c);
-  const avs=d.avatars.map((a,j)=>`<span class="av2" style="background:${a[1]};${j>0?'margin-left:-9px':''}">${a[0]}</span>`).join('');
-  row.innerHTML=`<div class="run-av">${avs}</div>
-    <div class="run-info"><div class="nm">${d.nm}</div><div class="lb">leave by ${d.h}:${String(d.m).padStart(2,'0')}</div></div>
-    <div class="run-cd">--:--<small>to go</small></div>`;
-  runList.appendChild(row);
-});
-function fmtRun(s){
-  if(s>=3600){const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h+':'+String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
-  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-}
-function schoolTick(){
-  const now=new Date();const day=now.getDay();
-  const weekend=(day===0||day===6);
-  const rows=runList.querySelectorAll('.run');
-  const last=departures.reduce((a,b)=>(b.h*60+b.m)>(a.h*60+a.m)?b:a);
-  const cutoff=new Date(now);cutoff.setHours(last.h,last.m+30,0,0);
-  const morning=!weekend && now<cutoff;
-  if(morning){
-    runList.style.display='';runMsg.style.display='none';
-    schoolEyebrow.textContent='School run · this morning';
-    departures.forEach((d,i)=>{
-      const t=new Date(now);t.setHours(d.h,d.m,0,0);
-      const diff=Math.round((t-now)/1000);
-      const cd=rows[i].querySelector('.run-cd');
-      if(diff>0){
-        rows[i].classList.remove('gone');
-        rows[i].classList.toggle('urgent',diff<=300);
-        cd.innerHTML=fmtRun(diff)+'<small>to go</small>';
-      }else{
-        rows[i].classList.add('gone');rows[i].classList.remove('urgent');
-        cd.innerHTML='Go! 🎒<small>'+fmtRun(-diff)+' over</small>';
-      }
-    });
-  }else{
-    runList.style.display='none';runMsg.style.display='';
-    schoolEyebrow.textContent='School run';
-    if(weekend){
-      runMsg.textContent='No school today — enjoy the weekend 🌞';
-    }else if(day===5){
-      runMsg.innerHTML='All out the door for the week 🎒<br><span style="color:var(--faint);font-size:.85em">Enjoy the weekend!</span>';
-    }else{
-      runMsg.innerHTML='All out the door 🎒<br><span style="color:var(--faint);font-size:.85em">Tomorrow — Matteo 7:19 · Max &amp; Maya 7:25</span>';
-    }
-  }
-}
-schoolTick();setInterval(schoolTick,1000);
-
-/* ---------- live weather (Open-Meteo, no key) ---------- */
+/* ---------- live weather ---------- */
 function wmo(c){
   const m={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],
     45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌦️','Drizzle'],
@@ -601,15 +544,15 @@ async function loadWeather(){
       if(ico) ico.textContent=cur.e;
       if(tmp) tmp.textContent=Math.round(d.current.temperature_2m)+'°';
       if(des) des.innerHTML=`<b>${cur.t}</b> · feels ${Math.round(d.current.apparent_temperature)}°`;
-    }catch(e){/* offline / sandboxed: keep the sample weather */}
+    }catch(e){}
   }
 }
 
-/* ---------- live multi-stock quote + Sparklines (Finnhub) ---------- */
+/* ---------- live multi-stock quote + Sparklines ---------- */
 async function loadStock(){
   const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
   const to = Math.floor(Date.now() / 1000);
-  const from = to - (86400 * 4); // fetch trailing 4 days for reliable trend history
+  const from = to - (86400 * 4); 
   
   for(let i=0;i<list.length;i++){
     const s=list[i];
@@ -624,7 +567,6 @@ async function loadStock(){
       cEl.className='stock-chg '+(up?'up':'down');
       cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
       
-      // Inject automated sparklines if container exists
       if(spk) {
          const r2 = await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${s.symbol}&resolution=60&from=${from}&to=${to}&token=${CONFIG.finnhub}`);
          if(r2.ok) {
@@ -641,11 +583,11 @@ async function loadStock(){
              }
          }
       }
-    }catch(e){/* keep sample */}
+    }catch(e){}
   }
 }
 
-/* ---------- ticker: sunrise/sunset + air quality (Open-Meteo, no key) ---------- */
+/* ---------- ticker: sunrise/sunset + air quality ---------- */
 async function loadSunAqi(){
   const c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
   try{
@@ -683,11 +625,9 @@ async function loadFx(){
     const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
     const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
     
-    // Add tiny sparkline SVG containers directly below the numbers
     if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small><svg id="spkEur" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
     if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small><svg id="spkUsd" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
     
-    // Fetch historical forex data to draw the sparklines
     const fetchSpk = async (sym, elId) => {
        try {
          const rs = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1h`);
@@ -710,7 +650,7 @@ async function loadFx(){
   }catch(e){}
 }
 
-/* ---------- ticker: moon phase (computed locally, no network) ---------- */
+/* ---------- ticker: moon phase ---------- */
 function moonPhase(){
   const now=new Date();
   const synodic=29.53058867;
@@ -727,15 +667,19 @@ function moonPhase(){
   if(txt) txt.textContent=p[2];
 }
 
-/* ---------- next trip (parse a TripIt .ics feed) ---------- */
+/* ---------- general .ics parser for calendars and trips ---------- */
 function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
 function icsEvents(raw){
   const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
-  for(const ln of lines){
+  for(let ln of lines){
+    ln = ln.trim();
     if(ln==='BEGIN:VEVENT'){cur={};continue;}
     if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
     if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
-    let k=ln.slice(0,i),v=ln.slice(i+1);const s=k.indexOf(';');
+    
+    let k=ln.slice(0,i).trim(),v=ln.slice(i+1).trim();
+    
+    const s=k.indexOf(';');
     const params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
     v=v.replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
     cur[k]={val:v,params};
@@ -751,6 +695,69 @@ function icsDate(f){
 }
 function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 
+/* ---------- Automated World Cup Schedule (API based) ---------- */
+async function loadWorldCupSchedule(){
+  const list = document.getElementById('wcSchedList');
+  if(!list) return;
+
+  if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') {
+     list.innerHTML='<div class="msg-text">Waiting for API key...</div>';
+     return;
+  }
+
+  try{
+    const today = new Date();
+    const fromDate = today.toISOString().slice(0, 10);
+    // Look ahead 21 days to find upcoming matches
+    const future = new Date(today.getTime() + 21 * 86400000).toISOString().slice(0, 10);
+    
+    const r = await fetch(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${fromDate}&dateTo=${future}`, {
+      headers: { 'X-Auth-Token': CONFIG.footballApi }
+    });
+    
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    const evs = d.matches || [];
+    
+    // Find upcoming matches that haven't finished
+    const upcoming = evs.filter(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'IN_PLAY' || m.status === 'PAUSED').slice(0, 3);
+    
+    if(!upcoming.length){ list.innerHTML='<div class="msg-text">No upcoming matches</div>'; return; }
+    
+    let html='';
+    const colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
+    
+    upcoming.forEach((u, i) => {
+       const matchTime = new Date(u.utcDate);
+       const timeStr = matchTime.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit', hour12:false});
+       
+       let dateStr = matchTime.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+       const tmrw = new Date(); tmrw.setDate(today.getDate() + 1);
+       if(matchTime.toDateString() === today.toDateString()) dateStr = 'Today';
+       else if(matchTime.toDateString() === tmrw.toDateString()) dateStr = 'Tomorrow';
+
+       const c = colors[i % colors.length];
+       
+       const home = u.homeTeam.name ? u.homeTeam.name : 'TBD';
+       const away = u.awayTeam.name ? u.awayTeam.name : 'TBD';
+
+       html += `
+          <div class="wc-item" style="--c:${c}">
+             <div class="wc-item-time">${timeStr}<small>CST</small></div>
+             <div>
+                <div class="wc-item-match">${home} vs ${away}</div>
+                <div class="wc-item-date">${dateStr}</div>
+             </div>
+          </div>
+       `;
+    });
+    list.innerHTML = html;
+  }catch(e){
+    list.innerHTML='<div class="msg-text">Unable to load schedule</div>';
+  }
+}
+
+/* ---------- next trip (TripIt rendering) ---------- */
 function renderTrip(t){
   const body=document.getElementById('tripBody');if(!body)return;
   const now=new Date();
@@ -828,17 +835,15 @@ function startCarousel() {
         items[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % items.length;
         items[currentIndex].classList.add('active');
-    }, 15000); // Swaps every 15 seconds natively
+    }, 15000); 
 }
 
-/* ---------- live world cup scores (football-data.org) ---------- */
+/* ---------- live world cup scores ---------- */
 async function loadWorldCup() {
   const container = document.getElementById('wcContainer');
   if(!container) return;
 
   try {
-    // We use football-data.org API as it natively supports the World Cup (Competition ID: 2000)
-    // IMPORTANT: It will not fetch anything until you add your key to the CONFIG object above.
     if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') return; 
 
     const today = new Date().toISOString().slice(0, 10);
@@ -850,7 +855,6 @@ async function loadWorldCup() {
     const d = await r.json();
     const matches = d.matches || [];
 
-    // If there are actual matches today, overwrite the "Waiting for Kickoff" placeholder natively
     if(matches.length > 0) {
        container.className = 'card chores carousel-item delay-4';
        
@@ -863,7 +867,6 @@ async function loadWorldCup() {
        `;
        
        matches.forEach(m => {
-          // Use the short 3-letter acronym if available, otherwise truncate the name
           const home = m.homeTeam.tla || (m.homeTeam.name ? m.homeTeam.name.substring(0,3).toUpperCase() : 'TBD');
           const away = m.awayTeam.tla || (m.awayTeam.name ? m.awayTeam.name.substring(0,3).toUpperCase() : 'TBD');
           
@@ -873,7 +876,6 @@ async function loadWorldCup() {
           let hScore = m.score?.fullTime?.home !== undefined && m.score.fullTime.home !== null ? m.score.fullTime.home : '-';
           let aScore = m.score?.fullTime?.away !== undefined && m.score.fullTime.away !== null ? m.score.fullTime.away : '-';
           
-          // Format the start time if the match hasn't started yet
           const matchTime = new Date(m.utcDate);
           let statusText = isLive ? 'LIVE' : (isFinished ? 'FT' : matchTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
 
@@ -890,21 +892,20 @@ async function loadWorldCup() {
        html += `</div>`;
        container.innerHTML = html;
     }
-  } catch(e) {
-    // Silently fail and keep the default placeholder visible if the API drops out
-  }
+  } catch(e) { }
 }
 
 /* ---------- boot ---------- */
 tick();setInterval(tick,1000);
 countdown();setInterval(countdown,3600000);
 loadState();
-loadWeather();setInterval(loadWeather,1800000);   // refresh weather every 30 min
-loadStock();setInterval(loadStock,300000);        // refresh stocks every 5 min
-loadSunAqi();setInterval(loadSunAqi,1800000);     // sun + air quality every 30 min
-loadFx();setInterval(loadFx,3600000);             // exchange rates hourly
-moonPhase();setInterval(moonPhase,3600000);       // moon phase hourly
-loadTrip();setInterval(loadTrip,1800000);         // refresh trip every 30 min
-startCarousel();                                  // initialize the lower grid carousel
-loadWorldCup();setInterval(loadWorldCup, 60000);  // check for updated match scores every minute
+loadWeather();setInterval(loadWeather,1800000);   
+loadStock();setInterval(loadStock,300000);        
+loadSunAqi();setInterval(loadSunAqi,1800000);     
+loadFx();setInterval(loadFx,3600000);             
+moonPhase();setInterval(moonPhase,3600000);       
+loadTrip();setInterval(loadTrip,1800000);         
+loadWorldCupSchedule();setInterval(loadWorldCupSchedule, 3600000); 
+startCarousel();                                  
+loadWorldCup();setInterval(loadWorldCup, 60000);  
 </script>
