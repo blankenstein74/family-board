@@ -59,6 +59,7 @@
     display: grid;
     gap: clamp(8px, 1.5vw, 16px);
     
+    /* minmax(0, 1fr) strictly prevents the grid from blowing past 50% width */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
@@ -88,6 +89,7 @@
   .head-left{display:flex;flex-direction:column;gap:clamp(4px,1vh,10px);min-width:0}
   .pill-row{display:flex;align-items:center;gap:clamp(4px,.8vw,12px);flex-wrap:wrap;color:var(--muted);font-weight:500;font-size:clamp(.65rem,.9vw,1rem)}
   
+  /* prominent countdown */
   .hero-cd{display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);background:var(--panel);
     border:1px solid var(--line);border-left:5px solid var(--mom);border-radius:14px;
     padding:clamp(8px,1vw,14px) clamp(10px,1.5vw,20px);flex:none}
@@ -312,7 +314,7 @@
   <div class="center">
     <div class="card wc-sched wc-hero delay-2">
       <div class="head-row"><h2 id="wcSchedEyebrow">World Cup Schedule</h2></div>
-      <div class="wc-list" id="wcSchedList"><div class="msg-text">Loading Matches...</div></div>
+      <div class="wc-list" id="wcSchedList"><div class="msg-text">Loading matches...</div></div>
     </div>
 
     <div class="carousel-wrapper" id="lowerCarousel">
@@ -386,30 +388,28 @@ const CONFIG = {
   footballApi: '0ce0f6a59976461b9b134e6c1d255ea2', 
 };
 
-/* ---------- API Rate Limiter Wrapper ---------- */
+/* ---------- API Rate Limiter Wrapper (Direct Fetch) ---------- */
 let footballApiBlockedUntil = 0;
 
 async function fetchFootball(url) {
-  // If we are in a cooldown period, instantly reject to save network requests
   if (Date.now() < footballApiBlockedUntil) {
      throw new Error('Rate limit paused');
   }
   
+  // Fetching DIRECTLY from the API (no proxy)
   const r = await fetch(url, {
     headers: { 'X-Auth-Token': CONFIG.footballApi }
   });
 
-  // football-data.org specific rate limiting headers
   const available = r.headers.get('X-Requests-Available-Minute');
   const resetSeconds = r.headers.get('X-RequestCounter-Reset');
 
-  // If we hit the absolute limit OR we only have 1 request left this minute, trigger cooldown
   if (r.status === 429 || (available !== null && parseInt(available) <= 1)) {
      const delayMs = resetSeconds ? (parseInt(resetSeconds) * 1000) : 60000;
      footballApiBlockedUntil = Date.now() + delayMs;
   }
   
-  if (!r.ok) throw new Error('API Error');
+  if (!r.ok) throw new Error('API Error: ' + r.status);
   return r.json();
 }
 
@@ -726,14 +726,17 @@ async function loadWorldCupSchedule(){
   const list = document.getElementById('wcSchedList');
   if(!list) return;
 
-  if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') return;
+  if (!CONFIG.footballApi || CONFIG.footballApi === 'YOUR_API_KEY') {
+     list.innerHTML='<div class="msg-text">Waiting for API key...</div>';
+     return;
+  }
 
   try{
     const today = new Date();
     const fromDate = today.toISOString().slice(0, 10);
     const future = new Date(today.getTime() + 21 * 86400000).toISOString().slice(0, 10);
     
-    // Using the new rate-limit-aware fetcher
+    // Using the rate-limit-aware fetcher
     const d = await fetchFootball(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${fromDate}&dateTo=${future}`);
     const evs = d.matches || [];
     
@@ -770,9 +773,9 @@ async function loadWorldCupSchedule(){
     });
     list.innerHTML = html;
   }catch(e){
-    // Keep it silent if rate limited so we don't flash an error screen
     if(e.message !== 'Rate limit paused') {
-       list.innerHTML='<div class="msg-text">Unable to load schedule</div>';
+       console.error("World Cup Schedule Error:", e);
+       list.innerHTML='<div class="msg-text">Unable to load schedule. Check console for details.</div>';
     }
   }
 }
@@ -858,7 +861,7 @@ function startCarousel() {
     }, 15000); 
 }
 
-/* ---------- live world cup scores (API based w/ custom fetchWrapper) ---------- */
+/* ---------- live world cup scores ---------- */
 async function loadWorldCup() {
   const container = document.getElementById('wcContainer');
   if(!container) return;
@@ -868,7 +871,7 @@ async function loadWorldCup() {
   try {
     const today = new Date().toISOString().slice(0, 10);
     
-    // Using the new rate-limit-aware fetcher
+    // Using the rate-limit-aware fetcher
     const d = await fetchFootball(`https://api.football-data.org/v4/competitions/2000/matches?dateFrom=${today}&dateTo=${today}`);
     const matches = d.matches || [];
 
