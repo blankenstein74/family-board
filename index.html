@@ -118,16 +118,14 @@
   .wx-city-col { display:flex; flex-direction:column; justify-content:center; min-width:0; }
   .wx-city-col .city { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1.1rem); line-height:1; word-wrap: break-word }
   
-  /* STOCKS */
+  /* STOCKS: Live Text Only */
   .stock{display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
   .stk-row{display:flex;flex-direction:column}
   .stk-row + .stk-row{padding-top:8px;border-top:1px solid var(--line)}
   .stock-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
   .stk-name{font-weight:700;font-size:clamp(.75rem,.9vw,1rem);word-wrap:break-word}
   .stock-ex{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:2px 6px;border-radius:999px;flex:none}
-  .stk-price-row { display:flex; align-items:center; justify-content:space-between; margin:.1em 0 }
-  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums}
-  .sparkline { width: 60px; height: 22px; flex:none; margin-left:8px; }
+  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums;margin:.1em 0 .1em}
   .stock-chg{font-weight:600;font-size:clamp(.65rem,.8vw,.85rem);color:var(--muted);display:flex;align-items:center;gap:5px}
   .stock-chg.up{color:#7ddf8e}
   .stock-chg.down{color:#ff7a7a}
@@ -283,18 +281,12 @@
       <div class="eyebrow" style="margin-bottom:6px">Markets</div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">Volaris <span class="stock-ex">VLRS</span></div></div>
-        <div class="stk-price-row">
-            <div class="stock-price" id="stkPrice0">$4.58</div>
-            <svg class="sparkline" id="stkSpark0" viewBox="0 0 60 22"></svg>
-        </div>
+        <div class="stock-price" id="stkPrice0">$4.58</div>
         <div class="stock-chg up" id="stkChg0"><span class="arrow">▲</span> +0.12 (2.57%) today</div>
       </div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">JPMorgan Premium <span class="stock-ex">JEPI</span></div></div>
-        <div class="stk-price-row">
-            <div class="stock-price" id="stkPrice1">$54.20</div>
-            <svg class="sparkline" id="stkSpark1" viewBox="0 0 60 22"></svg>
-        </div>
+        <div class="stock-price" id="stkPrice1">$54.20</div>
         <div class="stock-chg up" id="stkChg1"><span class="arrow">▲</span> +0.05 (0.10%) today</div>
       </div>
     </div>
@@ -372,93 +364,78 @@ const CONFIG = {
     { name:'JEPI', symbol:'JEPI' }
   ],
 
-  // FIFA WORLD CUP 2026 — GROUP STAGE (all 72 matches)
-  // Official schedule (USA TODAY / FOX Sports). Times shown in Central (CDMX, -06:00).
-  // All 48 teams confirmed (UEFA + inter-confederation playoffs resolved March 31, 2026).
+  // HARDCODED WORLD CUP MATCHES: Since FireTV browser blocks APIs/Local Files
+  // Update this array manually when the official 2026 groups are drawn.
   worldCupMatches: [
-    // June 11 — Matchday 1
+    // Matchday 1
     { date: '2026-06-11T14:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Africa 🇿🇦' },
     { date: '2026-06-11T21:00:00-06:00', home: 'South Korea 🇰🇷', away: 'Czechia 🇨🇿' },
-    // June 12
     { date: '2026-06-12T14:00:00-06:00', home: 'Canada 🇨🇦', away: 'Bosnia & Herzegovina 🇧🇦' },
     { date: '2026-06-12T20:00:00-06:00', home: 'USA 🇺🇸', away: 'Paraguay 🇵🇾' },
-    // June 13
     { date: '2026-06-13T14:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Morocco 🇲🇦' },
     { date: '2026-06-13T17:00:00-06:00', home: 'Australia 🇦🇺', away: 'Türkiye 🇹🇷' },
     { date: '2026-06-13T20:00:00-06:00', home: 'Haiti 🇭🇹', away: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
     { date: '2026-06-13T23:00:00-06:00', home: 'Qatar 🇶🇦', away: 'Switzerland 🇨🇭' },
-    // June 14
     { date: '2026-06-14T12:00:00-06:00', home: 'Germany 🇩🇪', away: 'Curaçao 🇨🇼' },
     { date: '2026-06-14T15:00:00-06:00', home: 'Ivory Coast 🇨🇮', away: 'Ecuador 🇪🇨' },
     { date: '2026-06-14T18:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Japan 🇯🇵' },
     { date: '2026-06-14T21:00:00-06:00', home: 'Sweden 🇸🇪', away: 'Tunisia 🇹🇳' },
-    // June 15
     { date: '2026-06-15T11:00:00-06:00', home: 'Spain 🇪🇸', away: 'Cape Verde 🇨🇻' },
     { date: '2026-06-15T14:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Egypt 🇪🇬' },
     { date: '2026-06-15T17:00:00-06:00', home: 'Saudi Arabia 🇸🇦', away: 'Uruguay 🇺🇾' },
     { date: '2026-06-15T20:00:00-06:00', home: 'Iran 🇮🇷', away: 'New Zealand 🇳🇿' },
-    // June 16
     { date: '2026-06-16T14:00:00-06:00', home: 'France 🇫🇷', away: 'Senegal 🇸🇳' },
     { date: '2026-06-16T17:00:00-06:00', home: 'Iraq 🇮🇶', away: 'Norway 🇳🇴' },
     { date: '2026-06-16T20:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Algeria 🇩🇿' },
     { date: '2026-06-16T23:00:00-06:00', home: 'Austria 🇦🇹', away: 'Jordan 🇯🇴' },
-    // June 17
     { date: '2026-06-17T12:00:00-06:00', home: 'Portugal 🇵🇹', away: 'DR Congo 🇨🇩' },
     { date: '2026-06-17T15:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Croatia 🇭🇷' },
     { date: '2026-06-17T18:00:00-06:00', home: 'Ghana 🇬🇭', away: 'Panama 🇵🇦' },
     { date: '2026-06-17T21:00:00-06:00', home: 'Uzbekistan 🇺🇿', away: 'Colombia 🇨🇴' },
-    // June 18 — Matchday 2
+    // Matchday 2
     { date: '2026-06-18T11:00:00-06:00', home: 'Czechia 🇨🇿', away: 'South Africa 🇿🇦' },
     { date: '2026-06-18T14:00:00-06:00', home: 'Switzerland 🇨🇭', away: 'Bosnia & Herzegovina 🇧🇦' },
     { date: '2026-06-18T17:00:00-06:00', home: 'Canada 🇨🇦', away: 'Qatar 🇶🇦' },
     { date: '2026-06-18T20:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Korea 🇰🇷' },
-    // June 19
     { date: '2026-06-19T14:00:00-06:00', home: 'USA 🇺🇸', away: 'Australia 🇦🇺' },
     { date: '2026-06-19T17:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Morocco 🇲🇦' },
     { date: '2026-06-19T20:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Haiti 🇭🇹' },
     { date: '2026-06-19T23:00:00-06:00', home: 'Türkiye 🇹🇷', away: 'Paraguay 🇵🇾' },
-    // June 20
     { date: '2026-06-20T12:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Sweden 🇸🇪' },
     { date: '2026-06-20T15:00:00-06:00', home: 'Germany 🇩🇪', away: 'Ivory Coast 🇨🇮' },
     { date: '2026-06-20T19:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Curaçao 🇨🇼' },
     { date: '2026-06-20T23:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Japan 🇯🇵' },
-    // June 21
     { date: '2026-06-21T11:00:00-06:00', home: 'Spain 🇪🇸', away: 'Saudi Arabia 🇸🇦' },
     { date: '2026-06-21T14:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Iran 🇮🇷' },
     { date: '2026-06-21T17:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Cape Verde 🇨🇻' },
     { date: '2026-06-21T20:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Egypt 🇪🇬' },
-    // June 22
     { date: '2026-06-22T12:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Austria 🇦🇹' },
     { date: '2026-06-22T16:00:00-06:00', home: 'France 🇫🇷', away: 'Iraq 🇮🇶' },
     { date: '2026-06-22T19:00:00-06:00', home: 'Norway 🇳🇴', away: 'Senegal 🇸🇳' },
     { date: '2026-06-22T22:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Algeria 🇩🇿' },
-    // June 23
     { date: '2026-06-23T12:00:00-06:00', home: 'Portugal 🇵🇹', away: 'Uzbekistan 🇺🇿' },
     { date: '2026-06-23T15:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Ghana 🇬🇭' },
     { date: '2026-06-23T18:00:00-06:00', home: 'Panama 🇵🇦', away: 'Croatia 🇭🇷' },
     { date: '2026-06-23T21:00:00-06:00', home: 'Colombia 🇨🇴', away: 'DR Congo 🇨🇩' },
-    // June 24 — Matchday 3
+    // Matchday 3
     { date: '2026-06-24T14:00:00-06:00', home: 'Canada 🇨🇦', away: 'Switzerland 🇨🇭' },
     { date: '2026-06-24T14:00:00-06:00', home: 'Bosnia & Herzegovina 🇧🇦', away: 'Qatar 🇶🇦' },
     { date: '2026-06-24T17:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Brazil 🇧🇷' },
     { date: '2026-06-24T17:00:00-06:00', home: 'Morocco 🇲🇦', away: 'Haiti 🇭🇹' },
     { date: '2026-06-24T20:00:00-06:00', home: 'Mexico 🇲🇽', away: 'Czechia 🇨🇿' },
     { date: '2026-06-24T20:00:00-06:00', home: 'South Korea 🇰🇷', away: 'South Africa 🇿🇦' },
-    // June 25
     { date: '2026-06-25T15:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Germany 🇩🇪' },
     { date: '2026-06-25T15:00:00-06:00', home: 'Curaçao 🇨🇼', away: 'Ivory Coast 🇨🇮' },
     { date: '2026-06-25T18:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Netherlands 🇳🇱' },
     { date: '2026-06-25T18:00:00-06:00', home: 'Japan 🇯🇵', away: 'Sweden 🇸🇪' },
     { date: '2026-06-25T21:00:00-06:00', home: 'USA 🇺🇸', away: 'Türkiye 🇹🇷' },
     { date: '2026-06-25T21:00:00-06:00', home: 'Paraguay 🇵🇾', away: 'Australia 🇦🇺' },
-    // June 26
     { date: '2026-06-26T14:00:00-06:00', home: 'Norway 🇳🇴', away: 'France 🇫🇷' },
     { date: '2026-06-26T14:00:00-06:00', home: 'Senegal 🇸🇳', away: 'Iraq 🇮🇶' },
     { date: '2026-06-26T19:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Belgium 🇧🇪' },
     { date: '2026-06-26T19:00:00-06:00', home: 'Egypt 🇪🇬', away: 'Iran 🇮🇷' },
     { date: '2026-06-26T12:00:00-06:00', home: 'Cape Verde 🇨🇻', away: 'Saudi Arabia 🇸🇦' },
     { date: '2026-06-26T22:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Spain 🇪🇸' },
-    // June 27
     { date: '2026-06-27T16:00:00-06:00', home: 'Panama 🇵🇦', away: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
     { date: '2026-06-27T16:00:00-06:00', home: 'Croatia 🇭🇷', away: 'Ghana 🇬🇭' },
     { date: '2026-06-27T18:30:00-06:00', home: 'Colombia 🇨🇴', away: 'Portugal 🇵🇹' },
@@ -629,15 +606,12 @@ async function loadWeather(){
   }
 }
 
-/* ---------- live multi-stock quote + Sparklines ---------- */
+/* ---------- live stock quotes (No CORS/Sparklines to prevent breaking on FireTV) ---------- */
 async function loadStock(){
   const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
-  const to = Math.floor(Date.now() / 1000);
-  const from = to - (86400 * 4); 
-  
   for(let i=0;i<list.length;i++){
     const s=list[i];
-    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i), spk=document.getElementById('stkSpark'+i);
+    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
     if(!pEl || !cEl) continue;
     try{
       const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
@@ -647,23 +621,6 @@ async function loadStock(){
       pEl.textContent='$'+d.c.toFixed(2);
       cEl.className='stock-chg '+(up?'up':'down');
       cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
-      
-      if(spk) {
-         const r2 = await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${s.symbol}&resolution=60&from=${from}&to=${to}&token=${CONFIG.finnhub}`);
-         if(r2.ok) {
-             const d2 = await r2.json();
-             if(d2.s === 'ok' && d2.c && d2.c.length > 0) {
-                 const prices = d2.c;
-                 const min = Math.min(...prices), max = Math.max(...prices);
-                 const range = max - min || 1;
-                 const w = 60, h = 22;
-                 const step = w / (prices.length - 1 || 1);
-                 const pts = prices.map((val, idx) => `${idx * step},${h - ((val - min) / range) * h}`).join(' L ');
-                 const color = up ? '#7ddf8e' : '#ff7a7a';
-                 spk.innerHTML = `<path d="M ${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-             }
-         }
-      }
     }catch(e){}
   }
 }
@@ -698,7 +655,7 @@ async function loadSunAqi(){
   }catch(e){}
 }
 
-/* ---------- ticker: exchange rates (ER-API) + Yahoo Sparklines ---------- */
+/* ---------- ticker: exchange rates (No CORS/Sparklines to prevent breaking on FireTV) ---------- */
 async function loadFx(){
   try{
     const r=await fetch('https://open.er-api.com/v6/latest/EUR');
@@ -706,28 +663,8 @@ async function loadFx(){
     const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
     const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
     
-    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small><svg id="spkEur" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
-    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small><svg id="spkUsd" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
-    
-    const fetchSpk = async (sym, elId) => {
-       try {
-         const rs = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1h`);
-         const dt = await rs.json();
-         const p = dt.chart.result[0].indicators.quote[0].close.filter(x => x !== null);
-         if(p.length > 0) {
-             const min = Math.min(...p), max = Math.max(...p);
-             const rng = max - min || 1;
-             const w = 40, h = 12;
-             const stp = w / (p.length - 1 || 1);
-             const pts = p.map((val, idx) => `${idx * stp},${h - ((val - min) / rng) * h}`).join(' L ');
-             const col = p[p.length-1] >= p[0] ? '#7ddf8e' : '#ff7a7a';
-             document.getElementById(elId).innerHTML = `<path d="M ${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-         }
-       } catch(err){}
-    };
-    fetchSpk('EURMXN=X', 'spkEur');
-    fetchSpk('USDMXN=X', 'spkUsd');
-    
+    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
+    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
   }catch(e){}
 }
 
