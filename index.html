@@ -184,7 +184,21 @@
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
   /* World Cup Content */
-  .world-cup-card { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: clamp(16px, 2vw, 32px); height: 100%; border-left: 5px solid #ffcf5c; }
+  .world-cup-card { display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; text-align:left; padding: clamp(14px,1.6vw,22px); height: 100%; border-left: 5px solid #ffcf5c; overflow:hidden; }
+  .wc-scores { display:flex; flex-direction:column; gap:clamp(7px,1vh,12px); overflow:auto; flex:1; }
+  .wc-splash { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; }
+  .wc-score-row { display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; padding:clamp(8px,1vh,13px) clamp(11px,1.2vw,15px); border-radius:12px; background:var(--panel-2); border-left:3px solid var(--c); }
+  .wc-score-teams { min-width:0; }
+  .wc-score-team { display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:600; font-size:clamp(.9rem,1.15vw,1.15rem); line-height:1.3; }
+  .wc-score-team .gf { font-family:var(--display); font-weight:800; font-variant-numeric:tabular-nums; }
+  .wc-score-team.lead { color:var(--ink); }
+  .wc-score-team.trail { color:var(--muted); }
+  .wc-score-state { text-align:right; white-space:nowrap; font-weight:700; font-size:clamp(.72rem,.9vw,.92rem); }
+  .wc-score-state .live { color:#ff7a7a; }
+  .wc-score-state .ft { color:var(--faint); }
+  .wc-score-state .ko { color:var(--mom); font-variant-numeric:tabular-nums; }
+  .wc-score-state .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#ff7a7a; margin-right:5px; animation:wcpulse 1.2s infinite; }
+  @keyframes wcpulse { 0%,100%{opacity:1} 50%{opacity:.3} }
   .wc-hero-ico { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
   .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
   .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
@@ -316,9 +330,14 @@
         </div>
         
         <div class="card world-cup-card carousel-item delay-4">
-            <div class="wc-hero-ico">⚽</div>
-            <div class="wc-title">FIFA World Cup 2026</div>
-            <div class="wc-sub">Tournament kicks off June 11, 2026!</div>
+            <div class="head-row" style="width:100%"><h2 id="wcScoresTitle">World Cup · Today</h2></div>
+            <div class="wc-scores" id="wcScores">
+              <div class="wc-splash">
+                <div class="wc-hero-ico">⚽</div>
+                <div class="wc-title">FIFA World Cup 2026</div>
+                <div class="wc-sub">Loading today's matches…</div>
+              </div>
+            </div>
         </div>
     </div>
   </div>
@@ -749,6 +768,68 @@ function moonPhase(){
 }
 
 /* ---------- Hardcoded World Cup Widget ---------- */
+async function loadWcScores(){
+  const box=document.getElementById('wcScores');
+  if(!box) return;
+  const TZ='America/Mexico_City';
+  const now=new Date();
+  const ymd=now.toLocaleDateString('en-CA',{timeZone:TZ}).replace(/-/g,'');
+  const url=`https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=${ymd}`;
+  try{
+    const r=await fetch(url);
+    if(!r.ok) throw 0;
+    const d=await r.json();
+    const events=(d.events||[]);
+    if(!events.length){
+      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
+        +'<div class="wc-title">FIFA World Cup 2026</div>'
+        +'<div class="wc-sub">No matches today — see the schedule tile</div></div>';
+      return;
+    }
+    const colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
+    let html='';
+    events.forEach((ev,i)=>{
+      const comp=(ev.competitions&&ev.competitions[0])||{};
+      const cs=comp.competitors||[];
+      const home=cs.find(c=>c.homeAway==='home')||cs[0]||{};
+      const away=cs.find(c=>c.homeAway==='away')||cs[1]||{};
+      const hn=(home.team&&(home.team.shortDisplayName||home.team.displayName))||'TBD';
+      const an=(away.team&&(away.team.shortDisplayName||away.team.displayName))||'TBD';
+      const hs=home.score!=null?home.score:'';
+      const as=away.score!=null?away.score:'';
+      const st=(ev.status&&ev.status.type)||{};
+      const stState=st.state;
+      let stateHtml='';
+      if(stState==='in'){
+        const clock=(ev.status&&ev.status.displayClock)||'';
+        stateHtml=`<span class="live"><span class="dot"></span>LIVE ${clock}</span>`;
+      }else if(stState==='post'){
+        stateHtml=`<span class="ft">FT</span>`;
+      }else{
+        const ko=new Date(ev.date).toLocaleTimeString('en-US',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false});
+        stateHtml=`<span class="ko">${ko}</span>`;
+      }
+      const c=colors[i%colors.length];
+      const showScore = stState!=='pre';
+      const hLead = showScore && (+hs)>(+as), aLead = showScore && (+as)>(+hs);
+      html+=`<div class="wc-score-row" style="--c:${c}">
+        <div class="wc-score-teams">
+          <div class="wc-score-team ${hLead?'lead':(showScore&&aLead?'trail':'')}"><span>${hn}</span>${showScore?`<span class="gf">${hs}</span>`:''}</div>
+          <div class="wc-score-team ${aLead?'lead':(showScore&&hLead?'trail':'')}"><span>${an}</span>${showScore?`<span class="gf">${as}</span>`:''}</div>
+        </div>
+        <div class="wc-score-state">${stateHtml}</div>
+      </div>`;
+    });
+    box.innerHTML=html;
+  }catch(e){
+    if(!box.querySelector('.wc-score-row')){
+      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
+        +'<div class="wc-title">FIFA World Cup 2026</div>'
+        +'<div class="wc-sub">Scores unavailable right now</div></div>';
+    }
+  }
+}
+
 function renderHardcodedWorldCup() {
   const list = document.getElementById('wcSchedList');
   if(!list) return;
@@ -912,10 +993,11 @@ loadSunAqi();setInterval(loadSunAqi,1800000);
 loadFx();setInterval(loadFx,3600000);             
 moonPhase();setInterval(moonPhase,3600000);       
 loadTrip();setInterval(loadTrip,1800000);         
+startCarousel();
 
 // Execute the hardcoded World Cup render immediately
 renderHardcodedWorldCup(); 
 setInterval(renderHardcodedWorldCup, 60000); 
 
-startCarousel();                                  
+loadWcScores(); setInterval(loadWcScores, 60000);   // live World Cup scores (ESPN, no key)
 </script>
