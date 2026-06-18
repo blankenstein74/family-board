@@ -118,7 +118,7 @@
   .wx-city-col { display:flex; flex-direction:column; justify-content:center; min-width:0; }
   .wx-city-col .city { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1.1rem); line-height:1; word-wrap: break-word }
   
-  /* STOCKS */
+  /* STOCKS: Live Text Only */
   .stock{display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
   .stk-row{display:flex;flex-direction:column}
   .stk-row + .stk-row{padding-top:8px;border-top:1px solid var(--line)}
@@ -154,12 +154,8 @@
 
   /* Carousel Container */
   .carousel-wrapper { display:grid; grid-template-columns: 1fr; grid-template-rows: 1fr; flex:1; min-height:0; position: relative;}
-  /* IMPORTANT: carousel items opt out of the global .card rise animation so the
-     entrance animation can't fight with .carousel-item's visibility rules.
-     Some TV browsers (Fire Stick Silk) resolve the cascade differently and end
-     up hiding the active item, which made the lower section vanish after first paint. */
-  .carousel-item { grid-area: 1 / 1; animation:none !important; transform:none; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease; z-index: 1;}
-  .carousel-item.active { opacity: 1 !important; visibility: visible !important; pointer-events: auto; z-index: 2;}
+  .carousel-item { grid-area: 1 / 1; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateY(10px); z-index: 1;}
+  .carousel-item.active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); z-index: 2;}
 
   .chores{display:flex;flex-direction:column;overflow:hidden;min-width:0; height:100%;}
   .kid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,.8vw,12px);flex:1;overflow:hidden}
@@ -301,18 +297,12 @@
       <div class="eyebrow" style="margin-bottom:6px">Markets</div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">Volaris <span class="stock-ex">VLRS</span></div></div>
-        <div class="stk-price-row">
-            <div class="stock-price" id="stkPrice0">$4.58</div>
-            <svg class="sparkline" id="stkSpark0" viewBox="0 0 60 22"></svg>
-        </div>
+        <div class="stock-price" id="stkPrice0">$4.58</div>
         <div class="stock-chg up" id="stkChg0"><span class="arrow">▲</span> +0.12 (2.57%) today</div>
       </div>
       <div class="stk-row">
         <div class="stock-head"><div class="stk-name">JPMorgan Premium <span class="stock-ex">JEPI</span></div></div>
-        <div class="stk-price-row">
-            <div class="stock-price" id="stkPrice1">$54.20</div>
-            <svg class="sparkline" id="stkSpark1" viewBox="0 0 60 22"></svg>
-        </div>
+        <div class="stock-price" id="stkPrice1">$54.20</div>
         <div class="stock-chg up" id="stkChg1"><span class="arrow">▲</span> +0.05 (0.10%) today</div>
       </div>
     </div>
@@ -333,7 +323,7 @@
           <div class="kid-grid" id="kids"></div>
         </div>
         
-        <div class="card world-cup-card carousel-item delay-4">
+        <div class="card world-cup-card carousel-item delay-4" id="wcContainer">
             <div class="head-row" style="width:100%"><h2 id="wcScoresTitle">World Cup · Today</h2></div>
             <div class="wc-scores" id="wcScores">
               <div class="wc-splash">
@@ -396,8 +386,6 @@ const CONFIG = {
   ],
 
   // FIFA WORLD CUP 2026 — GROUP STAGE (all 72 matches)
-  // Official schedule (USA TODAY / FOX Sports). Times shown in Central (CDMX, -06:00).
-  // All 48 teams confirmed (UEFA + inter-confederation playoffs resolved March 31, 2026).
   worldCupMatches: [
     // June 11 — Matchday 1
     { date: '2026-06-11T13:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Africa 🇿🇦' },
@@ -495,10 +483,18 @@ const CONFIG = {
 let lastHour = -1;
 function tick(){
   const n=new Date();
-  const h=n.getHours();
-  const m=String(n.getMinutes()).padStart(2,'0');
-  document.getElementById('time').firstChild.textContent=String(h).padStart(2,'0')+':'+m;
-  document.getElementById('sec').textContent=String(n.getSeconds()).padStart(2,'0');
+  
+  // SAFE: Removed modern padStart string manipulation. Old-school padding for Silk compatibility.
+  let h = n.getHours();
+  let hStr = h < 10 ? '0' + h : '' + h;
+  let m = n.getMinutes();
+  let mStr = m < 10 ? '0' + m : '' + m;
+  let s = n.getSeconds();
+  let sStr = s < 10 ? '0' + s : '' + s;
+
+  document.getElementById('time').firstChild.textContent = hStr + ':' + mStr;
+  document.getElementById('sec').textContent = sStr;
+  
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('date').innerHTML=days[n.getDay()]+', <span>'+mon[n.getMonth()]+' '+n.getDate()+'</span>';
@@ -513,6 +509,7 @@ function tick(){
 
 /* ---------- countdown ---------- */
 function countdown(){
+  // Safe date parsing across all browser engines
   const target=new Date(CONFIG.countdown.date+'T00:00:00');
   const d=Math.max(0,Math.ceil((target-new Date())/86400000));
   document.getElementById('cdNum').textContent=d;
@@ -579,8 +576,15 @@ function renderKids(){
     div.className='kid';div.style.setProperty('--c',k.c);
     let tasksHTML='';
     
-    const activeTasks = k.tasks.map((t, i) => ({...t, origIdx: i}))
-                               .filter(t => t.type === 'all' || t.type === dayType);
+    // SAFE: Map array manually instead of using ES6 object spread
+    let activeTasks = [];
+    for(let i = 0; i < k.tasks.length; i++) {
+        const t = k.tasks[i];
+        if (t.type === 'all' || t.type === dayType) {
+            let newTask = { txt: t.txt, time: t.time, type: t.type, origIdx: i };
+            activeTasks.push(newTask);
+        }
+    }
     
     const bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
 
@@ -620,7 +624,11 @@ function updateKidDOM(div){
   const tasks = div.querySelectorAll('.task');
   const total = tasks.length;
   const done = div.querySelectorAll('.task.done').length;
-  div.querySelector('.stars').textContent='★'.repeat(done)+'☆'.repeat(total-done);
+  // SAFE: Old-school string building instead of .repeat() just to be perfectly compatible
+  let str = '';
+  for(let i=0; i<done; i++) str += '★';
+  for(let i=0; i<total-done; i++) str += '☆';
+  div.querySelector('.stars').textContent = str;
   div.classList.toggle('complete',done===total && total>0);
 }
 
@@ -652,15 +660,12 @@ async function loadWeather(){
   }
 }
 
-/* ---------- live multi-stock quote + Sparklines ---------- */
+/* ---------- live stock quotes ---------- */
 async function loadStock(){
   const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
-  const to = Math.floor(Date.now() / 1000);
-  const from = to - (86400 * 4); 
-  
   for(let i=0;i<list.length;i++){
     const s=list[i];
-    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i), spk=document.getElementById('stkSpark'+i);
+    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
     if(!pEl || !cEl) continue;
     try{
       const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
@@ -670,23 +675,6 @@ async function loadStock(){
       pEl.textContent='$'+d.c.toFixed(2);
       cEl.className='stock-chg '+(up?'up':'down');
       cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
-      
-      if(spk) {
-         const r2 = await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${s.symbol}&resolution=60&from=${from}&to=${to}&token=${CONFIG.finnhub}`);
-         if(r2.ok) {
-             const d2 = await r2.json();
-             if(d2.s === 'ok' && d2.c && d2.c.length > 0) {
-                 const prices = d2.c;
-                 const min = Math.min(...prices), max = Math.max(...prices);
-                 const range = max - min || 1;
-                 const w = 60, h = 22;
-                 const step = w / (prices.length - 1 || 1);
-                 const pts = prices.map((val, idx) => `${idx * step},${h - ((val - min) / range) * h}`).join(' L ');
-                 const color = up ? '#7ddf8e' : '#ff7a7a';
-                 spk.innerHTML = `<path d="M ${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-             }
-         }
-      }
     }catch(e){}
   }
 }
@@ -698,7 +686,13 @@ async function loadSunAqi(){
     const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}`
       +`&timezone=${encodeURIComponent(c.tz)}&daily=sunrise,sunset&forecast_days=1`;
     const r=await fetch(u);if(r.ok){const d=await r.json();
-      const f=t=>{const x=new Date(t);return x.getHours()+':'+String(x.getMinutes()).padStart(2,'0');};
+      const f=t=>{
+         const x=new Date(t);
+         let hh = x.getHours();
+         let mm = x.getMinutes();
+         let mmStr = mm < 10 ? '0' + mm : '' + mm;
+         return hh + ':' + mmStr;
+      };
       const el=document.getElementById('tkSun');
       if(el) el.innerHTML=`${f(d.daily.sunrise[0])} <small>→</small> ${f(d.daily.sunset[0])}`;
     }
@@ -721,7 +715,7 @@ async function loadSunAqi(){
   }catch(e){}
 }
 
-/* ---------- ticker: exchange rates (ER-API) + Yahoo Sparklines ---------- */
+/* ---------- ticker: exchange rates ---------- */
 async function loadFx(){
   try{
     const r=await fetch('https://open.er-api.com/v6/latest/EUR');
@@ -729,28 +723,8 @@ async function loadFx(){
     const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
     const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
     
-    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small><svg id="spkEur" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
-    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small><svg id="spkUsd" width="40" height="12" viewBox="0 0 40 12" style="display:block; margin-top:3px"></svg>`;
-    
-    const fetchSpk = async (sym, elId) => {
-       try {
-         const rs = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=5d&interval=1h`);
-         const dt = await rs.json();
-         const p = dt.chart.result[0].indicators.quote[0].close.filter(x => x !== null);
-         if(p.length > 0) {
-             const min = Math.min(...p), max = Math.max(...p);
-             const rng = max - min || 1;
-             const w = 40, h = 12;
-             const stp = w / (p.length - 1 || 1);
-             const pts = p.map((val, idx) => `${idx * stp},${h - ((val - min) / rng) * h}`).join(' L ');
-             const col = p[p.length-1] >= p[0] ? '#7ddf8e' : '#ff7a7a';
-             document.getElementById(elId).innerHTML = `<path d="M ${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-         }
-       } catch(err){}
-    };
-    fetchSpk('EURMXN=X', 'spkEur');
-    fetchSpk('USDMXN=X', 'spkUsd');
-    
+    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
+    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
   }catch(e){}
 }
 
@@ -771,89 +745,35 @@ function moonPhase(){
   if(txt) txt.textContent=p[2];
 }
 
-/* ---------- Hardcoded World Cup Widget ---------- */
-async function loadWcScores(){
-  const box=document.getElementById('wcScores');
-  if(!box) return;
-  const TZ='America/Mexico_City';
-  try{
-    const now=new Date();
-    // YYYYMMDD for "today" in CDMX. Fall back to plain UTC date if Intl tz is unsupported.
-    let ymd;
-    try{
-      ymd=now.toLocaleDateString('en-CA',{timeZone:TZ}).replace(/-/g,'');
-    }catch(tzErr){
-      ymd=now.toISOString().slice(0,10).replace(/-/g,'');
-    }
-    const url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
-    const r=await fetch(url);
-    if(!r.ok) throw 0;
-    const d=await r.json();
-    const events=(d.events||[]);
-    if(!events.length){
-      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
-        +'<div class="wc-title">FIFA World Cup 2026</div>'
-        +'<div class="wc-sub">No matches today — see the schedule tile</div></div>';
-      return;
-    }
-    const colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
-    let html='';
-    events.forEach((ev,i)=>{
-      const comp=(ev.competitions&&ev.competitions[0])||{};
-      const cs=comp.competitors||[];
-      const home=cs.find(c=>c.homeAway==='home')||cs[0]||{};
-      const away=cs.find(c=>c.homeAway==='away')||cs[1]||{};
-      const hn=(home.team&&(home.team.shortDisplayName||home.team.displayName))||'TBD';
-      const an=(away.team&&(away.team.shortDisplayName||away.team.displayName))||'TBD';
-      const hs=home.score!=null?home.score:'';
-      const as=away.score!=null?away.score:'';
-      const st=(ev.status&&ev.status.type)||{};
-      const stState=st.state;
-      let stateHtml='';
-      if(stState==='in'){
-        const clock=(ev.status&&ev.status.displayClock)||'';
-        stateHtml=`<span class="live"><span class="dot"></span>LIVE ${clock}</span>`;
-      }else if(stState==='post'){
-        stateHtml=`<span class="ft">FT</span>`;
-      }else{
-        const ko=new Date(ev.date).toLocaleTimeString('en-US',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false});
-        stateHtml=`<span class="ko">${ko}</span>`;
-      }
-      const c=colors[i%colors.length];
-      const showScore = stState!=='pre';
-      const hLead = showScore && (+hs)>(+as), aLead = showScore && (+as)>(+hs);
-      html+=`<div class="wc-score-row" style="--c:${c}">
-        <div class="wc-score-teams">
-          <div class="wc-score-team ${hLead?'lead':(showScore&&aLead?'trail':'')}"><span>${hn}</span>${showScore?`<span class="gf">${hs}</span>`:''}</div>
-          <div class="wc-score-team ${aLead?'lead':(showScore&&hLead?'trail':'')}"><span>${an}</span>${showScore?`<span class="gf">${as}</span>`:''}</div>
-        </div>
-        <div class="wc-score-state">${stateHtml}</div>
-      </div>`;
-    });
-    box.innerHTML=html;
-  }catch(e){
-    if(!box.querySelector('.wc-score-row')){
-      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
-        +'<div class="wc-title">FIFA World Cup 2026</div>'
-        +'<div class="wc-sub">Scores unavailable right now</div></div>';
-    }
-  }
-}
-
+/* ---------- Hardcoded World Cup Widget (Safe for old browsers) ---------- */
 function renderHardcodedWorldCup() {
   const list = document.getElementById('wcSchedList');
   if(!list) return;
 
   const now = new Date();
   
-  // Find the next 3 matches that haven't ended yet (allowing a 2-hour match window)
-  const upcoming = CONFIG.worldCupMatches
-      .map(m => ({ ...m, parsedDate: new Date(m.date) }))
-      .filter(m => m.parsedDate >= new Date(now.getTime() - 7200000))
-      .sort((a,b) => a.parsedDate - b.parsedDate)
-      .slice(0, 3);
+  // SAFE: Pure JS array filtering and mapping without modern syntax
+  let parsedMatches = [];
+  for(let i = 0; i < CONFIG.worldCupMatches.length; i++) {
+      let m = CONFIG.worldCupMatches[i];
+      let pDate = new Date(m.date);
+      // Keep matches that are in the future or started within the last 2 hours
+      if(pDate.getTime() >= now.getTime() - 7200000) {
+          parsedMatches.push({
+              home: m.home,
+              away: m.away,
+              parsedDate: pDate
+          });
+      }
+  }
+
+  parsedMatches.sort(function(a, b) {
+      return a.parsedDate.getTime() - b.parsedDate.getTime();
+  });
+  
+  const upcoming = parsedMatches.slice(0, 3);
       
-  if(!upcoming.length){ 
+  if(upcoming.length === 0){ 
      list.innerHTML='<div class="msg-text">Tournament finished!</div>'; 
      return; 
   }
@@ -862,27 +782,46 @@ function renderHardcodedWorldCup() {
   const colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
   
   const TZ = 'America/Mexico_City';
-  const cdmxDay = d => d.toLocaleDateString('en-CA',{timeZone:TZ}); // YYYY-MM-DD key
+  
+  const getSafeDateString = function(d) {
+      try { return d.toLocaleDateString('en-CA',{timeZone:TZ}); } 
+      catch(e) { return d.toISOString().slice(0,10); }
+  };
+  const cdmxNow = getSafeDateString(now);
   const tmrw = new Date(now.getTime() + 86400000);
-  upcoming.forEach((u, i) => {
-     const timeStr = u.parsedDate.toLocaleTimeString('en-US',{timeZone:TZ, hour:'2-digit',minute:'2-digit', hour12:false});
+  const cdmxTmrw = getSafeDateString(tmrw);
+
+  for(let i = 0; i < upcoming.length; i++) {
+     let u = upcoming[i];
      
-     let dateStr = u.parsedDate.toLocaleDateString('en-US',{timeZone:TZ, weekday:'short', month:'short', day:'numeric'});
-     if(cdmxDay(u.parsedDate) === cdmxDay(now)) dateStr = 'Today';
-     else if(cdmxDay(u.parsedDate) === cdmxDay(tmrw)) dateStr = 'Tomorrow';
+     let timeStr = "";
+     try {
+         timeStr = u.parsedDate.toLocaleTimeString('en-US',{timeZone:TZ, hour:'2-digit',minute:'2-digit', hour12:false});
+     } catch(e) {
+         timeStr = u.parsedDate.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit', hour12:false});
+     }
+     
+     let dateStr = "";
+     try {
+         dateStr = u.parsedDate.toLocaleDateString('en-US',{timeZone:TZ, weekday:'short', month:'short', day:'numeric'});
+     } catch(e) {
+         dateStr = u.parsedDate.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+     }
+     
+     if(getSafeDateString(u.parsedDate) === cdmxNow) dateStr = 'Today';
+     else if(getSafeDateString(u.parsedDate) === cdmxTmrw) dateStr = 'Tomorrow';
 
      const c = colors[i % colors.length];
 
-     html += `
-        <div class="wc-item" style="--c:${c}">
-           <div class="wc-item-time">${timeStr}<small>CST</small></div>
-           <div>
-              <div class="wc-item-match">${u.home} vs ${u.away}</div>
-              <div class="wc-item-date">${dateStr}</div>
-           </div>
-        </div>
-     `;
-  });
+     html += '<div class="wc-item" style="--c:' + c + '">';
+     html += '   <div class="wc-item-time">' + timeStr + '<small>CST</small></div>';
+     html += '   <div>';
+     html += '      <div class="wc-item-match">' + u.home + ' vs ' + u.away + '</div>';
+     html += '      <div class="wc-item-date">' + dateStr + '</div>';
+     html += '   </div>';
+     html += '</div>';
+  }
+  
   list.innerHTML = html;
 }
 
@@ -890,8 +829,8 @@ function renderHardcodedWorldCup() {
 function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
 function icsEvents(raw){
   const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
-  for(let ln of lines){
-    ln = ln.trim();
+  for(let j=0; j<lines.length; j++){
+    let ln = lines[j].trim();
     if(ln==='BEGIN:VEVENT'){cur={};continue;}
     if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
     if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
@@ -905,7 +844,7 @@ function icsEvents(raw){
 }
 function icsDate(f){
   if(!f)return null;const v=f.val,p=f.params||'';
-  if(p.includes('DATE')&&!v.includes('T')) return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8)));
+  if(p.indexOf('DATE') !== -1 && v.indexOf('T') === -1) return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8)));
   const m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);
   if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]));
   return new Date(v);
@@ -917,26 +856,32 @@ function renderTrip(t){
   const body=document.getElementById('tripBody');if(!body)return;
   const now=new Date();
   const start=new Date(t.start+'T00:00:00'), end=new Date(t.end+'T00:00:00');
-  const days=Math.ceil((start-now)/86400000);
-  let cd = days>1?`in ${days} days` : days===1?'tomorrow' : (now<=end?'now':'');
-  const cdHtml = cd?`<div class="trip-cd">${cd}</div>`:'';
+  const days=Math.max(0, Math.ceil((start.getTime()-now.getTime())/86400000));
+  let cd = days>1? 'in ' + days + ' days' : days===1?'tomorrow' : (now<=end?'now':'');
+  const cdHtml = cd?'<div class="trip-cd">'+cd+'</div>':'';
   
   let legsHtml = '';
   if(t.legs && t.legs.length > 0) {
-     legsHtml = '<div class="trip-legs">' + t.legs.map((leg, i) => `
-        <div class="leg-item">
-          <span class="pl">${leg.icon||'📍'}</span>
-          <div class="pb">
-            ${i===0 ? `<div class="pk">${now<=end&&days<=0?'Next up':'First up'}</div>` : ''}
-            <div class="pv">${leg.text}<small> · ${leg.when}</small></div>
-          </div>
-        </div>
-     `).join('') + '</div>';
+     legsHtml = '<div class="trip-legs">';
+     for(let i=0; i<t.legs.length; i++){
+        let leg = t.legs[i];
+        let legIcon = leg.icon ? leg.icon : '📍';
+        let upText = (i===0) ? '<div class="pk">' + (now<=end&&days<=0?'Next up':'First up') + '</div>' : '';
+        
+        legsHtml += '<div class="leg-item">';
+        legsHtml += '  <span class="pl">' + legIcon + '</span>';
+        legsHtml += '  <div class="pb">';
+        legsHtml +=      upText;
+        legsHtml += '    <div class="pv">' + leg.text + '<small> · ' + leg.when + '</small></div>';
+        legsHtml += '  </div>';
+        legsHtml += '</div>';
+     }
+     legsHtml += '</div>';
   }
 
-  body.innerHTML=`<div class="trip-head"><div class="trip-name">${t.name}</div>${cdHtml}</div>
-    <div class="trip-dest">📍 ${t.dest}</div>
-    <div class="trip-dates">${fmtTripDate(start)} – ${fmtTripDate(end)}, ${end.getFullYear()}</div>${legsHtml}`;
+  body.innerHTML='<div class="trip-head"><div class="trip-name">'+t.name+'</div>'+cdHtml+'</div>'
+    +'<div class="trip-dest">📍 '+t.dest+'</div>'
+    +'<div class="trip-dates">'+fmtTripDate(start)+' – '+fmtTripDate(end)+', '+end.getFullYear()+'</div>'+legsHtml;
 }
 
 async function loadTrip(){
@@ -946,31 +891,67 @@ async function loadTrip(){
     const raw=await r.text();const evs=icsEvents(raw);
     if(!evs.length)throw 0;
     
-    const trips=evs.filter(e=>e.DTSTART&&(e.DTSTART.params||'').includes('DATE'));
+    // Convert logic to old school array filter/sort for max compatibility
+    let trips = [];
+    for(let i=0; i<evs.length; i++) {
+        let e = evs[i];
+        if(e.DTSTART && e.DTSTART.params && e.DTSTART.params.indexOf('DATE') !== -1) {
+            trips.push(e);
+        }
+    }
+    
     const now=new Date();
-    const cand=trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)}))
-      .filter(x=>x.e>=now).sort((a,b)=>a.s-b.s)[0] || trips.map(t=>({t,s:icsDate(t.DTSTART),e:icsDate(t.DTEND)})).sort((a,b)=>b.s-a.s)[0];
+    let candArray = [];
+    for(let i=0; i<trips.length; i++) {
+        let t = trips[i];
+        candArray.push({ t: t, s: icsDate(t.DTSTART), e: icsDate(t.DTEND) });
+    }
+    
+    let candFuture = [];
+    for(let i=0; i<candArray.length; i++) {
+        if(candArray[i].e.getTime() >= now.getTime()) {
+            candFuture.push(candArray[i]);
+        }
+    }
+    candFuture.sort(function(a,b) { return a.s.getTime() - b.s.getTime(); });
+    
+    candArray.sort(function(a,b) { return b.s.getTime() - a.s.getTime(); });
+    
+    const cand = candFuture[0] || candArray[0];
     if(!cand)throw 0;
     
-    const subEvents = evs.filter(e=> e.DTSTART && !(e.DTSTART.params||'').includes('DATE'));
-    const upcoming = subEvents.map(e => ({ s: icsDate(e.DTSTART), sum: (e.SUMMARY||{}).val || 'Event' }))
-                              .filter(e => e.s >= new Date(now.getTime()-3600000))
-                              .sort((a,b) => a.s - b.s)
-                              .slice(0, 2);
+    let subEvents = [];
+    for(let i=0; i<evs.length; i++) {
+        let e = evs[i];
+        if(e.DTSTART && (!e.DTSTART.params || e.DTSTART.params.indexOf('DATE') === -1)) {
+            subEvents.push(e);
+        }
+    }
+    
+    let upcoming = [];
+    for(let i=0; i<subEvents.length; i++) {
+        let e = subEvents[i];
+        let sDate = icsDate(e.DTSTART);
+        let sum = (e.SUMMARY && e.SUMMARY.val) ? e.SUMMARY.val : 'Event';
+        if(sDate.getTime() >= now.getTime() - 3600000) {
+            upcoming.push({ s: sDate, sum: sum });
+        }
+    }
+    upcoming.sort(function(a,b){ return a.s.getTime() - b.s.getTime(); });
+    upcoming = upcoming.slice(0, 2);
 
-    const legs = upcoming.map(u => {
+    let legs = [];
+    for(let i=0; i<upcoming.length; i++) {
+       let u = upcoming[i];
        let icon = '📅';
-       if(/ to /i.test(u.sum)) icon = '🛫';
-       else if(/hotel|resort|inn/i.test(u.sum)) icon = '🏨';
-       else if(/car|rental/i.test(u.sum)) icon = '🚗';
-       else if(/restaurant|dinner|lunch|reservation/i.test(u.sum)) icon = '🍽️';
+       if(u.sum.indexOf(' to ') !== -1) icon = '🛫';
+       else if(u.sum.toLowerCase().indexOf('hotel') !== -1 || u.sum.toLowerCase().indexOf('resort') !== -1) icon = '🏨';
+       else if(u.sum.toLowerCase().indexOf('car') !== -1 || u.sum.toLowerCase().indexOf('rental') !== -1) icon = '🚗';
+       else if(u.sum.toLowerCase().indexOf('dinner') !== -1 || u.sum.toLowerCase().indexOf('reservation') !== -1) icon = '🍽️';
        
-       return { 
-           text: u.sum, 
-           when: u.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}), 
-           icon: icon 
-       };
-    });
+       let dtStr = u.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+       legs.push({ text: u.sum, when: dtStr, icon: icon });
+    }
 
     renderTrip({name:cand.t.SUMMARY.val,
       dest:(cand.t.LOCATION&&cand.t.LOCATION.val)||'',
@@ -986,11 +967,103 @@ function startCarousel() {
     if(items.length < 2) return;
     let currentIndex = 0;
     
-    setInterval(() => {
+    setInterval(function() {
         items[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % items.length;
         items[currentIndex].classList.add('active');
     }, 15000); 
+}
+
+/* ---------- SAFE: ESPN API World Cup Live Scores ---------- */
+async function loadWcScores(){
+  const box=document.getElementById('wcScores');
+  if(!box) return;
+  const TZ='America/Mexico_City';
+  try{
+    const now=new Date();
+    let ymd;
+    try{
+      let rawDate = now.toLocaleDateString('en-CA',{timeZone:TZ});
+      ymd = rawDate.split('-').join('');
+    }catch(tzErr){
+      let rawDate = now.toISOString().slice(0,10);
+      ymd = rawDate.split('-').join('');
+    }
+    
+    // Using ESPN's open JSON endpoint. Doesn't require keys, heavily CORS-friendly.
+    const url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
+    const r=await fetch(url);
+    if(!r.ok) throw 0;
+    const d=await r.json();
+    const events=(d.events||[]);
+    
+    if(events.length === 0){
+      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
+        +'<div class="wc-title">FIFA World Cup 2026</div>'
+        +'<div class="wc-sub">No matches today — see the schedule tile</div></div>';
+      return;
+    }
+    
+    const colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
+    let html='';
+    
+    for(let i=0; i<events.length; i++) {
+      let ev = events[i];
+      let comp = (ev.competitions && ev.competitions.length > 0) ? ev.competitions[0] : {};
+      let cs = comp.competitors || [];
+      
+      let home = {}; let away = {};
+      for(let j=0; j<cs.length; j++) {
+         if(cs[j].homeAway === 'home') home = cs[j];
+         if(cs[j].homeAway === 'away') away = cs[j];
+      }
+      if(!home.team && cs.length > 0) home = cs[0];
+      if(!away.team && cs.length > 1) away = cs[1];
+      
+      let hn = (home.team && (home.team.shortDisplayName || home.team.displayName)) ? (home.team.shortDisplayName || home.team.displayName) : 'TBD';
+      let an = (away.team && (away.team.shortDisplayName || away.team.displayName)) ? (away.team.shortDisplayName || away.team.displayName) : 'TBD';
+      let hs = home.score != null ? home.score : '';
+      let as = away.score != null ? away.score : '';
+      
+      let st = (ev.status && ev.status.type) ? ev.status.type : {};
+      let stState = st.state;
+      
+      let stateHtml='';
+      if(stState==='in'){
+        let clock = (ev.status && ev.status.displayClock) ? ev.status.displayClock : '';
+        stateHtml='<span class="live"><span class="dot"></span>LIVE ' + clock + '</span>';
+      }else if(stState==='post'){
+        stateHtml='<span class="ft">FT</span>';
+      }else{
+        let ko = '';
+        try {
+           ko=new Date(ev.date).toLocaleTimeString('en-US',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false});
+        } catch(err) {
+           ko=new Date(ev.date).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        }
+        stateHtml='<span class="ko">' + ko + '</span>';
+      }
+      
+      let c=colors[i%colors.length];
+      let showScore = stState !== 'pre';
+      let hNum = parseInt(hs, 10);
+      let aNum = parseInt(as, 10);
+      let hLead = showScore && (hNum > aNum);
+      let aLead = showScore && (aNum > hNum);
+      
+      html += '<div class="wc-score-row" style="--c:' + c + '">';
+      html += '  <div class="wc-score-teams">';
+      html += '    <div class="wc-score-team ' + (hLead ? 'lead' : (showScore && aLead ? 'trail' : '')) + '"><span>' + hn + '</span>' + (showScore ? '<span class="gf">' + hs + '</span>' : '') + '</div>';
+      html += '    <div class="wc-score-team ' + (aLead ? 'lead' : (showScore && hLead ? 'trail' : '')) + '"><span>' + an + '</span>' + (showScore ? '<span class="gf">' + as + '</span>' : '') + '</div>';
+      html += '  </div>';
+      html += '  <div class="wc-score-state">' + stateHtml + '</div>';
+      html += '</div>';
+    }
+    
+    box.innerHTML=html;
+  }catch(e){
+    // Keep silent failure if network drops to preserve formatting
+  }
 }
 
 /* ---------- boot ---------- */
@@ -998,24 +1071,24 @@ function startCarousel() {
 // dashboard (older TV browsers like Fire Stick Silk are stricter than Chrome).
 function safe(fn){ try{ fn(); }catch(e){ /* keep going */ } }
 
-safe(()=>{ tick(); setInterval(tick,1000); });
-safe(()=>{ countdown(); setInterval(countdown,3600000); });
+safe(function(){ tick(); setInterval(tick,1000); });
+safe(function(){ countdown(); setInterval(countdown,3600000); });
 safe(loadState);
-safe(()=>{ loadWeather(); setInterval(loadWeather,1800000); });
-safe(()=>{ loadStock(); setInterval(loadStock,300000); });
-safe(()=>{ loadSunAqi(); setInterval(loadSunAqi,1800000); });
-safe(()=>{ loadFx(); setInterval(loadFx,3600000); });
-safe(()=>{ moonPhase(); setInterval(moonPhase,3600000); });
-safe(()=>{ loadTrip(); setInterval(loadTrip,1800000); });
+safe(function(){ loadWeather(); setInterval(loadWeather,1800000); });
+safe(function(){ loadStock(); setInterval(loadStock,300000); });
+safe(function(){ loadSunAqi(); setInterval(loadSunAqi,1800000); });
+safe(function(){ loadFx(); setInterval(loadFx,3600000); });
+safe(function(){ moonPhase(); setInterval(moonPhase,3600000); });
+safe(function(){ loadTrip(); setInterval(loadTrip,1800000); });
 
 // Paint the lower section (chores, schedule, carousel) BEFORE any network call,
 // so it always renders even if a fetch later misbehaves.
-safe(()=>{ renderHardcodedWorldCup(); setInterval(renderHardcodedWorldCup,60000); });
+safe(function(){ renderHardcodedWorldCup(); setInterval(renderHardcodedWorldCup,60000); });
 safe(startCarousel);
 
 // Live World Cup scores (ESPN, no key). Deferred + isolated so a slow/failed
 // fetch on a TV browser can't block the rest of the boot.
 setTimeout(function(){
-  safe(()=>{ loadWcScores(); setInterval(loadWcScores,60000); });
+  safe(function(){ loadWcScores(); setInterval(loadWcScores,60000); });
 }, 100);
 </script>
