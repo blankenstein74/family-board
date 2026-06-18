@@ -118,35 +118,33 @@
   .wx-city-col { display:flex; flex-direction:column; justify-content:center; min-width:0; }
   .wx-city-col .city { font-family:var(--display); font-weight:700; font-size:clamp(.75rem,1vw,1.1rem); line-height:1; word-wrap: break-word }
   
-  /* STOCKS: Live Text Only */
+  /* STOCKS */
   .stock{display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
   .stk-row{display:flex;flex-direction:column}
   .stk-row + .stk-row{padding-top:8px;border-top:1px solid var(--line)}
   .stock-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
   .stk-name{font-weight:700;font-size:clamp(.75rem,.9vw,1rem);word-wrap:break-word}
   .stock-ex{font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;border:1px solid var(--line);padding:2px 6px;border-radius:999px;flex:none}
-  .stk-price-row { display:flex; align-items:center; justify-content:space-between; margin:.1em 0 }
-  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums}
-  .sparkline { width: 60px; height: 22px; flex:none; margin-left:8px; }
+  .stock-price{font-family:var(--display);font-weight:800;font-size:clamp(1.2rem,2.2vw,2rem);line-height:.9;font-variant-numeric:tabular-nums;margin:.1em 0 .1em}
   .stock-chg{font-weight:600;font-size:clamp(.65rem,.8vw,.85rem);color:var(--muted);display:flex;align-items:center;gap:5px}
   .stock-chg.up{color:#7ddf8e}
   .stock-chg.down{color:#ff7a7a}
   .stock-chg .arrow{font-size:.8em}
 
   /* ---------- CENTER: agenda + chores + carousel ---------- */
-  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0; position:relative;}
+  .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:clamp(6px, 1vh, 12px);min-width:0; position:relative;}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5em;gap:6px}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.3rem);letter-spacing:-.01em}
   .legend{display:flex;gap:8px;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
 
   /* HARDCODED WORLD CUP SCHEDULE CARD */
-  .wc-sched{display:flex;flex-direction:column;justify-content:center;gap:clamp(6px,1vh,12px)}
+  .wc-sched{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,8px)}
   .wc-hero{position:relative;overflow:hidden}
   .wc-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, #006847, #ffffff, #ce1126)}
-  .wc-list{display:flex;flex-direction:column;gap:clamp(6px,1vh,12px)}
-  .wc-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(6px,1vh,12px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
-  .wc-item-time{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1.1rem,2vw,1.6rem);line-height:.82;color:var(--c);min-width:55px;text-align:center;}
+  .wc-list{display:flex;flex-direction:column;gap:clamp(4px,1vh,8px)}
+  .wc-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(4px,1vh,8px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
+  .wc-item-time{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1rem,2vw,1.4rem);line-height:.82;color:var(--c);min-width:50px;text-align:center;}
   .wc-item-time small{display:block;font-family:var(--body);font-weight:500;font-size:.4em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
   .wc-item-match{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.1rem);line-height:1;word-wrap:break-word;}
   .wc-item-date{color:var(--muted);font-weight:500;font-size:.55rem;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
@@ -361,10 +359,10 @@
 /* ============================================================
    CONFIG — edit this to go live. Everything else updates itself.
    ============================================================ */
-const CONFIG = {
+var CONFIG = {
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
-    { name:'Houston',     lat:29.7633, lon:-95.3633, tz:'America/Chicago'     },
+    { name:'Houston',     lat:29.7633, lon:-95.3633, tz:'America/Chicago'     }
   ],
 
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
@@ -385,91 +383,74 @@ const CONFIG = {
     { name:'JEPI', symbol:'JEPI' }
   ],
 
-  // FIFA WORLD CUP 2026 — GROUP STAGE (all 72 matches)
+  // HARDCODED WORLD CUP MATCHES: Strict ISO Format to prevent Silk Browser crashes
   worldCupMatches: [
-    // June 11 — Matchday 1
     { date: '2026-06-11T13:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Africa 🇿🇦' },
     { date: '2026-06-11T20:00:00-06:00', home: 'South Korea 🇰🇷', away: 'Czechia 🇨🇿' },
-    // June 12
-    { date: '2026-06-12T13:00:00-06:00', home: 'Canada 🇨🇦', away: 'Bosnia & Herzegovina 🇧🇦' },
+    { date: '2026-06-12T13:00:00-06:00', home: 'Canada 🇨🇦', away: 'Bosnia & Herze. 🇧🇦' },
     { date: '2026-06-12T19:00:00-06:00', home: 'USA 🇺🇸', away: 'Paraguay 🇵🇾' },
-    // June 13
     { date: '2026-06-13T13:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Morocco 🇲🇦' },
     { date: '2026-06-13T16:00:00-06:00', home: 'Australia 🇦🇺', away: 'Türkiye 🇹🇷' },
     { date: '2026-06-13T19:00:00-06:00', home: 'Haiti 🇭🇹', away: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
     { date: '2026-06-13T22:00:00-06:00', home: 'Qatar 🇶🇦', away: 'Switzerland 🇨🇭' },
-    // June 14
     { date: '2026-06-14T11:00:00-06:00', home: 'Germany 🇩🇪', away: 'Curaçao 🇨🇼' },
     { date: '2026-06-14T14:00:00-06:00', home: 'Ivory Coast 🇨🇮', away: 'Ecuador 🇪🇨' },
     { date: '2026-06-14T17:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Japan 🇯🇵' },
     { date: '2026-06-14T20:00:00-06:00', home: 'Sweden 🇸🇪', away: 'Tunisia 🇹🇳' },
-    // June 15
     { date: '2026-06-15T10:00:00-06:00', home: 'Spain 🇪🇸', away: 'Cape Verde 🇨🇻' },
     { date: '2026-06-15T13:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Egypt 🇪🇬' },
     { date: '2026-06-15T16:00:00-06:00', home: 'Saudi Arabia 🇸🇦', away: 'Uruguay 🇺🇾' },
     { date: '2026-06-15T19:00:00-06:00', home: 'Iran 🇮🇷', away: 'New Zealand 🇳🇿' },
-    // June 16
     { date: '2026-06-16T13:00:00-06:00', home: 'France 🇫🇷', away: 'Senegal 🇸🇳' },
     { date: '2026-06-16T16:00:00-06:00', home: 'Iraq 🇮🇶', away: 'Norway 🇳🇴' },
     { date: '2026-06-16T19:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Algeria 🇩🇿' },
     { date: '2026-06-16T22:00:00-06:00', home: 'Austria 🇦🇹', away: 'Jordan 🇯🇴' },
-    // June 17
     { date: '2026-06-17T11:00:00-06:00', home: 'Portugal 🇵🇹', away: 'DR Congo 🇨🇩' },
     { date: '2026-06-17T14:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Croatia 🇭🇷' },
     { date: '2026-06-17T17:00:00-06:00', home: 'Ghana 🇬🇭', away: 'Panama 🇵🇦' },
     { date: '2026-06-17T20:00:00-06:00', home: 'Uzbekistan 🇺🇿', away: 'Colombia 🇨🇴' },
-    // June 18 — Matchday 2
     { date: '2026-06-18T10:00:00-06:00', home: 'Czechia 🇨🇿', away: 'South Africa 🇿🇦' },
-    { date: '2026-06-18T13:00:00-06:00', home: 'Switzerland 🇨🇭', away: 'Bosnia & Herzegovina 🇧🇦' },
+    { date: '2026-06-18T13:00:00-06:00', home: 'Switzerland 🇨🇭', away: 'Bosnia & Herze. 🇧🇦' },
     { date: '2026-06-18T16:00:00-06:00', home: 'Canada 🇨🇦', away: 'Qatar 🇶🇦' },
     { date: '2026-06-18T19:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Korea 🇰🇷' },
-    // June 19
     { date: '2026-06-19T13:00:00-06:00', home: 'USA 🇺🇸', away: 'Australia 🇦🇺' },
     { date: '2026-06-19T16:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Morocco 🇲🇦' },
     { date: '2026-06-19T19:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Haiti 🇭🇹' },
     { date: '2026-06-19T22:00:00-06:00', home: 'Türkiye 🇹🇷', away: 'Paraguay 🇵🇾' },
-    // June 20
     { date: '2026-06-20T11:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Sweden 🇸🇪' },
     { date: '2026-06-20T14:00:00-06:00', home: 'Germany 🇩🇪', away: 'Ivory Coast 🇨🇮' },
     { date: '2026-06-20T18:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Curaçao 🇨🇼' },
     { date: '2026-06-20T22:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Japan 🇯🇵' },
-    // June 21
     { date: '2026-06-21T10:00:00-06:00', home: 'Spain 🇪🇸', away: 'Saudi Arabia 🇸🇦' },
     { date: '2026-06-21T13:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Iran 🇮🇷' },
     { date: '2026-06-21T16:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Cape Verde 🇨🇻' },
     { date: '2026-06-21T19:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Egypt 🇪🇬' },
-    // June 22
     { date: '2026-06-22T11:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Austria 🇦🇹' },
     { date: '2026-06-22T15:00:00-06:00', home: 'France 🇫🇷', away: 'Iraq 🇮🇶' },
     { date: '2026-06-22T18:00:00-06:00', home: 'Norway 🇳🇴', away: 'Senegal 🇸🇳' },
     { date: '2026-06-22T21:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Algeria 🇩🇿' },
-    // June 23
     { date: '2026-06-23T11:00:00-06:00', home: 'Portugal 🇵🇹', away: 'Uzbekistan 🇺🇿' },
     { date: '2026-06-23T14:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Ghana 🇬🇭' },
     { date: '2026-06-23T17:00:00-06:00', home: 'Panama 🇵🇦', away: 'Croatia 🇭🇷' },
     { date: '2026-06-23T20:00:00-06:00', home: 'Colombia 🇨🇴', away: 'DR Congo 🇨🇩' },
-    // June 24 — Matchday 3
     { date: '2026-06-24T13:00:00-06:00', home: 'Canada 🇨🇦', away: 'Switzerland 🇨🇭' },
-    { date: '2026-06-24T13:00:00-06:00', home: 'Bosnia & Herzegovina 🇧🇦', away: 'Qatar 🇶🇦' },
+    { date: '2026-06-24T13:00:00-06:00', home: 'Bosnia & Herze. 🇧🇦', away: 'Qatar 🇶🇦' },
     { date: '2026-06-24T16:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Brazil 🇧🇷' },
     { date: '2026-06-24T16:00:00-06:00', home: 'Morocco 🇲🇦', away: 'Haiti 🇭🇹' },
     { date: '2026-06-24T19:00:00-06:00', home: 'Mexico 🇲🇽', away: 'Czechia 🇨🇿' },
     { date: '2026-06-24T19:00:00-06:00', home: 'South Korea 🇰🇷', away: 'South Africa 🇿🇦' },
-    // June 25
     { date: '2026-06-25T14:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Germany 🇩🇪' },
     { date: '2026-06-25T14:00:00-06:00', home: 'Curaçao 🇨🇼', away: 'Ivory Coast 🇨🇮' },
     { date: '2026-06-25T17:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Netherlands 🇳🇱' },
     { date: '2026-06-25T17:00:00-06:00', home: 'Japan 🇯🇵', away: 'Sweden 🇸🇪' },
     { date: '2026-06-25T20:00:00-06:00', home: 'USA 🇺🇸', away: 'Türkiye 🇹🇷' },
     { date: '2026-06-25T20:00:00-06:00', home: 'Paraguay 🇵🇾', away: 'Australia 🇦🇺' },
-    // June 26
     { date: '2026-06-26T13:00:00-06:00', home: 'Norway 🇳🇴', away: 'France 🇫🇷' },
     { date: '2026-06-26T13:00:00-06:00', home: 'Senegal 🇸🇳', away: 'Iraq 🇮🇶' },
     { date: '2026-06-26T18:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Belgium 🇧🇪' },
     { date: '2026-06-26T18:00:00-06:00', home: 'Egypt 🇪🇬', away: 'Iran 🇮🇷' },
     { date: '2026-06-26T11:00:00-06:00', home: 'Cape Verde 🇨🇻', away: 'Saudi Arabia 🇸🇦' },
     { date: '2026-06-26T21:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Spain 🇪🇸' },
-    // June 27
     { date: '2026-06-27T15:00:00-06:00', home: 'Panama 🇵🇦', away: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
     { date: '2026-06-27T15:00:00-06:00', home: 'Croatia 🇭🇷', away: 'Ghana 🇬🇭' },
     { date: '2026-06-27T17:30:00-06:00', home: 'Colombia 🇨🇴', away: 'Portugal 🇵🇹' },
@@ -480,25 +461,23 @@ const CONFIG = {
 };
 
 /* ---------- live clock + date ---------- */
-let lastHour = -1;
+var lastHour = -1;
 function tick(){
-  const n=new Date();
-  
-  // SAFE: Removed modern padStart string manipulation. Old-school padding for Silk compatibility.
-  let h = n.getHours();
-  let hStr = h < 10 ? '0' + h : '' + h;
-  let m = n.getMinutes();
-  let mStr = m < 10 ? '0' + m : '' + m;
-  let s = n.getSeconds();
-  let sStr = s < 10 ? '0' + s : '' + s;
+  var n = new Date();
+  var h = n.getHours();
+  var hStr = h < 10 ? '0' + h : '' + h;
+  var m = n.getMinutes();
+  var mStr = m < 10 ? '0' + m : '' + m;
+  var s = n.getSeconds();
+  var sStr = s < 10 ? '0' + s : '' + s;
 
   document.getElementById('time').firstChild.textContent = hStr + ':' + mStr;
   document.getElementById('sec').textContent = sStr;
   
-  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('date').innerHTML=days[n.getDay()]+', <span>'+mon[n.getMonth()]+' '+n.getDate()+'</span>';
-  const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  var g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
   document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
   
   if(lastHour !== -1 && lastHour !== h) {
@@ -509,14 +488,13 @@ function tick(){
 
 /* ---------- countdown ---------- */
 function countdown(){
-  // Safe date parsing across all browser engines
-  const target=new Date(CONFIG.countdown.date+'T00:00:00');
-  const d=Math.max(0,Math.ceil((target-new Date())/86400000));
+  var target=new Date(CONFIG.countdown.date+'T00:00:00Z'); 
+  var d=Math.max(0,Math.ceil((target.getTime()-new Date().getTime())/86400000));
   document.getElementById('cdNum').textContent=d;
 }
 
 /* ---------- chore chart ---------- */
-const kidsData=[
+var kidsData=[
   {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:[
     {txt:'Make the bed', time:'morning', type:'all'},
     {txt:'Feed the dog', time:'morning', type:'all'},
@@ -537,180 +515,189 @@ const kidsData=[
   ]},
 ];
 
-let state={};        
-let memOnly=false;
+var state={};        
+var memOnly=false;
 
 async function loadState(){
-  const todayKey=new Date().toISOString().slice(0,10);
+  var todayKey=new Date().toISOString().slice(0,10);
   try{
-    const r=await window.storage.get('chores');
-    const parsed=JSON.parse(r.value);
-    state=(parsed.date===todayKey)?parsed.done:{};
-    if(parsed.date!==todayKey) saveState();
+    if(window.storage && window.storage.get) {
+      var r = await window.storage.get('chores');
+      var parsed=JSON.parse(r.value);
+      state=(parsed.date===todayKey)?parsed.done:{};
+      if(parsed.date!==todayKey) saveState();
+    }
   }catch(e){ state={}; memOnly=(typeof window.storage==='undefined'); }
   renderKids();
 }
 
 async function saveState(){
-  const todayKey=new Date().toISOString().slice(0,10);
-  try{ await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); }
-  catch(e){ memOnly=true; }
+  var todayKey=new Date().toISOString().slice(0,10);
+  try{ 
+    if(window.storage && window.storage.set) {
+       await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); 
+    }
+  } catch(e){ memOnly=true; }
 }
 
 function renderKids(){
-  const wrap=document.getElementById('kids');wrap.innerHTML='';
-  const d = new Date();
-  const hr = d.getHours();
-  const todayKey = d.toISOString().slice(0,10);
-  const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-  const dayType = isWeekend ? 'weekend' : 'weekday';
+  var wrap=document.getElementById('kids');wrap.innerHTML='';
+  var d = new Date();
+  var hr = d.getHours();
+  var todayKey = d.toISOString().slice(0,10);
+  var isWeekend = d.getDay() === 0 || d.getDay() === 6;
+  var dayType = isWeekend ? 'weekend' : 'weekday';
 
-  const getBonusId = (kidStr, count) => {
-     let hash = 0; const s = todayKey + kidStr;
-     for(let i=0; i<s.length; i++) hash = Math.imul(31, hash) + s.charCodeAt(i) | 0;
+  var getBonusId = function(kidStr, count) {
+     var hash = 0; var s = todayKey + kidStr;
+     for(var i=0; i<s.length; i++) hash = Math.imul(31, hash) + s.charCodeAt(i) | 0;
      return Math.abs(hash) % count;
   };
 
-  kidsData.forEach((k,ki)=>{
-    const div=document.createElement('div');
+  for(var ki=0; ki<kidsData.length; ki++) {
+    var k = kidsData[ki];
+    var div=document.createElement('div');
     div.className='kid';div.style.setProperty('--c',k.c);
-    let tasksHTML='';
+    var tasksHTML='';
     
-    // SAFE: Map array manually instead of using ES6 object spread
-    let activeTasks = [];
-    for(let i = 0; i < k.tasks.length; i++) {
-        const t = k.tasks[i];
+    var activeTasks = [];
+    for(var j=0; j<k.tasks.length; j++) {
+        var t = k.tasks[j];
         if (t.type === 'all' || t.type === dayType) {
-            let newTask = { txt: t.txt, time: t.time, type: t.type, origIdx: i };
-            activeTasks.push(newTask);
+            activeTasks.push({ txt: t.txt, time: t.time, type: t.type, origIdx: j });
         }
     }
     
-    const bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
+    var bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
 
-    activeTasks.forEach((t, i)=>{
-      const id = ki + '-' + t.origIdx; 
-      const done = state[id] ? 'done' : '';
+    for(var j=0; j<activeTasks.length; j++) {
+      var t2 = activeTasks[j];
+      var id = ki + '-' + t2.origIdx; 
+      var done = state[id] ? 'done' : '';
       
-      let dimClass = '';
-      if (hr >= 12 && t.time === 'morning' && !state[id]) dimClass = 'dimmed';
-      if (hr < 12 && t.time === 'evening') dimClass = 'dimmed';
+      var dimClass = '';
+      if (hr >= 12 && t2.time === 'morning' && !state[id]) dimClass = 'dimmed';
+      if (hr < 12 && t2.time === 'evening') dimClass = 'dimmed';
 
-      const isGolden = i === bonusIndex ? 'golden' : '';
+      var isGolden = j === bonusIndex ? 'golden' : '';
 
-      tasksHTML+=`<div class="task ${done} ${dimClass} ${isGolden}" data-id="${id}">
-        <span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
-        <span class="label">${t.txt}</span></div>`;
-    });
+      tasksHTML += '<div class="task ' + done + ' ' + dimClass + ' ' + isGolden + '" data-id="' + id + '">'
+        + '<span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>'
+        + '<span class="label">' + t2.txt + '</span></div>';
+    }
 
-    div.innerHTML=`<div class="kid-head"><div class="avatar">${k.init}</div>
-      <div class="kid-name">${k.name}<small>age ${k.age}</small></div></div>
-      <div class="tasks">${tasksHTML}</div>
-      <div class="stars"></div><div class="done-badge">★ All done!</div>`;
+    div.innerHTML='<div class="kid-head"><div class="avatar">' + k.init + '</div>'
+      + '<div class="kid-name">' + k.name + '<small>age ' + k.age + '</small></div></div>'
+      + '<div class="tasks">' + tasksHTML + '</div>'
+      + '<div class="stars"></div><div class="done-badge">★ All done!</div>';
     wrap.appendChild(div);
     updateKidDOM(div);
-  });
+  }
 
-  wrap.querySelectorAll('.task').forEach(t=>t.addEventListener('click',()=>{
-    const id=t.dataset.id;state[id]=!state[id];
-    if(!state[id]) delete state[id];
-    t.classList.toggle('done');
-    updateKidDOM(t.closest('.kid'));
-    saveState();
-  }));
+  var allTasks = wrap.querySelectorAll('.task');
+  for(var i=0; i<allTasks.length; i++) {
+     allTasks[i].addEventListener('click', function(){
+        var id=this.dataset.id;
+        state[id]=!state[id];
+        if(!state[id]) delete state[id];
+        this.classList.toggle('done');
+        updateKidDOM(this.closest('.kid'));
+        saveState();
+     });
+  }
 }
 
 function updateKidDOM(div){
-  const tasks = div.querySelectorAll('.task');
-  const total = tasks.length;
-  const done = div.querySelectorAll('.task.done').length;
-  // SAFE: Old-school string building instead of .repeat() just to be perfectly compatible
-  let str = '';
-  for(let i=0; i<done; i++) str += '★';
-  for(let i=0; i<total-done; i++) str += '☆';
-  div.querySelector('.stars').textContent = str;
+  var tasks = div.querySelectorAll('.task');
+  var total = tasks.length;
+  var done = div.querySelectorAll('.task.done').length;
+  
+  var starsStr = '';
+  for(var i=0; i<done; i++) starsStr += '★';
+  for(var i=0; i<total-done; i++) starsStr += '☆';
+  
+  div.querySelector('.stars').textContent = starsStr;
   div.classList.toggle('complete',done===total && total>0);
 }
 
 /* ---------- live weather ---------- */
 function wmo(c){
-  const m={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],
+  var m={0:['☀️','Clear'],1:['🌤️','Mostly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],
     45:['🌫️','Fog'],48:['🌫️','Fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌦️','Drizzle'],
     56:['🌧️','Freezing drizzle'],57:['🌧️','Freezing drizzle'],61:['🌧️','Light rain'],63:['🌧️','Rain'],
     65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['❄️','Light snow'],
     73:['❄️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow grains'],80:['🌦️','Showers'],81:['🌦️','Showers'],
     82:['🌧️','Heavy showers'],85:['🌨️','Snow showers'],86:['🌨️','Snow showers'],
     95:['⛈️','Thunderstorm'],96:['⛈️','Thunderstorm'],99:['⛈️','Thunderstorm']};
-  const x=m[c]||['🌡️','—'];return{e:x[0],t:x[1]};
+  var x=m[c]||['🌡️','—'];return{e:x[0],t:x[1]};
 }
 async function loadWeather(){
-  const cities=CONFIG.weather;if(!cities||!cities.length)return;
-  for(let i=0;i<cities.length;i++){
-    const w=cities[i];
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${w.lat}&longitude=${w.lon}`
-      +`&timezone=${encodeURIComponent(w.tz)}&current=temperature_2m,apparent_temperature,weather_code`;
+  var cities=CONFIG.weather;if(!cities||!cities.length)return;
+  for(var i=0;i<cities.length;i++){
+    var w=cities[i];
+    var url='https://api.open-meteo.com/v1/forecast?latitude=' + w.lat + '&longitude=' + w.lon
+      + '&timezone=' + encodeURIComponent(w.tz) + '&current=temperature_2m,apparent_temperature,weather_code';
     try{
-      const r=await fetch(url);if(!r.ok)throw 0;const d=await r.json();
-      const cur=wmo(d.current.weather_code);
-      const ico=document.getElementById('wxIco'+i),tmp=document.getElementById('wxTemp'+i),des=document.getElementById('wxDesc'+i);
+      var r=await fetch(url);if(!r.ok)throw 0;var d=await r.json();
+      var cur=wmo(d.current.weather_code);
+      var ico=document.getElementById('wxIco'+i),tmp=document.getElementById('wxTemp'+i),des=document.getElementById('wxDesc'+i);
       if(ico) ico.textContent=cur.e;
       if(tmp) tmp.textContent=Math.round(d.current.temperature_2m)+'°';
-      if(des) des.innerHTML=`<b>${cur.t}</b> · feels ${Math.round(d.current.apparent_temperature)}°`;
+      if(des) des.innerHTML='<b>' + cur.t + '</b> · feels ' + Math.round(d.current.apparent_temperature) + '°';
     }catch(e){}
   }
 }
 
 /* ---------- live stock quotes ---------- */
 async function loadStock(){
-  const list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
-  for(let i=0;i<list.length;i++){
-    const s=list[i];
-    const pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
+  var list=CONFIG.stocks;if(!list||!CONFIG.finnhub)return;
+  for(var i=0;i<list.length;i++){
+    var s=list[i];
+    var pEl=document.getElementById('stkPrice'+i),cEl=document.getElementById('stkChg'+i);
     if(!pEl || !cEl) continue;
     try{
-      const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.symbol}&token=${CONFIG.finnhub}`);
-      if(!r.ok)throw 0;const d=await r.json();
+      var r=await fetch('https://finnhub.io/api/v1/quote?symbol=' + s.symbol + '&token=' + CONFIG.finnhub);
+      if(!r.ok)throw 0;var d=await r.json();
       if(typeof d.c!=='number'||!d.c)throw 0;
-      const up=(d.d||0)>=0;
-      pEl.textContent='$'+d.c.toFixed(2);
-      cEl.className='stock-chg '+(up?'up':'down');
-      cEl.innerHTML=`<span class="arrow">${up?'▲':'▼'}</span> ${up?'+':''}${(d.d||0).toFixed(2)} (${(d.dp||0).toFixed(2)}%) today`;
+      var up=(d.d||0)>=0;
+      pEl.textContent='$' + d.c.toFixed(2);
+      cEl.className='stock-chg ' + (up?'up':'down');
+      cEl.innerHTML='<span class="arrow">' + (up?'▲':'▼') + '</span> ' + (up?'+':'') + (d.d||0).toFixed(2) + ' (' + (d.dp||0).toFixed(2) + '%) today';
     }catch(e){}
   }
 }
 
 /* ---------- ticker: sunrise/sunset + air quality ---------- */
 async function loadSunAqi(){
-  const c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
+  var c=(CONFIG.weather&&CONFIG.weather[0])||{lat:19.4326,lon:-99.1332,tz:'America/Mexico_City'};
   try{
-    const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}`
-      +`&timezone=${encodeURIComponent(c.tz)}&daily=sunrise,sunset&forecast_days=1`;
-    const r=await fetch(u);if(r.ok){const d=await r.json();
-      const f=t=>{
-         const x=new Date(t);
-         let hh = x.getHours();
-         let mm = x.getMinutes();
-         let mmStr = mm < 10 ? '0' + mm : '' + mm;
-         return hh + ':' + mmStr;
-      };
-      const el=document.getElementById('tkSun');
-      if(el) el.innerHTML=`${f(d.daily.sunrise[0])} <small>→</small> ${f(d.daily.sunset[0])}`;
+    var u='https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lon
+      + '&timezone=' + encodeURIComponent(c.tz) + '&daily=sunrise,sunset&forecast_days=1';
+    var r=await fetch(u);if(r.ok){var d=await r.json();
+      var el=document.getElementById('tkSun');
+      if(el) {
+          var sR = new Date(d.daily.sunrise[0]);
+          var sS = new Date(d.daily.sunset[0]);
+          var rH = sR.getHours(); var rM = sR.getMinutes() < 10 ? '0' + sR.getMinutes() : sR.getMinutes();
+          var sH = sS.getHours(); var sM = sS.getMinutes() < 10 ? '0' + sS.getMinutes() : sS.getMinutes();
+          el.innerHTML = rH + ':' + rM + ' <small>→</small> ' + sH + ':' + sM;
+      }
     }
   }catch(e){}
   try{
-    const u=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${c.lat}&longitude=${c.lon}`
-      +`&timezone=${encodeURIComponent(c.tz)}&current=us_aqi`;
-    const r=await fetch(u);if(r.ok){const d=await r.json();
-      const a=Math.round(d.current.us_aqi);
-      let label,color;
+    var u='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + c.lat + '&longitude=' + c.lon
+      + '&timezone=' + encodeURIComponent(c.tz) + '&current=us_aqi';
+    var r=await fetch(u);if(r.ok){var d=await r.json();
+      var a=Math.round(d.current.us_aqi);
+      var label,color;
       if(a<=50){label='Good';color='#7ddf8e';}
       else if(a<=100){label='Moderate';color='#ffd166';}
       else if(a<=150){label='Unhealthy (sensitive)';color='#ef8354';}
       else if(a<=200){label='Unhealthy';color='#ff7a7a';}
       else if(a<=300){label='Very unhealthy';color='#d6a3ee';}
       else {label='Hazardous';color='#bc4749';}
-      const el=document.getElementById('tkAqi');
-      if(el) el.innerHTML=`<span class="aqi-dot" style="background:${color}"></span><b>${a}</b> <small>${label}</small>`;
+      var el=document.getElementById('tkAqi');
+      if(el) el.innerHTML='<span class="aqi-dot" style="background:' + color + '"></span><b>' + a + '</b> <small>' + label + '</small>';
     }
   }catch(e){}
 }
@@ -718,45 +705,49 @@ async function loadSunAqi(){
 /* ---------- ticker: exchange rates ---------- */
 async function loadFx(){
   try{
-    const r=await fetch('https://open.er-api.com/v6/latest/EUR');
-    if(!r.ok)throw 0;const d=await r.json();
-    const eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
-    const e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
+    var r=await fetch('https://open.er-api.com/v6/latest/EUR');
+    if(!r.ok)throw 0;var d=await r.json();
+    var eur=d.rates.MXN, usd=d.rates.MXN/d.rates.USD; 
+    var e=document.getElementById('tkEur'),u=document.getElementById('tkUsd');
     
-    if(e) e.innerHTML=`<b>${eur.toFixed(2)}</b> <small>MXN</small>`;
-    if(u) u.innerHTML=`<b>${usd.toFixed(2)}</b> <small>MXN</small>`;
+    if(e) e.innerHTML='<b>' + eur.toFixed(2) + '</b> <small>MXN</small>';
+    if(u) u.innerHTML='<b>' + usd.toFixed(2) + '</b> <small>MXN</small>';
   }catch(e){}
 }
 
 /* ---------- ticker: moon phase ---------- */
 function moonPhase(){
-  const now=new Date();
-  const synodic=29.53058867;
-  const ref=Date.UTC(2000,0,6,18,14)/86400000;
-  const days=(now.getTime()/86400000)-ref;
-  let age=days%synodic; if(age<0) age+=synodic;
-  const phases=[
+  var now=new Date();
+  var synodic=29.53058867;
+  var ref=Date.UTC(2000,0,6,18,14)/86400000;
+  var days=(now.getTime()/86400000)-ref;
+  var age=days%synodic; if(age<0) age+=synodic;
+  var phases=[
     [1.85,'🌑','New moon'],[5.54,'🌒','Waxing crescent'],[9.23,'🌓','First quarter'],
     [12.91,'🌔','Waxing gibbous'],[16.61,'🌕','Full moon'],[20.30,'🌖','Waning gibbous'],
     [23.99,'🌗','Last quarter'],[27.68,'🌘','Waning crescent'],[29.54,'🌑','New moon']];
-  const p=phases.find(x=>age<x[0])||phases[phases.length-1];
-  const ico=document.getElementById('tkMoonIco'),txt=document.getElementById('tkMoon');
+  
+  var p = phases[phases.length-1];
+  for(var i=0; i<phases.length; i++) {
+     if(age < phases[i][0]) { p = phases[i]; break; }
+  }
+  
+  var ico=document.getElementById('tkMoonIco'),txt=document.getElementById('tkMoon');
   if(ico) ico.textContent=p[1];
   if(txt) txt.textContent=p[2];
 }
 
 /* ---------- Hardcoded World Cup Widget (Safe for old browsers) ---------- */
 function renderHardcodedWorldCup() {
-  const list = document.getElementById('wcSchedList');
+  var list = document.getElementById('wcSchedList');
   if(!list) return;
 
-  const now = new Date();
-  
-  // SAFE: Pure JS array filtering and mapping without modern syntax
-  let parsedMatches = [];
-  for(let i = 0; i < CONFIG.worldCupMatches.length; i++) {
-      let m = CONFIG.worldCupMatches[i];
-      let pDate = new Date(m.date);
+  var now = new Date();
+
+  var parsedMatches = [];
+  for(var i = 0; i < CONFIG.worldCupMatches.length; i++) {
+      var m = CONFIG.worldCupMatches[i];
+      var pDate = new Date(m.date); // Safe parsing because we reverted to ISO format
       // Keep matches that are in the future or started within the last 2 hours
       if(pDate.getTime() >= now.getTime() - 7200000) {
           parsedMatches.push({
@@ -771,47 +762,47 @@ function renderHardcodedWorldCup() {
       return a.parsedDate.getTime() - b.parsedDate.getTime();
   });
   
-  const upcoming = parsedMatches.slice(0, 3);
+  // FIX: Slice to 2 matches instead of 3 to fit vertical screen space
+  var upcoming = parsedMatches.slice(0, 2);
       
   if(upcoming.length === 0){ 
      list.innerHTML='<div class="msg-text">Tournament finished!</div>'; 
      return; 
   }
   
-  let html='';
-  const colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
+  var html='';
+  var colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
   
-  const TZ = 'America/Mexico_City';
+  var nowY = now.getFullYear();
+  var nowM = now.getMonth();
+  var nowD = now.getDate();
+  var todayStr = nowY + "-" + nowM + "-" + nowD;
   
-  const getSafeDateString = function(d) {
-      try { return d.toLocaleDateString('en-CA',{timeZone:TZ}); } 
-      catch(e) { return d.toISOString().slice(0,10); }
-  };
-  const cdmxNow = getSafeDateString(now);
-  const tmrw = new Date(now.getTime() + 86400000);
-  const cdmxTmrw = getSafeDateString(tmrw);
+  var tmrw = new Date(now.getTime() + 86400000);
+  var tmrwStr = tmrw.getFullYear() + "-" + tmrw.getMonth() + "-" + tmrw.getDate();
 
-  for(let i = 0; i < upcoming.length; i++) {
-     let u = upcoming[i];
-     
-     let timeStr = "";
-     try {
-         timeStr = u.parsedDate.toLocaleTimeString('en-US',{timeZone:TZ, hour:'2-digit',minute:'2-digit', hour12:false});
-     } catch(e) {
-         timeStr = u.parsedDate.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit', hour12:false});
-     }
-     
-     let dateStr = "";
-     try {
-         dateStr = u.parsedDate.toLocaleDateString('en-US',{timeZone:TZ, weekday:'short', month:'short', day:'numeric'});
-     } catch(e) {
-         dateStr = u.parsedDate.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
-     }
-     
-     if(getSafeDateString(u.parsedDate) === cdmxNow) dateStr = 'Today';
-     else if(getSafeDateString(u.parsedDate) === cdmxTmrw) dateStr = 'Tomorrow';
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-     const c = colors[i % colors.length];
+  for(var i = 0; i < upcoming.length; i++) {
+     var u = upcoming[i];
+     
+     var hh = u.parsedDate.getHours();
+     var mm = u.parsedDate.getMinutes();
+     var timeStr = (hh<10?'0':'') + hh + ":" + (mm<10?'0':'') + mm;
+     
+     var matchStr = u.parsedDate.getFullYear() + "-" + u.parsedDate.getMonth() + "-" + u.parsedDate.getDate();
+     var dateStr = "";
+     
+     if(matchStr === todayStr) {
+         dateStr = 'Today';
+     } else if (matchStr === tmrwStr) {
+         dateStr = 'Tomorrow';
+     } else {
+         dateStr = days[u.parsedDate.getDay()] + ", " + months[u.parsedDate.getMonth()] + " " + u.parsedDate.getDate();
+     }
+
+     var c = colors[i % colors.length];
 
      html += '<div class="wc-item" style="--c:' + c + '">';
      html += '   <div class="wc-item-time">' + timeStr + '<small>CST</small></div>';
@@ -828,45 +819,49 @@ function renderHardcodedWorldCup() {
 /* ---------- general .ics parser for trips ---------- */
 function icsUnfold(raw){return raw.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');}
 function icsEvents(raw){
-  const lines=icsUnfold(raw).split(/\r\n|\n/);const out=[];let cur=null;
-  for(let j=0; j<lines.length; j++){
-    let ln = lines[j].trim();
+  var lines=icsUnfold(raw).split(/\r\n|\n/);var out=[];var cur=null;
+  for(var j=0; j<lines.length; j++){
+    var ln = lines[j].trim();
     if(ln==='BEGIN:VEVENT'){cur={};continue;}
     if(ln==='END:VEVENT'){if(cur)out.push(cur);cur=null;continue;}
-    if(!cur)continue;const i=ln.indexOf(':');if(i<0)continue;
-    let k=ln.slice(0,i).trim(),v=ln.slice(i+1).trim();
-    const s=k.indexOf(';');
-    const params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
+    if(!cur)continue;var i=ln.indexOf(':');if(i<0)continue;
+    var k=ln.slice(0,i).trim(),v=ln.slice(i+1).trim();
+    var s=k.indexOf(';');
+    var params=s>=0?k.slice(s+1):'';if(s>=0)k=k.slice(0,s);
     v=v.replace(/\\,/g,',').replace(/\\n/g,'\n').replace(/\\;/g,';').replace(/\\\\/g,'\\');
-    cur[k]={val:v,params};
+    cur[k]={val:v,params:params};
   }
   return out;
 }
 function icsDate(f){
-  if(!f)return null;const v=f.val,p=f.params||'';
+  if(!f)return null;var v=f.val,p=f.params||'';
   if(p.indexOf('DATE') !== -1 && v.indexOf('T') === -1) return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8)));
-  const m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);
+  var m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);
   if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]));
   return new Date(v);
 }
-function fmtTripDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function fmtTripDate(d){
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate();
+}
 
 /* ---------- next trip (TripIt rendering) ---------- */
 function renderTrip(t){
-  const body=document.getElementById('tripBody');if(!body)return;
-  const now=new Date();
-  const start=new Date(t.start+'T00:00:00'), end=new Date(t.end+'T00:00:00');
-  const days=Math.max(0, Math.ceil((start.getTime()-now.getTime())/86400000));
-  let cd = days>1? 'in ' + days + ' days' : days===1?'tomorrow' : (now<=end?'now':'');
-  const cdHtml = cd?'<div class="trip-cd">'+cd+'</div>':'';
+  var body=document.getElementById('tripBody');if(!body)return;
+  var now=new Date();
+  var start=new Date(t.start+'T00:00:00Z');
+  var end=new Date(t.end+'T00:00:00Z');
+  var days=Math.max(0, Math.ceil((start.getTime()-now.getTime())/86400000));
+  var cd = days>1? 'in ' + days + ' days' : days===1?'tomorrow' : (now.getTime()<=end.getTime()?'now':'');
+  var cdHtml = cd?'<div class="trip-cd">'+cd+'</div>':'';
   
-  let legsHtml = '';
+  var legsHtml = '';
   if(t.legs && t.legs.length > 0) {
      legsHtml = '<div class="trip-legs">';
-     for(let i=0; i<t.legs.length; i++){
-        let leg = t.legs[i];
-        let legIcon = leg.icon ? leg.icon : '📍';
-        let upText = (i===0) ? '<div class="pk">' + (now<=end&&days<=0?'Next up':'First up') + '</div>' : '';
+     for(var i=0; i<t.legs.length; i++){
+        var leg = t.legs[i];
+        var legIcon = leg.icon ? leg.icon : '📍';
+        var upText = (i===0) ? '<div class="pk">' + (now.getTime()<=end.getTime()&&days<=0?'Next up':'First up') + '</div>' : '';
         
         legsHtml += '<div class="leg-item">';
         legsHtml += '  <span class="pl">' + legIcon + '</span>';
@@ -885,54 +880,52 @@ function renderTrip(t){
 }
 
 async function loadTrip(){
-  const fb=CONFIG.tripFallback;
+  var fb=CONFIG.tripFallback;
   try{
-    const r=await fetch(CONFIG.tripitIcs,{cache:'no-store'});if(!r.ok)throw 0;
-    const raw=await r.text();const evs=icsEvents(raw);
+    var r=await fetch(CONFIG.tripitIcs,{cache:'no-store'});if(!r.ok)throw 0;
+    var raw=await r.text();var evs=icsEvents(raw);
     if(!evs.length)throw 0;
     
-    // Convert logic to old school array filter/sort for max compatibility
-    let trips = [];
-    for(let i=0; i<evs.length; i++) {
-        let e = evs[i];
+    var trips = [];
+    for(var i=0; i<evs.length; i++) {
+        var e = evs[i];
         if(e.DTSTART && e.DTSTART.params && e.DTSTART.params.indexOf('DATE') !== -1) {
             trips.push(e);
         }
     }
     
-    const now=new Date();
-    let candArray = [];
-    for(let i=0; i<trips.length; i++) {
-        let t = trips[i];
+    var now=new Date();
+    var candArray = [];
+    for(var i=0; i<trips.length; i++) {
+        var t = trips[i];
         candArray.push({ t: t, s: icsDate(t.DTSTART), e: icsDate(t.DTEND) });
     }
     
-    let candFuture = [];
-    for(let i=0; i<candArray.length; i++) {
+    var candFuture = [];
+    for(var i=0; i<candArray.length; i++) {
         if(candArray[i].e.getTime() >= now.getTime()) {
             candFuture.push(candArray[i]);
         }
     }
     candFuture.sort(function(a,b) { return a.s.getTime() - b.s.getTime(); });
-    
     candArray.sort(function(a,b) { return b.s.getTime() - a.s.getTime(); });
     
-    const cand = candFuture[0] || candArray[0];
+    var cand = candFuture[0] || candArray[0];
     if(!cand)throw 0;
     
-    let subEvents = [];
-    for(let i=0; i<evs.length; i++) {
-        let e = evs[i];
-        if(e.DTSTART && (!e.DTSTART.params || e.DTSTART.params.indexOf('DATE') === -1)) {
-            subEvents.push(e);
+    var subEvents = [];
+    for(var i=0; i<evs.length; i++) {
+        var e2 = evs[i];
+        if(e2.DTSTART && (!e2.DTSTART.params || e2.DTSTART.params.indexOf('DATE') === -1)) {
+            subEvents.push(e2);
         }
     }
     
-    let upcoming = [];
-    for(let i=0; i<subEvents.length; i++) {
-        let e = subEvents[i];
-        let sDate = icsDate(e.DTSTART);
-        let sum = (e.SUMMARY && e.SUMMARY.val) ? e.SUMMARY.val : 'Event';
+    var upcoming = [];
+    for(var i=0; i<subEvents.length; i++) {
+        var e3 = subEvents[i];
+        var sDate = icsDate(e3.DTSTART);
+        var sum = (e3.SUMMARY && e3.SUMMARY.val) ? e3.SUMMARY.val : 'Event';
         if(sDate.getTime() >= now.getTime() - 3600000) {
             upcoming.push({ s: sDate, sum: sum });
         }
@@ -940,16 +933,22 @@ async function loadTrip(){
     upcoming.sort(function(a,b){ return a.s.getTime() - b.s.getTime(); });
     upcoming = upcoming.slice(0, 2);
 
-    let legs = [];
-    for(let i=0; i<upcoming.length; i++) {
-       let u = upcoming[i];
-       let icon = '📅';
+    var legs = [];
+    var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    for(var i=0; i<upcoming.length; i++) {
+       var u = upcoming[i];
+       var icon = '📅';
        if(u.sum.indexOf(' to ') !== -1) icon = '🛫';
        else if(u.sum.toLowerCase().indexOf('hotel') !== -1 || u.sum.toLowerCase().indexOf('resort') !== -1) icon = '🏨';
        else if(u.sum.toLowerCase().indexOf('car') !== -1 || u.sum.toLowerCase().indexOf('rental') !== -1) icon = '🚗';
        else if(u.sum.toLowerCase().indexOf('dinner') !== -1 || u.sum.toLowerCase().indexOf('reservation') !== -1) icon = '🍽️';
        
-       let dtStr = u.s.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+       var hh = u.s.getHours(); var mm = u.s.getMinutes();
+       var timeStr = (hh<10?'0':'')+hh+":"+(mm<10?'0':'')+mm;
+       var dtStr = days[u.s.getDay()] + ", " + months[u.s.getMonth()] + " " + u.s.getDate() + " · " + timeStr;
+
        legs.push({ text: u.sum, when: dtStr, icon: icon });
     }
 
@@ -958,14 +957,14 @@ async function loadTrip(){
       start:cand.s.toISOString().slice(0,10), end:cand.e.toISOString().slice(0,10), legs: legs});
     return;
   }catch(e){}
-  if(fb) renderTrip(fb); else {const m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
+  if(fb) renderTrip(fb); else {var m=document.getElementById('tripMsg');if(m)m.textContent='No upcoming trips';}
 }
 
 /* ---------- automated vertical carousel ---------- */
 function startCarousel() {
-    const items = document.querySelectorAll('#lowerCarousel .carousel-item');
+    var items = document.querySelectorAll('#lowerCarousel .carousel-item');
     if(items.length < 2) return;
-    let currentIndex = 0;
+    var currentIndex = 0;
     
     setInterval(function() {
         items[currentIndex].classList.remove('active');
@@ -976,26 +975,21 @@ function startCarousel() {
 
 /* ---------- SAFE: ESPN API World Cup Live Scores ---------- */
 async function loadWcScores(){
-  const box=document.getElementById('wcScores');
+  var box=document.getElementById('wcScores');
   if(!box) return;
-  const TZ='America/Mexico_City';
+  
   try{
-    const now=new Date();
-    let ymd;
-    try{
-      let rawDate = now.toLocaleDateString('en-CA',{timeZone:TZ});
-      ymd = rawDate.split('-').join('');
-    }catch(tzErr){
-      let rawDate = now.toISOString().slice(0,10);
-      ymd = rawDate.split('-').join('');
-    }
+    var now=new Date();
+    var y = now.getFullYear();
+    var m = now.getMonth() + 1;
+    var d = now.getDate();
+    var ymd = "" + y + (m<10?'0':'') + m + (d<10?'0':'') + d;
     
-    // Using ESPN's open JSON endpoint. Doesn't require keys, heavily CORS-friendly.
-    const url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
-    const r=await fetch(url);
+    var url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
+    var r=await fetch(url);
     if(!r.ok) throw 0;
-    const d=await r.json();
-    const events=(d.events||[]);
+    var data=await r.json();
+    var events=(data.events||[]);
     
     if(events.length === 0){
       box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
@@ -1004,52 +998,50 @@ async function loadWcScores(){
       return;
     }
     
-    const colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
-    let html='';
+    var colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
+    var html='';
     
-    for(let i=0; i<events.length; i++) {
-      let ev = events[i];
-      let comp = (ev.competitions && ev.competitions.length > 0) ? ev.competitions[0] : {};
-      let cs = comp.competitors || [];
+    for(var i=0; i<events.length; i++) {
+      var ev = events[i];
+      var comp = (ev.competitions && ev.competitions.length > 0) ? ev.competitions[0] : {};
+      var cs = comp.competitors || [];
       
-      let home = {}; let away = {};
-      for(let j=0; j<cs.length; j++) {
+      var home = {}; var away = {};
+      for(var j=0; j<cs.length; j++) {
          if(cs[j].homeAway === 'home') home = cs[j];
          if(cs[j].homeAway === 'away') away = cs[j];
       }
       if(!home.team && cs.length > 0) home = cs[0];
       if(!away.team && cs.length > 1) away = cs[1];
       
-      let hn = (home.team && (home.team.shortDisplayName || home.team.displayName)) ? (home.team.shortDisplayName || home.team.displayName) : 'TBD';
-      let an = (away.team && (away.team.shortDisplayName || away.team.displayName)) ? (away.team.shortDisplayName || away.team.displayName) : 'TBD';
-      let hs = home.score != null ? home.score : '';
-      let as = away.score != null ? away.score : '';
+      var hn = (home.team && (home.team.shortDisplayName || home.team.displayName)) ? (home.team.shortDisplayName || home.team.displayName) : 'TBD';
+      var an = (away.team && (away.team.shortDisplayName || away.team.displayName)) ? (away.team.shortDisplayName || away.team.displayName) : 'TBD';
+      var hs = home.score != null ? home.score : '';
+      var as = away.score != null ? away.score : '';
       
-      let st = (ev.status && ev.status.type) ? ev.status.type : {};
-      let stState = st.state;
+      var st = (ev.status && ev.status.type) ? ev.status.type : {};
+      var stState = st.state;
       
-      let stateHtml='';
+      var stateHtml='';
       if(stState==='in'){
-        let clock = (ev.status && ev.status.displayClock) ? ev.status.displayClock : '';
+        var clock = (ev.status && ev.status.displayClock) ? ev.status.displayClock : '';
         stateHtml='<span class="live"><span class="dot"></span>LIVE ' + clock + '</span>';
       }else if(stState==='post'){
         stateHtml='<span class="ft">FT</span>';
       }else{
-        let ko = '';
-        try {
-           ko=new Date(ev.date).toLocaleTimeString('en-US',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false});
-        } catch(err) {
-           ko=new Date(ev.date).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
-        }
+        var matchDate = new Date(ev.date);
+        var hh = matchDate.getHours();
+        var mm = matchDate.getMinutes();
+        var ko = (hh<10?'0':'') + hh + ":" + (mm<10?'0':'') + mm;
         stateHtml='<span class="ko">' + ko + '</span>';
       }
       
-      let c=colors[i%colors.length];
-      let showScore = stState !== 'pre';
-      let hNum = parseInt(hs, 10);
-      let aNum = parseInt(as, 10);
-      let hLead = showScore && (hNum > aNum);
-      let aLead = showScore && (aNum > hNum);
+      var c=colors[i%colors.length];
+      var showScore = stState !== 'pre';
+      var hNum = parseInt(hs, 10);
+      var aNum = parseInt(as, 10);
+      var hLead = showScore && (hNum > aNum);
+      var aLead = showScore && (aNum > hNum);
       
       html += '<div class="wc-score-row" style="--c:' + c + '">';
       html += '  <div class="wc-score-teams">';
@@ -1067,9 +1059,7 @@ async function loadWcScores(){
 }
 
 /* ---------- boot ---------- */
-// Run each step in isolation so one failing call can never halt the rest of the
-// dashboard (older TV browsers like Fire Stick Silk are stricter than Chrome).
-function safe(fn){ try{ fn(); }catch(e){ /* keep going */ } }
+function safe(fn){ try{ fn(); }catch(e){} }
 
 safe(function(){ tick(); setInterval(tick,1000); });
 safe(function(){ countdown(); setInterval(countdown,3600000); });
@@ -1081,13 +1071,9 @@ safe(function(){ loadFx(); setInterval(loadFx,3600000); });
 safe(function(){ moonPhase(); setInterval(moonPhase,3600000); });
 safe(function(){ loadTrip(); setInterval(loadTrip,1800000); });
 
-// Paint the lower section (chores, schedule, carousel) BEFORE any network call,
-// so it always renders even if a fetch later misbehaves.
 safe(function(){ renderHardcodedWorldCup(); setInterval(renderHardcodedWorldCup,60000); });
 safe(startCarousel);
 
-// Live World Cup scores (ESPN, no key). Deferred + isolated so a slow/failed
-// fetch on a TV browser can't block the rest of the boot.
 setTimeout(function(){
   safe(function(){ loadWcScores(); setInterval(loadWcScores,60000); });
 }, 100);
