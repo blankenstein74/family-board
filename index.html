@@ -772,10 +772,16 @@ async function loadWcScores(){
   const box=document.getElementById('wcScores');
   if(!box) return;
   const TZ='America/Mexico_City';
-  const now=new Date();
-  const ymd=now.toLocaleDateString('en-CA',{timeZone:TZ}).replace(/-/g,'');
-  const url=`https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=${ymd}`;
   try{
+    const now=new Date();
+    // YYYYMMDD for "today" in CDMX. Fall back to plain UTC date if Intl tz is unsupported.
+    let ymd;
+    try{
+      ymd=now.toLocaleDateString('en-CA',{timeZone:TZ}).replace(/-/g,'');
+    }catch(tzErr){
+      ymd=now.toISOString().slice(0,10).replace(/-/g,'');
+    }
+    const url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
     const r=await fetch(url);
     if(!r.ok) throw 0;
     const d=await r.json();
@@ -984,20 +990,28 @@ function startCarousel() {
 }
 
 /* ---------- boot ---------- */
-tick();setInterval(tick,1000);
-countdown();setInterval(countdown,3600000);
-loadState();
-loadWeather();setInterval(loadWeather,1800000);   
-loadStock();setInterval(loadStock,300000);        
-loadSunAqi();setInterval(loadSunAqi,1800000);     
-loadFx();setInterval(loadFx,3600000);             
-moonPhase();setInterval(moonPhase,3600000);       
-loadTrip();setInterval(loadTrip,1800000);         
-startCarousel();
+// Run each step in isolation so one failing call can never halt the rest of the
+// dashboard (older TV browsers like Fire Stick Silk are stricter than Chrome).
+function safe(fn){ try{ fn(); }catch(e){ /* keep going */ } }
 
-// Execute the hardcoded World Cup render immediately
-renderHardcodedWorldCup(); 
-setInterval(renderHardcodedWorldCup, 60000); 
+safe(()=>{ tick(); setInterval(tick,1000); });
+safe(()=>{ countdown(); setInterval(countdown,3600000); });
+safe(loadState);
+safe(()=>{ loadWeather(); setInterval(loadWeather,1800000); });
+safe(()=>{ loadStock(); setInterval(loadStock,300000); });
+safe(()=>{ loadSunAqi(); setInterval(loadSunAqi,1800000); });
+safe(()=>{ loadFx(); setInterval(loadFx,3600000); });
+safe(()=>{ moonPhase(); setInterval(moonPhase,3600000); });
+safe(()=>{ loadTrip(); setInterval(loadTrip,1800000); });
 
-loadWcScores(); setInterval(loadWcScores, 60000);   // live World Cup scores (ESPN, no key)
+// Paint the lower section (chores, schedule, carousel) BEFORE any network call,
+// so it always renders even if a fetch later misbehaves.
+safe(()=>{ renderHardcodedWorldCup(); setInterval(renderHardcodedWorldCup,60000); });
+safe(startCarousel);
+
+// Live World Cup scores (ESPN, no key). Deferred + isolated so a slow/failed
+// fetch on a TV browser can't block the rest of the boot.
+setTimeout(function(){
+  safe(()=>{ loadWcScores(); setInterval(loadWcScores,60000); });
+}, 100);
 </script>
