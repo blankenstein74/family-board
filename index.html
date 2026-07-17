@@ -138,16 +138,19 @@
   .legend{display:flex;gap:8px;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px;font-size:.55rem;color:var(--muted);font-weight:500}
 
-  /* HARDCODED WORLD CUP SCHEDULE CARD */
-  .wc-sched{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,8px)}
-  .wc-hero{position:relative;overflow:hidden}
-  .wc-hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, #006847, #ffffff, #ce1126)}
-  .wc-list{display:flex;flex-direction:column;gap:clamp(4px,1vh,8px)}
-  .wc-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(4px,1vh,8px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
-  .wc-item-time{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1rem,2vw,1.4rem);line-height:.82;color:var(--c);min-width:50px;text-align:center;}
-  .wc-item-time small{display:block;font-family:var(--body);font-weight:500;font-size:.4em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
-  .wc-item-match{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.1rem);line-height:1;word-wrap:break-word;}
-  .wc-item-date{color:var(--muted);font-weight:500;font-size:.55rem;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+  /* BIRTHDAY COUNTDOWN CARD */
+  .bday{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,8px);position:relative;overflow:hidden}
+  .bday::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--dad),var(--max),var(--maya),var(--matteo),var(--mom))}
+  .bd-list{display:flex;flex-direction:column;gap:clamp(3px,.7vh,6px)}
+  .bd-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(3px,.8vh,7px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
+  .bd-item.today{background:rgba(255,207,92,.12);box-shadow:0 0 0 1.5px var(--c) inset}
+  .bd-num{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1rem,2vw,1.4rem);line-height:.82;color:var(--c);min-width:50px;text-align:center}
+  .bd-num small{display:block;font-family:var(--body);font-weight:500;font-size:.4em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+  .bd-num.is-today{font-size:clamp(.9rem,1.5vw,1.15rem);line-height:1}
+  .bd-name{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.1rem);line-height:1;word-wrap:break-word}
+  .bd-date{color:var(--muted);font-weight:500;font-size:.55rem;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
+  .bd-cake{font-size:clamp(.9rem,1.4vw,1.2rem);line-height:1;flex:none;opacity:0}
+  .bd-item.today .bd-cake{opacity:1}
   .msg-text{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(.75rem,1vw,1.05rem);line-height:1.4;padding:6px}
 
   /* Carousel Container */
@@ -181,25 +184,23 @@
   .kid.complete .done-badge{opacity:1}
   .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
 
-  /* World Cup Content */
-  .world-cup-card { display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; text-align:left; padding: clamp(14px,1.6vw,22px); height: 100%; border-left: 5px solid #ffcf5c; overflow:hidden; }
-  .wc-scores { display:flex; flex-direction:column; gap:clamp(7px,1vh,12px); overflow:auto; flex:1; }
-  .wc-splash { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; }
-  .wc-score-row { display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; padding:clamp(8px,1vh,13px) clamp(11px,1.2vw,15px); border-radius:12px; background:var(--panel-2); border-left:3px solid var(--c); }
-  .wc-score-teams { min-width:0; }
-  .wc-score-team { display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:600; font-size:clamp(.9rem,1.15vw,1.15rem); line-height:1.3; }
-  .wc-score-team .gf { font-family:var(--display); font-weight:800; font-variant-numeric:tabular-nums; }
-  .wc-score-team.lead { color:var(--ink); }
-  .wc-score-team.trail { color:var(--muted); }
-  .wc-score-state { text-align:right; white-space:nowrap; font-weight:700; font-size:clamp(.72rem,.9vw,.92rem); }
-  .wc-score-state .live { color:#ff7a7a; }
-  .wc-score-state .ft { color:var(--faint); }
-  .wc-score-state .ko { color:var(--mom); font-variant-numeric:tabular-nums; }
-  .wc-score-state .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#ff7a7a; margin-right:5px; animation:wcpulse 1.2s infinite; }
-  @keyframes wcpulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-  .wc-hero-ico { font-size: clamp(3rem, 5vw, 5rem); line-height: 1; margin-bottom: 12px; }
-  .wc-title { font-family: var(--display); font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 8px; color: var(--max); }
-  .wc-sub { font-size: clamp(.8rem, 1.2vw, 1.1rem); color: var(--muted); font-weight: 500; line-height: 1.4; max-width: 80%; }
+  /* Word of the Day Content */
+  .wotd-card { display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; text-align:left; padding: clamp(14px,1.6vw,22px); height:100%; border-left:5px solid var(--c); overflow:hidden; }
+  .wotd-body { display:flex; flex-direction:column; justify-content:center; gap:clamp(6px,1vh,12px); flex:1; min-height:0; overflow:hidden; }
+  .wotd-pair { display:flex; flex-direction:column; gap:clamp(2px,.5vh,6px); }
+  .wotd-line { display:flex; align-items:baseline; gap:clamp(6px,.8vw,10px); min-width:0; }
+  .wotd-flag { font-size:clamp(.8rem,1.1vw,1.1rem); line-height:1; flex:none; }
+  .wotd-word { font-family:var(--display); font-weight:800; letter-spacing:-.02em; line-height:1; word-wrap:break-word; min-width:0; font-size:clamp(1.4rem,3vw,2.6rem); }
+  .wotd-word.es { color:var(--c); font-size:clamp(1.2rem,2.5vw,2.1rem); }
+  .wotd-word.de { color:var(--c2); font-size:clamp(1.2rem,2.5vw,2.1rem); }
+  .wotd-pos { font-family:var(--body); font-style:italic; color:var(--faint); font-weight:600; font-size:clamp(.55rem,.75vw,.85rem); flex:none; }
+  .wotd-def { color:var(--muted); font-weight:500; line-height:1.35; font-size:clamp(.7rem,.95vw,1.05rem); padding-top:clamp(4px,.8vh,8px); border-top:1px solid var(--line); word-wrap:break-word; }
+  .wotd-ex { display:flex; flex-direction:column; gap:clamp(3px,.6vh,6px); padding-top:clamp(4px,.8vh,8px); border-top:1px solid var(--line); }
+  .wotd-ex-line { display:flex; align-items:flex-start; gap:7px; min-width:0; }
+  .wotd-ex-line .fl { font-size:clamp(.6rem,.8vw,.85rem); line-height:1.4; flex:none; }
+  .wotd-ex-line .tx { font-family:var(--serif); font-style:italic; color:var(--ink); font-weight:400; line-height:1.3; font-size:clamp(.65rem,.9vw,1rem); word-wrap:break-word; min-width:0; }
+  .wotd-ex-line.es .tx { color:var(--muted); }
+  .wotd-ex-line.de .tx { color:var(--muted); }
 
   /* ---------- RIGHT: trip / glance ---------- */
   .right{grid-area:right;display:grid;grid-template-rows:auto 1fr;gap:inherit;min-width:0}
@@ -281,7 +282,7 @@
           <div class="cond" id="wxDesc0" style="font-size:clamp(.55rem,.7vw,.8rem); color:var(--muted); margin-top:4px; line-height:1.1">Loading...</div>
         </div>
         <div class="wx-city-col" style="border-left: 1px solid var(--line); padding-left: 8px;">
-          <div class="wx-meta"><div class="city">Cancún <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
+          <div class="wx-meta"><div class="city">Zurich <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
           <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
             <span class="ico" id="wxIco1" style="font-size:clamp(1.4rem,2.5vw,2.2rem)">☁️</span>
             <div class="wx-temp" id="wxTemp1" style="font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:800; font-family:var(--display)">--°</div>
@@ -307,9 +308,9 @@
   </div>
 
   <div class="center">
-    <div class="card wc-sched wc-hero delay-2">
-      <div class="head-row"><h2 id="wcSchedEyebrow">World Cup Matches</h2></div>
-      <div class="wc-list" id="wcSchedList"></div>
+    <div class="card bday delay-2">
+      <div class="head-row"><h2>Birthdays 🎂</h2></div>
+      <div class="bd-list" id="bdList"></div>
     </div>
 
     <div class="carousel-wrapper" id="lowerCarousel">
@@ -321,14 +322,10 @@
           <div class="kid-grid" id="kids"></div>
         </div>
         
-        <div class="card world-cup-card carousel-item delay-4" id="wcContainer">
-            <div class="head-row" style="width:100%"><h2 id="wcScoresTitle">World Cup · Today</h2></div>
-            <div class="wc-scores" id="wcScores">
-              <div class="wc-splash">
-                <div class="wc-hero-ico">⚽</div>
-                <div class="wc-title">FIFA World Cup 2026</div>
-                <div class="wc-sub">Loading today's matches…</div>
-              </div>
+        <div class="card wotd-card carousel-item delay-4" id="wotdContainer" style="--c:var(--mom)">
+            <div class="head-row" style="width:100%"><h2>Word of the day</h2><div class="legend"><span style="color:var(--faint)" id="wotdDay">—</span></div></div>
+            <div class="wotd-body" id="wotdBody">
+              <div class="msg-text">Loading…</div>
             </div>
         </div>
     </div>
@@ -362,18 +359,18 @@
 var CONFIG = {
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
-    { name:'Cancún',      lat:21.1743, lon:-86.8466, tz:'America/Cancun'      }
+    { name:'Zurich',      lat:47.3667, lon:8.55,     tz:'Europe/Zurich'       }
   ],
 
   countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
-  tripitIcs: 'tripit_Jun25_to_Jun28.ics',
+  tripitIcs: 'tripit_Jul20_to_Aug20.ics',
   
   tripFallback: {
-    name:'Cancún JUN 26', dest:'Cancún, Mexico',
-    start:'2026-06-25', end:'2026-06-28',
+    name:'Madrid Verano 26', dest:'Zurich, Switzerland',
+    start:'2026-07-20', end:'2026-08-20',
     legs: [
-      { text:'Y43483 — TLC to CUN', when:'Thu, Jun 25 · 11:04', icon:'🛫' },
-      { text:'Y43482 — CUN to TLC', when:'Sun, Jun 28 · 15:14', icon:'🛫' }
+      { text:'IB308 — MEX to MAD', when:'Mon, Jul 20 · 19:00 CST', icon:'🛫' },
+      { text:'IB1287 — MAD to ZRH', when:'Tue, Jul 21 · 16:40 CEST', icon:'🛫' }
     ]
   },
 
@@ -383,80 +380,13 @@ var CONFIG = {
     { name:'JEPI', symbol:'JEPI' }
   ],
 
-  // HARDCODED WORLD CUP MATCHES: Strict ISO Format to prevent Silk Browser crashes
-  worldCupMatches: [
-    { date: '2026-06-11T13:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Africa 🇿🇦' },
-    { date: '2026-06-11T20:00:00-06:00', home: 'South Korea 🇰🇷', away: 'Czechia 🇨🇿' },
-    { date: '2026-06-12T13:00:00-06:00', home: 'Canada 🇨🇦', away: 'Bosnia & Herze. 🇧🇦' },
-    { date: '2026-06-12T19:00:00-06:00', home: 'USA 🇺🇸', away: 'Paraguay 🇵🇾' },
-    { date: '2026-06-13T13:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Morocco 🇲🇦' },
-    { date: '2026-06-13T16:00:00-06:00', home: 'Australia 🇦🇺', away: 'Türkiye 🇹🇷' },
-    { date: '2026-06-13T19:00:00-06:00', home: 'Haiti 🇭🇹', away: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
-    { date: '2026-06-13T22:00:00-06:00', home: 'Qatar 🇶🇦', away: 'Switzerland 🇨🇭' },
-    { date: '2026-06-14T11:00:00-06:00', home: 'Germany 🇩🇪', away: 'Curaçao 🇨🇼' },
-    { date: '2026-06-14T14:00:00-06:00', home: 'Ivory Coast 🇨🇮', away: 'Ecuador 🇪🇨' },
-    { date: '2026-06-14T17:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Japan 🇯🇵' },
-    { date: '2026-06-14T20:00:00-06:00', home: 'Sweden 🇸🇪', away: 'Tunisia 🇹🇳' },
-    { date: '2026-06-15T10:00:00-06:00', home: 'Spain 🇪🇸', away: 'Cape Verde 🇨🇻' },
-    { date: '2026-06-15T13:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Egypt 🇪🇬' },
-    { date: '2026-06-15T16:00:00-06:00', home: 'Saudi Arabia 🇸🇦', away: 'Uruguay 🇺🇾' },
-    { date: '2026-06-15T19:00:00-06:00', home: 'Iran 🇮🇷', away: 'New Zealand 🇳🇿' },
-    { date: '2026-06-16T13:00:00-06:00', home: 'France 🇫🇷', away: 'Senegal 🇸🇳' },
-    { date: '2026-06-16T16:00:00-06:00', home: 'Iraq 🇮🇶', away: 'Norway 🇳🇴' },
-    { date: '2026-06-16T19:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Algeria 🇩🇿' },
-    { date: '2026-06-16T22:00:00-06:00', home: 'Austria 🇦🇹', away: 'Jordan 🇯🇴' },
-    { date: '2026-06-17T11:00:00-06:00', home: 'Portugal 🇵🇹', away: 'DR Congo 🇨🇩' },
-    { date: '2026-06-17T14:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Croatia 🇭🇷' },
-    { date: '2026-06-17T17:00:00-06:00', home: 'Ghana 🇬🇭', away: 'Panama 🇵🇦' },
-    { date: '2026-06-17T20:00:00-06:00', home: 'Uzbekistan 🇺🇿', away: 'Colombia 🇨🇴' },
-    { date: '2026-06-18T10:00:00-06:00', home: 'Czechia 🇨🇿', away: 'South Africa 🇿🇦' },
-    { date: '2026-06-18T13:00:00-06:00', home: 'Switzerland 🇨🇭', away: 'Bosnia & Herze. 🇧🇦' },
-    { date: '2026-06-18T16:00:00-06:00', home: 'Canada 🇨🇦', away: 'Qatar 🇶🇦' },
-    { date: '2026-06-18T19:00:00-06:00', home: 'Mexico 🇲🇽', away: 'South Korea 🇰🇷' },
-    { date: '2026-06-19T13:00:00-06:00', home: 'USA 🇺🇸', away: 'Australia 🇦🇺' },
-    { date: '2026-06-19T16:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Morocco 🇲🇦' },
-    { date: '2026-06-19T19:00:00-06:00', home: 'Brazil 🇧🇷', away: 'Haiti 🇭🇹' },
-    { date: '2026-06-19T22:00:00-06:00', home: 'Türkiye 🇹🇷', away: 'Paraguay 🇵🇾' },
-    { date: '2026-06-20T11:00:00-06:00', home: 'Netherlands 🇳🇱', away: 'Sweden 🇸🇪' },
-    { date: '2026-06-20T14:00:00-06:00', home: 'Germany 🇩🇪', away: 'Ivory Coast 🇨🇮' },
-    { date: '2026-06-20T18:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Curaçao 🇨🇼' },
-    { date: '2026-06-20T22:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Japan 🇯🇵' },
-    { date: '2026-06-21T10:00:00-06:00', home: 'Spain 🇪🇸', away: 'Saudi Arabia 🇸🇦' },
-    { date: '2026-06-21T13:00:00-06:00', home: 'Belgium 🇧🇪', away: 'Iran 🇮🇷' },
-    { date: '2026-06-21T16:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Cape Verde 🇨🇻' },
-    { date: '2026-06-21T19:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Egypt 🇪🇬' },
-    { date: '2026-06-22T11:00:00-06:00', home: 'Argentina 🇦🇷', away: 'Austria 🇦🇹' },
-    { date: '2026-06-22T15:00:00-06:00', home: 'France 🇫🇷', away: 'Iraq 🇮🇶' },
-    { date: '2026-06-22T18:00:00-06:00', home: 'Norway 🇳🇴', away: 'Senegal 🇸🇳' },
-    { date: '2026-06-22T21:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Algeria 🇩🇿' },
-    { date: '2026-06-23T11:00:00-06:00', home: 'Portugal 🇵🇹', away: 'Uzbekistan 🇺🇿' },
-    { date: '2026-06-23T14:00:00-06:00', home: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿', away: 'Ghana 🇬🇭' },
-    { date: '2026-06-23T17:00:00-06:00', home: 'Panama 🇵🇦', away: 'Croatia 🇭🇷' },
-    { date: '2026-06-23T20:00:00-06:00', home: 'Colombia 🇨🇴', away: 'DR Congo 🇨🇩' },
-    { date: '2026-06-24T13:00:00-06:00', home: 'Canada 🇨🇦', away: 'Switzerland 🇨🇭' },
-    { date: '2026-06-24T13:00:00-06:00', home: 'Bosnia & Herze. 🇧🇦', away: 'Qatar 🇶🇦' },
-    { date: '2026-06-24T16:00:00-06:00', home: 'Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿', away: 'Brazil 🇧🇷' },
-    { date: '2026-06-24T16:00:00-06:00', home: 'Morocco 🇲🇦', away: 'Haiti 🇭🇹' },
-    { date: '2026-06-24T19:00:00-06:00', home: 'Mexico 🇲🇽', away: 'Czechia 🇨🇿' },
-    { date: '2026-06-24T19:00:00-06:00', home: 'South Korea 🇰🇷', away: 'South Africa 🇿🇦' },
-    { date: '2026-06-25T14:00:00-06:00', home: 'Ecuador 🇪🇨', away: 'Germany 🇩🇪' },
-    { date: '2026-06-25T14:00:00-06:00', home: 'Curaçao 🇨🇼', away: 'Ivory Coast 🇨🇮' },
-    { date: '2026-06-25T17:00:00-06:00', home: 'Tunisia 🇹🇳', away: 'Netherlands 🇳🇱' },
-    { date: '2026-06-25T17:00:00-06:00', home: 'Japan 🇯🇵', away: 'Sweden 🇸🇪' },
-    { date: '2026-06-25T20:00:00-06:00', home: 'USA 🇺🇸', away: 'Türkiye 🇹🇷' },
-    { date: '2026-06-25T20:00:00-06:00', home: 'Paraguay 🇵🇾', away: 'Australia 🇦🇺' },
-    { date: '2026-06-26T13:00:00-06:00', home: 'Norway 🇳🇴', away: 'France 🇫🇷' },
-    { date: '2026-06-26T13:00:00-06:00', home: 'Senegal 🇸🇳', away: 'Iraq 🇮🇶' },
-    { date: '2026-06-26T18:00:00-06:00', home: 'New Zealand 🇳🇿', away: 'Belgium 🇧🇪' },
-    { date: '2026-06-26T18:00:00-06:00', home: 'Egypt 🇪🇬', away: 'Iran 🇮🇷' },
-    { date: '2026-06-26T11:00:00-06:00', home: 'Cape Verde 🇨🇻', away: 'Saudi Arabia 🇸🇦' },
-    { date: '2026-06-26T21:00:00-06:00', home: 'Uruguay 🇺🇾', away: 'Spain 🇪🇸' },
-    { date: '2026-06-27T15:00:00-06:00', home: 'Panama 🇵🇦', away: 'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
-    { date: '2026-06-27T15:00:00-06:00', home: 'Croatia 🇭🇷', away: 'Ghana 🇬🇭' },
-    { date: '2026-06-27T17:30:00-06:00', home: 'Colombia 🇨🇴', away: 'Portugal 🇵🇹' },
-    { date: '2026-06-27T17:30:00-06:00', home: 'DR Congo 🇨🇩', away: 'Uzbekistan 🇺🇿' },
-    { date: '2026-06-27T20:00:00-06:00', home: 'Jordan 🇯🇴', away: 'Argentina 🇦🇷' },
-    { date: '2026-06-27T20:00:00-06:00', home: 'Algeria 🇩🇿', away: 'Austria 🇦🇹' }
+  // BIRTHDAYS — month is 1-12. Year not needed; it rolls forward automatically.
+  birthdays: [
+    { name:'Matteo',  month:5,  day:12, c:'var(--matteo)' },
+    { name:'Holger',  month:6,  day:21, c:'var(--dad)'    },
+    { name:'Marlene', month:7,  day:1,  c:'var(--mom)'    },
+    { name:'Maya',    month:7,  day:26, c:'var(--maya)'   },
+    { name:'Max',     month:8,  day:3,  c:'var(--max)'    }
   ]
 };
 
@@ -737,82 +667,57 @@ function moonPhase(){
   if(txt) txt.textContent=p[2];
 }
 
-/* ---------- Hardcoded World Cup Widget (Safe for old browsers) ---------- */
-function renderHardcodedWorldCup() {
-  var list = document.getElementById('wcSchedList');
+/* ---------- birthday countdown (self-updating, rolls year automatically) ---------- */
+function renderBirthdays() {
+  var list = document.getElementById('bdList');
   if(!list) return;
+  var bd = CONFIG.birthdays;
+  if(!bd || !bd.length){ list.innerHTML='<div class="msg-text">No birthdays configured</div>'; return; }
 
-  var now = new Date();
-
-  var parsedMatches = [];
-  for(var i = 0; i < CONFIG.worldCupMatches.length; i++) {
-      var m = CONFIG.worldCupMatches[i];
-      var pDate = new Date(m.date); // Safe parsing because we reverted to ISO format
-      // Keep matches that are in the future or started within the last 2 hours
-      if(pDate.getTime() >= now.getTime() - 7200000) {
-          parsedMatches.push({
-              home: m.home,
-              away: m.away,
-              parsedDate: pDate
-          });
-      }
-  }
-
-  parsedMatches.sort(function(a, b) {
-      return a.parsedDate.getTime() - b.parsedDate.getTime();
-  });
-  
-  // FIX: Slice to 2 matches instead of 3 to fit vertical screen space
-  var upcoming = parsedMatches.slice(0, 2);
-      
-  if(upcoming.length === 0){ 
-     list.innerHTML='<div class="msg-text">Tournament finished!</div>'; 
-     return; 
-  }
-  
-  var html='';
-  var colors = ['var(--maya)', 'var(--max)', 'var(--mom)'];
-  
-  var nowY = now.getFullYear();
-  var nowM = now.getMonth();
-  var nowD = now.getDate();
-  var todayStr = nowY + "-" + nowM + "-" + nowD;
-  
-  var tmrw = new Date(now.getTime() + 86400000);
-  var tmrwStr = tmrw.getFullYear() + "-" + tmrw.getMonth() + "-" + tmrw.getDate();
-
-  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  for(var i = 0; i < upcoming.length; i++) {
-     var u = upcoming[i];
-     
-     var hh = u.parsedDate.getHours();
-     var mm = u.parsedDate.getMinutes();
-     var timeStr = (hh<10?'0':'') + hh + ":" + (mm<10?'0':'') + mm;
-     
-     var matchStr = u.parsedDate.getFullYear() + "-" + u.parsedDate.getMonth() + "-" + u.parsedDate.getDate();
-     var dateStr = "";
-     
-     if(matchStr === todayStr) {
-         dateStr = 'Today';
-     } else if (matchStr === tmrwStr) {
-         dateStr = 'Tomorrow';
-     } else {
-         dateStr = days[u.parsedDate.getDay()] + ", " + months[u.parsedDate.getMonth()] + " " + u.parsedDate.getDate();
-     }
-
-     var c = colors[i % colors.length];
-
-     html += '<div class="wc-item" style="--c:' + c + '">';
-     html += '   <div class="wc-item-time">' + timeStr + '<small>CST</small></div>';
-     html += '   <div>';
-     html += '      <div class="wc-item-match">' + u.home + ' vs ' + u.away + '</div>';
-     html += '      <div class="wc-item-date">' + dateStr + '</div>';
-     html += '   </div>';
-     html += '</div>';
+  var rows = [];
+  for(var i = 0; i < bd.length; i++) {
+    var p = bd[i];
+    // next occurrence: this year, else next year
+    var next = new Date(today.getFullYear(), p.month - 1, p.day);
+    if(next.getTime() < today.getTime()) {
+      next = new Date(today.getFullYear() + 1, p.month - 1, p.day);
+    }
+    var days = Math.round((next.getTime() - today.getTime()) / 86400000);
+    rows.push({ name: p.name, c: p.c, days: days, month: p.month, day: p.day, next: next });
   }
-  
+
+  rows.sort(function(a, b){ return a.days - b.days; });
+
+  var html = '';
+  for(var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var isToday = (r.days === 0);
+    var numHtml;
+    if(isToday) {
+      numHtml = '<div class="bd-num is-today">TODAY</div>';
+    } else if(r.days === 1) {
+      numHtml = '<div class="bd-num">1<small>day</small></div>';
+    } else {
+      numHtml = '<div class="bd-num">' + r.days + '<small>days</small></div>';
+    }
+
+    var dateStr = months[r.month - 1] + ' ' + r.day;
+    if(r.days === 1) dateStr = dateStr + ' · Tomorrow';
+    else if(r.next.getFullYear() !== now.getFullYear()) dateStr = dateStr + ', ' + r.next.getFullYear();
+
+    html += '<div class="bd-item' + (isToday ? ' today' : '') + '" style="--c:' + r.c + '">';
+    html += '   ' + numHtml;
+    html += '   <div>';
+    html += '      <div class="bd-name">' + r.name + '</div>';
+    html += '      <div class="bd-date">' + dateStr + '</div>';
+    html += '   </div>';
+    html += '   <span class="bd-cake">🎂</span>';
+    html += '</div>';
+  }
   list.innerHTML = html;
 }
 
@@ -842,7 +747,9 @@ function icsDate(f){
 }
 function fmtTripDate(d){
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return months[d.getMonth()] + ' ' + d.getDate();
+  // trip dates are parsed as UTC midnight — read them back in UTC, or a
+  // dashboard west of Greenwich renders every date one day early.
+  return months[d.getUTCMonth()] + ' ' + d.getUTCDate();
 }
 
 /* ---------- next trip (TripIt rendering) ---------- */
@@ -876,7 +783,35 @@ function renderTrip(t){
 
   body.innerHTML='<div class="trip-head"><div class="trip-name">'+t.name+'</div>'+cdHtml+'</div>'
     +'<div class="trip-dest">📍 '+t.dest+'</div>'
-    +'<div class="trip-dates">'+fmtTripDate(start)+' – '+fmtTripDate(end)+', '+end.getFullYear()+'</div>'+legsHtml;
+    +'<div class="trip-dates">'+fmtTripDate(start)+' – '+fmtTripDate(end)+', '+end.getUTCFullYear()+'</div>'+legsHtml;
+}
+
+/* ---------- leg date/time in the event's OWN local zone ----------
+   DTSTART is UTC, so getHours() renders every leg in the dashboard's timezone —
+   a 15:00 CEST check-in in Switzerland would show as 07:00 in Mexico City.
+   TripIt writes the real local time (and usually the date) into DESCRIPTION,
+   e.g. "Mon, Jul 20" + "19:00  CST". Prefer that; fall back to the old behaviour.
+------------------------------------------------------------------ */
+var DAYS_S = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var MON_S  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function legWhen(ev, utcDate){
+  var dstr = null, tstr = null, zone = '';
+  try{
+    var d = (ev && ev.DESCRIPTION && ev.DESCRIPTION.val) ? ev.DESCRIPTION.val : '';
+    var md = d.match(/\b(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})\b/);
+    if(md) dstr = md[1] + ', ' + md[2] + ' ' + md[3];
+    var mt = d.match(/\b(\d{1,2}):(\d{2})\s+([A-Z]{2,5})\b/);
+    if(mt){ tstr = (mt[1].length < 2 ? '0' : '') + mt[1] + ':' + mt[2]; zone = mt[3]; }
+  }catch(err){}
+
+  if(!dstr) dstr = DAYS_S[utcDate.getDay()] + ', ' + MON_S[utcDate.getMonth()] + ' ' + utcDate.getDate();
+  if(!tstr){
+    var hh = utcDate.getHours(), mm = utcDate.getMinutes();
+    tstr = (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm;
+    zone = '';
+  }
+  return dstr + ' · ' + tstr + (zone ? ' ' + zone : '');
 }
 
 async function loadTrip(){
@@ -898,12 +833,18 @@ async function loadTrip(){
     var candArray = [];
     for(var i=0; i<trips.length; i++) {
         var t = trips[i];
-        candArray.push({ t: t, s: icsDate(t.DTSTART), e: icsDate(t.DTEND) });
+        var endD = icsDate(t.DTEND);
+        // iCal all-day DTEND is EXCLUSIVE: 'Aug 21' means the last day is Aug 20.
+        if(endD && t.DTEND && t.DTEND.params && t.DTEND.params.indexOf('DATE') !== -1 && t.DTEND.val.indexOf('T') === -1) {
+            endD = new Date(endD.getTime() - 86400000);
+        }
+        candArray.push({ t: t, s: icsDate(t.DTSTART), e: endD });
     }
     
     var candFuture = [];
     for(var i=0; i<candArray.length; i++) {
-        if(candArray[i].e.getTime() >= now.getTime()) {
+        // keep a trip selected through the end of its final day
+        if(candArray[i].e.getTime() + 86400000 >= now.getTime()) {
             candFuture.push(candArray[i]);
         }
     }
@@ -927,27 +868,26 @@ async function loadTrip(){
         var sDate = icsDate(e3.DTSTART);
         var sum = (e3.SUMMARY && e3.SUMMARY.val) ? e3.SUMMARY.val : 'Event';
         if(sDate.getTime() >= now.getTime() - 3600000) {
-            upcoming.push({ s: sDate, sum: sum });
+            upcoming.push({ s: sDate, sum: sum, e: e3 });
         }
     }
     upcoming.sort(function(a,b){ return a.s.getTime() - b.s.getTime(); });
     upcoming = upcoming.slice(0, 2);
 
     var legs = [];
-    var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
     for(var i=0; i<upcoming.length; i++) {
        var u = upcoming[i];
+       var sl = u.sum.toLowerCase();
        var icon = '📅';
-       if(u.sum.indexOf(' to ') !== -1) icon = '🛫';
-       else if(u.sum.toLowerCase().indexOf('hotel') !== -1 || u.sum.toLowerCase().indexOf('resort') !== -1) icon = '🏨';
-       else if(u.sum.toLowerCase().indexOf('car') !== -1 || u.sum.toLowerCase().indexOf('rental') !== -1) icon = '🚗';
-       else if(u.sum.toLowerCase().indexOf('dinner') !== -1 || u.sum.toLowerCase().indexOf('reservation') !== -1) icon = '🍽️';
+       // rail first: 'Bale Sbb to Paris' also contains ' to ', which would read as a flight
+       if(sl.indexOf('sncf') !== -1 || sl.indexOf('rail') !== -1 || sl.indexOf('train') !== -1) icon = '🚆';
+       else if(sl.indexOf('car') !== -1 || sl.indexOf('rental') !== -1) icon = '🚗';
+       else if(u.sum.indexOf(' to ') !== -1) icon = '🛫';
+       else if(sl.indexOf('check-in') !== -1 || sl.indexOf('check-out') !== -1 || sl.indexOf('hotel') !== -1 || sl.indexOf('resort') !== -1) icon = '🏨';
+       else if(sl.indexOf('dinner') !== -1 || sl.indexOf('reservation') !== -1) icon = '🍽️';
        
-       var hh = u.s.getHours(); var mm = u.s.getMinutes();
-       var timeStr = (hh<10?'0':'')+hh+":"+(mm<10?'0':'')+mm;
-       var dtStr = days[u.s.getDay()] + ", " + months[u.s.getMonth()] + " " + u.s.getDate() + " · " + timeStr;
+       var dtStr = legWhen(u.e, u.s);
 
        legs.push({ text: u.sum, when: dtStr, icon: icon });
     }
@@ -973,89 +913,177 @@ function startCarousel() {
     }, 15000); 
 }
 
-/* ---------- SAFE: ESPN API World Cup Live Scores ---------- */
-async function loadWcScores(){
-  var box=document.getElementById('wcScores');
-  if(!box) return;
-  
-  try{
-    var now=new Date();
-    var y = now.getFullYear();
-    var m = now.getMonth() + 1;
-    var d = now.getDate();
-    var ymd = "" + y + (m<10?'0':'') + m + (d<10?'0':'') + d;
-    
-    var url='https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates='+ymd;
-    var r=await fetch(url);
-    if(!r.ok) throw 0;
-    var data=await r.json();
-    var events=(data.events||[]);
-    
-    if(events.length === 0){
-      box.innerHTML='<div class="wc-splash"><div class="wc-hero-ico">⚽</div>'
-        +'<div class="wc-title">FIFA World Cup 2026</div>'
-        +'<div class="wc-sub">No matches today — see the schedule tile</div></div>';
-      return;
-    }
-    
-    var colors=['var(--maya)','var(--max)','var(--mom)','var(--matteo)','var(--dad)'];
-    var html='';
-    
-    for(var i=0; i<events.length; i++) {
-      var ev = events[i];
-      var comp = (ev.competitions && ev.competitions.length > 0) ? ev.competitions[0] : {};
-      var cs = comp.competitors || [];
-      
-      var home = {}; var away = {};
-      for(var j=0; j<cs.length; j++) {
-         if(cs[j].homeAway === 'home') home = cs[j];
-         if(cs[j].homeAway === 'away') away = cs[j];
-      }
-      if(!home.team && cs.length > 0) home = cs[0];
-      if(!away.team && cs.length > 1) away = cs[1];
-      
-      var hn = (home.team && (home.team.shortDisplayName || home.team.displayName)) ? (home.team.shortDisplayName || home.team.displayName) : 'TBD';
-      var an = (away.team && (away.team.shortDisplayName || away.team.displayName)) ? (away.team.shortDisplayName || away.team.displayName) : 'TBD';
-      var hs = home.score != null ? home.score : '';
-      var as = away.score != null ? away.score : '';
-      
-      var st = (ev.status && ev.status.type) ? ev.status.type : {};
-      var stState = st.state;
-      
-      var stateHtml='';
-      if(stState==='in'){
-        var clock = (ev.status && ev.status.displayClock) ? ev.status.displayClock : '';
-        stateHtml='<span class="live"><span class="dot"></span>LIVE ' + clock + '</span>';
-      }else if(stState==='post'){
-        stateHtml='<span class="ft">FT</span>';
-      }else{
-        var matchDate = new Date(ev.date);
-        var hh = matchDate.getHours();
-        var mm = matchDate.getMinutes();
-        var ko = (hh<10?'0':'') + hh + ":" + (mm<10?'0':'') + mm;
-        stateHtml='<span class="ko">' + ko + '</span>';
-      }
-      
-      var c=colors[i%colors.length];
-      var showScore = stState !== 'pre';
-      var hNum = parseInt(hs, 10);
-      var aNum = parseInt(as, 10);
-      var hLead = showScore && (hNum > aNum);
-      var aLead = showScore && (aNum > hNum);
-      
-      html += '<div class="wc-score-row" style="--c:' + c + '">';
-      html += '  <div class="wc-score-teams">';
-      html += '    <div class="wc-score-team ' + (hLead ? 'lead' : (showScore && aLead ? 'trail' : '')) + '"><span>' + hn + '</span>' + (showScore ? '<span class="gf">' + hs + '</span>' : '') + '</div>';
-      html += '    <div class="wc-score-team ' + (aLead ? 'lead' : (showScore && hLead ? 'trail' : '')) + '"><span>' + an + '</span>' + (showScore ? '<span class="gf">' + as + '</span>' : '') + '</div>';
-      html += '  </div>';
-      html += '  <div class="wc-score-state">' + stateHtml + '</div>';
-      html += '</div>';
-    }
-    
-    box.innerHTML=html;
-  }catch(e){
-    // Keep silent failure if network drops to preserve formatting
-  }
+/* ---------- word of the day (EN + ES + DE) ----------
+   Local word bank: no API, no key, no CORS, cannot break.
+   Rotates by day-of-year, shifts each year so the order varies.
+   Add or edit entries freely — the tile picks up new ones automatically.
+   Each entry needs: en, es, de, pos, def, exEn, exEs, exDe
+   Note: fields are single-quoted JS strings — avoid apostrophes inside them.
+------------------------------------------------------------------ */
+var WORDS = [
+  {en:'resilient',es:'resiliente',de:'widerstandsfähig',pos:'adjective',def:'Able to recover quickly from difficulty.',exEn:'She stayed resilient through a hard year.',exEs:'Se mantuvo resiliente durante un año difícil.',exDe:'Sie blieb ein schweres Jahr lang widerstandsfähig.'},
+  {en:'sunrise',es:'el amanecer',de:'der Sonnenaufgang',pos:'noun',def:'The moment the sun first appears in the morning.',exEn:'We watched the sunrise from the roof.',exEs:'Vimos el amanecer desde la azotea.',exDe:'Wir haben den Sonnenaufgang vom Dach aus gesehen.'},
+  {en:'to gather',es:'reunir',de:'versammeln',pos:'verb',def:'To bring people or things together in one place.',exEn:'They gather every Sunday for lunch.',exEs:'Se reúnen cada domingo para comer.',exDe:'Sie versammeln sich jeden Sonntag zum Mittagessen.'},
+  {en:'cozy',es:'acogedor',de:'gemütlich',pos:'adjective',def:'Warm, comfortable and inviting.',exEn:'The kitchen is the coziest room.',exEs:'La cocina es el cuarto más acogedor.',exDe:'Die Küche ist der gemütlichste Raum.'},
+  {en:'journey',es:'el viaje',de:'die Reise',pos:'noun',def:'An act of travelling from one place to another.',exEn:'The journey took us three days.',exEs:'El viaje nos tomó tres días.',exDe:'Die Reise dauerte drei Tage.'},
+  {en:'to whisper',es:'susurrar',de:'flüstern',pos:'verb',def:'To speak very softly, using the breath.',exEn:'He whispered so nobody would hear.',exEs:'Susurró para que nadie escuchara.',exDe:'Er flüsterte, damit niemand es hörte.'},
+  {en:'brave',es:'valiente',de:'mutig',pos:'adjective',def:'Showing courage when facing something hard.',exEn:'That was a brave thing to admit.',exEs:'Fue algo valiente de admitir.',exDe:'Das war mutig, das zuzugeben.'},
+  {en:'neighborhood',es:'el barrio',de:'das Viertel',pos:'noun',def:'A district or area of a town where people live.',exEn:'Our neighborhood is quiet at night.',exEs:'Nuestro barrio es tranquilo de noche.',exDe:'Unser Viertel ist nachts ruhig.'},
+  {en:'to share',es:'compartir',de:'teilen',pos:'verb',def:'To give a part of something to others.',exEn:'Please share the cake with your brother.',exEs:'Por favor comparte el pastel con tu hermano.',exDe:'Bitte teile den Kuchen mit deinem Bruder.'},
+  {en:'curious',es:'curioso',de:'neugierig',pos:'adjective',def:'Eager to know or learn something.',exEn:'She is curious about everything.',exEs:'Ella es curiosa por todo.',exDe:'Sie ist auf alles neugierig.'},
+  {en:'breeze',es:'la brisa',de:'die Brise',pos:'noun',def:'A gentle wind.',exEn:'A cool breeze came through the window.',exEs:'Una brisa fresca entró por la ventana.',exDe:'Eine kühle Brise kam durchs Fenster.'},
+  {en:'to belong',es:'pertenecer',de:'gehören',pos:'verb',def:'To be part of a group or to have a proper place.',exEn:'That book belongs on the top shelf.',exEs:'Ese libro pertenece al estante de arriba.',exDe:'Das Buch gehört ins oberste Regal.'},
+  {en:'grateful',es:'agradecido',de:'dankbar',pos:'adjective',def:'Feeling thankful for something received.',exEn:'We are grateful for your help.',exEs:'Estamos agradecidos por tu ayuda.',exDe:'Wir sind dankbar für deine Hilfe.'},
+  {en:'dawn',es:'la madrugada',de:'die Morgendämmerung',pos:'noun',def:'The very early hours before and around sunrise.',exEn:'The flight leaves at dawn.',exEs:'El vuelo sale de madrugada.',exDe:'Der Flug geht bei Morgendämmerung.'},
+  {en:'to wander',es:'vagar',de:'umherstreifen',pos:'verb',def:'To walk without a fixed destination.',exEn:'We wandered through the market.',exEs:'Vagamos por el mercado.',exDe:'Wir streiften durch den Markt.'},
+  {en:'gentle',es:'suave',de:'sanft',pos:'adjective',def:'Mild, soft, not harsh or forceful.',exEn:'Be gentle with the puppy.',exEs:'Sé suave con el cachorro.',exDe:'Sei sanft mit dem Welpen.'},
+  {en:'laughter',es:'la risa',de:'das Lachen',pos:'noun',def:'The sound of laughing.',exEn:'The house was full of laughter.',exEs:'La casa estaba llena de risas.',exDe:'Das Haus war voller Lachen.'},
+  {en:'to build',es:'construir',de:'bauen',pos:'verb',def:'To make something by putting parts together.',exEn:'They built the treehouse in a weekend.',exEs:'Construyeron la casa del árbol en un fin de semana.',exDe:'Sie bauten das Baumhaus an einem Wochenende.'},
+  {en:'clever',es:'listo',de:'klug',pos:'adjective',def:'Quick to understand and learn.',exEn:'That was a clever solution.',exEs:'Esa fue una solución muy lista.',exDe:'Das war eine kluge Lösung.'},
+  {en:'horizon',es:'el horizonte',de:'der Horizont',pos:'noun',def:'The line where the earth seems to meet the sky.',exEn:'The ship disappeared over the horizon.',exEs:'El barco desapareció tras el horizonte.',exDe:'Das Schiff verschwand hinter dem Horizont.'},
+  {en:'to remember',es:'recordar',de:'sich erinnern',pos:'verb',def:'To keep something in your mind, or bring it back.',exEn:'I remember that summer clearly.',exEs:'Recuerdo ese verano claramente.',exDe:'Ich erinnere mich gut an diesen Sommer.'},
+  {en:'warm',es:'cálido',de:'warm',pos:'adjective',def:'Having a comfortable heat; also friendly.',exEn:'They gave us a warm welcome.',exEs:'Nos dieron una cálida bienvenida.',exDe:'Sie hießen uns warm willkommen.'},
+  {en:'courage',es:'el valor',de:'der Mut',pos:'noun',def:'The ability to face fear or difficulty.',exEn:'It takes courage to start over.',exEs:'Se necesita valor para empezar de nuevo.',exDe:'Es braucht Mut, neu anzufangen.'},
+  {en:'to discover',es:'descubrir',de:'entdecken',pos:'verb',def:'To find something for the first time.',exEn:'We discovered a new taco place.',exEs:'Descubrimos una nueva taquería.',exDe:'Wir haben eine neue Taquería entdeckt.'},
+  {en:'bright',es:'brillante',de:'hell',pos:'adjective',def:'Giving off a lot of light; also very clever.',exEn:'The moon is bright tonight.',exEs:'La luna está brillante esta noche.',exDe:'Der Mond ist heute Nacht hell.'},
+  {en:'friendship',es:'la amistad',de:'die Freundschaft',pos:'noun',def:'The relationship between friends.',exEn:'Their friendship lasted forty years.',exEs:'Su amistad duró cuarenta años.',exDe:'Ihre Freundschaft hielt vierzig Jahre.'},
+  {en:'to grow',es:'crecer',de:'wachsen',pos:'verb',def:'To become bigger or develop over time.',exEn:'You have grown so much this year.',exEs:'Has crecido mucho este año.',exDe:'Du bist dieses Jahr sehr gewachsen.'},
+  {en:'quiet',es:'tranquilo',de:'ruhig',pos:'adjective',def:'Making little or no noise; calm.',exEn:'It is quiet here in the mornings.',exEs:'Aquí está tranquilo por las mañanas.',exDe:'Hier ist es morgens ruhig.'},
+  {en:'treasure',es:'el tesoro',de:'der Schatz',pos:'noun',def:'Something valuable, kept or hidden.',exEn:'The photos are a family treasure.',exEs:'Las fotos son un tesoro familiar.',exDe:'Die Fotos sind ein Familienschatz.'},
+  {en:'to imagine',es:'imaginar',de:'sich vorstellen',pos:'verb',def:'To form a picture of something in your mind.',exEn:'Imagine what the trip will be like.',exEs:'Imagina cómo será el viaje.',exDe:'Stell dir vor, wie die Reise wird.'},
+  {en:'kind',es:'amable',de:'freundlich',pos:'adjective',def:'Generous and caring toward others.',exEn:'That was very kind of you.',exEs:'Eso fue muy amable de tu parte.',exDe:'Das war sehr freundlich von dir.'},
+  {en:'shadow',es:'la sombra',de:'der Schatten',pos:'noun',def:'A dark shape made when something blocks light.',exEn:'We sat in the shadow of the tree.',exEs:'Nos sentamos a la sombra del árbol.',exDe:'Wir saßen im Schatten des Baumes.'},
+  {en:'to promise',es:'prometer',de:'versprechen',pos:'verb',def:'To say firmly that you will do something.',exEn:'He promised to be home by six.',exEs:'Prometió estar en casa a las seis.',exDe:'Er versprach, um sechs zu Hause zu sein.'},
+  {en:'wild',es:'salvaje',de:'wild',pos:'adjective',def:'Living or growing in nature, not tamed.',exEn:'Wild parrots live in these trees.',exEs:'Loros salvajes viven en estos árboles.',exDe:'Wilde Papageien leben in diesen Bäumen.'},
+  {en:'harvest',es:'la cosecha',de:'die Ernte',pos:'noun',def:'The gathering of crops; the crops gathered.',exEn:'This year the harvest was good.',exEs:'Este año la cosecha fue buena.',exDe:'Dieses Jahr war die Ernte gut.'},
+  {en:'to listen',es:'escuchar',de:'zuhören',pos:'verb',def:'To pay attention to a sound or to someone.',exEn:'Listen carefully to the question.',exEs:'Escucha bien la pregunta.',exDe:'Hör der Frage gut zu.'},
+  {en:'proud',es:'orgulloso',de:'stolz',pos:'adjective',def:'Feeling pleased about something you did.',exEn:'We are proud of your report card.',exEs:'Estamos orgullosos de tus calificaciones.',exDe:'Wir sind stolz auf dein Zeugnis.'},
+  {en:'mountain',es:'la montaña',de:'der Berg',pos:'noun',def:'A very high natural elevation of land.',exEn:'You can see the mountains on a clear day.',exEs:'Se ven las montañas en un día claro.',exDe:'An klaren Tagen sieht man die Berge.'},
+  {en:'to celebrate',es:'celebrar',de:'feiern',pos:'verb',def:'To mark a happy occasion.',exEn:'We celebrate birthdays with cake.',exEs:'Celebramos los cumpleaños con pastel.',exDe:'Wir feiern Geburtstage mit Kuchen.'},
+  {en:'deep',es:'profundo',de:'tief',pos:'adjective',def:'Going far down from the surface.',exEn:'The pool is deep at that end.',exEs:'La alberca es profunda en ese extremo.',exDe:'Das Becken ist an dem Ende tief.'},
+  {en:'memory',es:'el recuerdo',de:'die Erinnerung',pos:'noun',def:'Something you remember from the past.',exEn:'That is my favorite memory of the trip.',exEs:'Ese es mi recuerdo favorito del viaje.',exDe:'Das ist meine liebste Erinnerung an die Reise.'},
+  {en:'to protect',es:'proteger',de:'schützen',pos:'verb',def:'To keep someone or something safe from harm.',exEn:'Sunscreen protects your skin.',exEs:'El bloqueador protege tu piel.',exDe:'Sonnencreme schützt deine Haut.'},
+  {en:'honest',es:'honesto',de:'ehrlich',pos:'adjective',def:'Truthful and sincere.',exEn:'Thank you for being honest with me.',exEs:'Gracias por ser honesto conmigo.',exDe:'Danke, dass du ehrlich zu mir bist.'},
+  {en:'river',es:'el río',de:'der Fluss',pos:'noun',def:'A large natural stream of flowing water.',exEn:'The river runs beside the village.',exEs:'El río corre junto al pueblo.',exDe:'Der Fluss fließt neben dem Dorf.'},
+  {en:'to invent',es:'inventar',de:'erfinden',pos:'verb',def:'To create something that did not exist before.',exEn:'He invented a game for the car ride.',exEs:'Inventó un juego para el viaje en coche.',exDe:'Er erfand ein Spiel für die Autofahrt.'},
+  {en:'patient',es:'paciente',de:'geduldig',pos:'adjective',def:'Able to wait calmly without getting upset.',exEn:'Be patient, dinner is almost ready.',exEs:'Sé paciente, la cena ya casi está.',exDe:'Sei geduldig, das Essen ist gleich fertig.'},
+  {en:'star',es:'la estrella',de:'der Stern',pos:'noun',def:'A bright point of light in the night sky.',exEn:'You can see more stars outside the city.',exEs:'Se ven más estrellas fuera de la ciudad.',exDe:'Außerhalb der Stadt sieht man mehr Sterne.'},
+  {en:'to explore',es:'explorar',de:'erkunden',pos:'verb',def:'To travel through a place to learn about it.',exEn:'We explored the old part of town.',exEs:'Exploramos la parte antigua del pueblo.',exDe:'Wir erkundeten die Altstadt.'},
+  {en:'strong',es:'fuerte',de:'stark',pos:'adjective',def:'Having great physical or moral power.',exEn:'The coffee is very strong today.',exEs:'El café está muy fuerte hoy.',exDe:'Der Kaffee ist heute sehr stark.'},
+  {en:'dream',es:'el sueño',de:'der Traum',pos:'noun',def:'Images in sleep; also a hope for the future.',exEn:'Living by the sea was always her dream.',exEs:'Vivir junto al mar siempre fue su sueño.',exDe:'Am Meer zu leben war immer ihr Traum.'},
+  {en:'to forgive',es:'perdonar',de:'vergeben',pos:'verb',def:'To stop being angry about a mistake.',exEn:'She forgave him right away.',exEs:'Lo perdonó de inmediato.',exDe:'Sie vergab ihm sofort.'},
+  {en:'lively',es:'animado',de:'lebhaft',pos:'adjective',def:'Full of energy and life.',exEn:'It was a lively conversation.',exEs:'Fue una conversación muy animada.',exDe:'Es war ein lebhaftes Gespräch.'},
+  {en:'garden',es:'el jardín',de:'der Garten',pos:'noun',def:'A piece of ground where plants are grown.',exEn:'The garden needs water.',exEs:'El jardín necesita agua.',exDe:'Der Garten braucht Wasser.'},
+  {en:'to teach',es:'enseñar',de:'beibringen',pos:'verb',def:'To help someone learn something.',exEn:'Dad taught me to ride a bike.',exEs:'Papá me enseñó a andar en bici.',exDe:'Papa brachte mir das Fahrradfahren bei.'},
+  {en:'simple',es:'sencillo',de:'einfach',pos:'adjective',def:'Easy to understand or do; not complicated.',exEn:'The recipe is simple.',exEs:'La receta es sencilla.',exDe:'Das Rezept ist einfach.'},
+  {en:'storm',es:'la tormenta',de:'das Gewitter',pos:'noun',def:'Violent weather with wind and rain.',exEn:'A storm is coming this afternoon.',exEs:'Viene una tormenta esta tarde.',exDe:'Heute Nachmittag kommt ein Gewitter.'},
+  {en:'to arrive',es:'llegar',de:'ankommen',pos:'verb',def:'To reach a place at the end of a journey.',exEn:'We arrive in Cancún at two.',exEs:'Llegamos a Cancún a las dos.',exDe:'Wir kommen um zwei in Cancún an.'},
+  {en:'sweet',es:'dulce',de:'süß',pos:'adjective',def:'Tasting of sugar; also kind and pleasant.',exEn:'The mangoes are very sweet.',exEs:'Los mangos están muy dulces.',exDe:'Die Mangos sind sehr süß.'},
+  {en:'hope',es:'la esperanza',de:'die Hoffnung',pos:'noun',def:'A feeling that something good may happen.',exEn:'There is still hope of good weather.',exEs:'Todavía hay esperanza de buen clima.',exDe:'Es gibt noch Hoffnung auf gutes Wetter.'},
+  {en:'to choose',es:'elegir',de:'wählen',pos:'verb',def:'To pick one thing from several options.',exEn:'You can choose the movie tonight.',exEs:'Puedes elegir la película esta noche.',exDe:'Du darfst heute Abend den Film wählen.'},
+  {en:'loud',es:'ruidoso',de:'laut',pos:'adjective',def:'Making a lot of noise.',exEn:'The street is loud on Fridays.',exEs:'La calle es ruidosa los viernes.',exDe:'Die Straße ist freitags laut.'},
+  {en:'bridge',es:'el puente',de:'die Brücke',pos:'noun',def:'A structure built to cross over something.',exEn:'The bridge is closed for repairs.',exEs:'El puente está cerrado por obras.',exDe:'Die Brücke ist wegen Bauarbeiten gesperrt.'},
+  {en:'to help',es:'ayudar',de:'helfen',pos:'verb',def:'To make it easier for someone to do something.',exEn:'Can you help me carry this?',exEs:'¿Me puedes ayudar a cargar esto?',exDe:'Kannst du mir helfen, das zu tragen?'},
+  {en:'tired',es:'cansado',de:'müde',pos:'adjective',def:'In need of rest or sleep.',exEn:'I am too tired to cook.',exEs:'Estoy demasiado cansado para cocinar.',exDe:'Ich bin zu müde zum Kochen.'},
+  {en:'kitchen',es:'la cocina',de:'die Küche',pos:'noun',def:'The room where food is prepared.',exEn:'Everyone ends up in the kitchen.',exEs:'Todos terminan en la cocina.',exDe:'Alle landen am Ende in der Küche.'},
+  {en:'to cook',es:'cocinar',de:'kochen',pos:'verb',def:'To prepare food using heat.',exEn:'She cooks better than anyone.',exEs:'Ella cocina mejor que nadie.',exDe:'Sie kocht besser als alle anderen.'},
+  {en:'hungry',es:'hambriento',de:'hungrig',pos:'adjective',def:'Feeling the need to eat.',exEn:'The kids are always hungry after school.',exEs:'Los niños siempre están hambrientos tras la escuela.',exDe:'Die Kinder sind nach der Schule immer hungrig.'},
+  {en:'window',es:'la ventana',de:'das Fenster',pos:'noun',def:'An opening in a wall fitted with glass.',exEn:'Open the window, it is warm.',exEs:'Abre la ventana, hace calor.',exDe:'Mach das Fenster auf, es ist warm.'},
+  {en:'to open',es:'abrir',de:'öffnen',pos:'verb',def:'To move something so it is no longer closed.',exEn:'The shop opens at nine.',exEs:'La tienda abre a las nueve.',exDe:'Der Laden öffnet um neun.'},
+  {en:'early',es:'temprano',de:'früh',pos:'adverb',def:'Before the usual or expected time.',exEn:'We left early to beat traffic.',exEs:'Salimos temprano para evitar el tráfico.',exDe:'Wir fuhren früh los, um dem Verkehr zu entgehen.'},
+  {en:'rain',es:'la lluvia',de:'der Regen',pos:'noun',def:'Water falling from clouds in drops.',exEn:'The rain starts every afternoon.',exEs:'La lluvia empieza cada tarde.',exDe:'Der Regen fängt jeden Nachmittag an.'},
+  {en:'to run',es:'correr',de:'laufen',pos:'verb',def:'To move quickly on foot.',exEn:'He runs in the park on Sundays.',exEs:'Corre en el parque los domingos.',exDe:'Er läuft sonntags im Park.'},
+  {en:'happy',es:'feliz',de:'glücklich',pos:'adjective',def:'Feeling pleasure or contentment.',exEn:'They look happy in that photo.',exEs:'Se ven felices en esa foto.',exDe:'Auf dem Foto sehen sie glücklich aus.'},
+  {en:'book',es:'el libro',de:'das Buch',pos:'noun',def:'A set of printed pages bound together.',exEn:'This book is worth reading twice.',exEs:'Este libro vale la pena leerlo dos veces.',exDe:'Dieses Buch lohnt sich zweimal zu lesen.'},
+  {en:'to read',es:'leer',de:'lesen',pos:'verb',def:'To look at and understand written words.',exEn:'She reads before bed every night.',exEs:'Lee antes de dormir cada noche.',exDe:'Sie liest jeden Abend vor dem Schlafen.'},
+  {en:'tall',es:'alto',de:'groß',pos:'adjective',def:'Of great height.',exEn:'He is the tallest in his class.',exEs:'Es el más alto de su clase.',exDe:'Er ist der Größte in seiner Klasse.'},
+  {en:'tree',es:'el árbol',de:'der Baum',pos:'noun',def:'A tall plant with a trunk and branches.',exEn:'The tree gives good shade.',exEs:'El árbol da buena sombra.',exDe:'Der Baum gibt guten Schatten.'},
+  {en:'to climb',es:'escalar',de:'klettern',pos:'verb',def:'To go up something using hands and feet.',exEn:'They climbed to the top by noon.',exEs:'Escalaron hasta la cima al mediodía.',exDe:'Sie kletterten bis mittags zum Gipfel.'},
+  {en:'cold',es:'frío',de:'kalt',pos:'adjective',def:'At a low temperature.',exEn:'The nights get cold in January.',exEs:'Las noches se ponen frías en enero.',exDe:'Im Januar werden die Nächte kalt.'},
+  {en:'beach',es:'la playa',de:'der Strand',pos:'noun',def:'A shore of sand or pebbles by the sea.',exEn:'The beach is empty in the morning.',exEs:'La playa está vacía por la mañana.',exDe:'Morgens ist der Strand leer.'},
+  {en:'to swim',es:'nadar',de:'schwimmen',pos:'verb',def:'To move through water using the body.',exEn:'All three kids can swim now.',exEs:'Los tres niños ya saben nadar.',exDe:'Alle drei Kinder können jetzt schwimmen.'},
+  {en:'tiny',es:'diminuto',de:'winzig',pos:'adjective',def:'Extremely small.',exEn:'A tiny lizard lives on the wall.',exEs:'Una lagartija diminuta vive en la pared.',exDe:'Eine winzige Eidechse lebt an der Wand.'},
+  {en:'bird',es:'el pájaro',de:'der Vogel',pos:'noun',def:'A feathered animal, usually able to fly.',exEn:'A bird built a nest on the balcony.',exEs:'Un pájaro hizo un nido en el balcón.',exDe:'Ein Vogel hat ein Nest auf dem Balkon gebaut.'},
+  {en:'to fly',es:'volar',de:'fliegen',pos:'verb',def:'To move through the air.',exEn:'We fly out on Thursday.',exEs:'Volamos el jueves.',exDe:'Wir fliegen am Donnerstag.'},
+  {en:'delicious',es:'delicioso',de:'köstlich',pos:'adjective',def:'Very pleasant to taste.',exEn:'That was a delicious dinner.',exEs:'Esa fue una cena deliciosa.',exDe:'Das war ein köstliches Abendessen.'},
+  {en:'breakfast',es:'el desayuno',de:'das Frühstück',pos:'noun',def:'The first meal of the day.',exEn:'Breakfast is at seven sharp.',exEs:'El desayuno es a las siete en punto.',exDe:'Frühstück ist pünktlich um sieben.'},
+  {en:'to wake up',es:'despertar',de:'aufwachen',pos:'verb',def:'To stop sleeping.',exEn:'I wake up before the alarm.',exEs:'Despierto antes de la alarma.',exDe:'Ich wache vor dem Wecker auf.'},
+  {en:'late',es:'tarde',de:'spät',pos:'adverb',def:'After the expected or usual time.',exEn:'We arrived late to the party.',exEs:'Llegamos tarde a la fiesta.',exDe:'Wir kamen spät zur Party.'},
+  {en:'school',es:'la escuela',de:'die Schule',pos:'noun',def:'A place where children are taught.',exEn:'School starts again in August.',exEs:'La escuela empieza otra vez en agosto.',exDe:'Die Schule fängt im August wieder an.'},
+  {en:'to learn',es:'aprender',de:'lernen',pos:'verb',def:'To gain knowledge or a skill.',exEn:'You learn faster than I did.',exEs:'Aprendes más rápido que yo.',exDe:'Du lernst schneller als ich damals.'},
+  {en:'funny',es:'gracioso',de:'lustig',pos:'adjective',def:'Causing laughter or amusement.',exEn:'That joke was actually funny.',exEs:'Ese chiste sí fue gracioso.',exDe:'Der Witz war wirklich lustig.'},
+  {en:'friend',es:'el amigo',de:'der Freund',pos:'noun',def:'A person you like and know well.',exEn:'A friend is coming over later.',exEs:'Un amigo viene más tarde.',exDe:'Ein Freund kommt später vorbei.'},
+  {en:'to play',es:'jugar',de:'spielen',pos:'verb',def:'To take part in a game for enjoyment.',exEn:'They play in the yard until dark.',exEs:'Juegan en el patio hasta que oscurece.',exDe:'Sie spielen im Hof, bis es dunkel wird.'},
+  {en:'clean',es:'limpio',de:'sauber',pos:'adjective',def:'Free from dirt or mess.',exEn:'Your room looks clean today.',exEs:'Tu cuarto se ve limpio hoy.',exDe:'Dein Zimmer sieht heute sauber aus.'},
+  {en:'bedroom',es:'la recámara',de:'das Schlafzimmer',pos:'noun',def:'A room for sleeping.',exEn:'The bedroom is the coolest room.',exEs:'La recámara es el cuarto más fresco.',exDe:'Das Schlafzimmer ist der kühlste Raum.'},
+  {en:'to sleep',es:'dormir',de:'schlafen',pos:'verb',def:'To rest with your eyes closed and mind inactive.',exEn:'The baby sleeps through the night now.',exEs:'El bebé ya duerme toda la noche.',exDe:'Das Baby schläft jetzt durch.'},
+  {en:'busy',es:'ocupado',de:'beschäftigt',pos:'adjective',def:'Having a lot to do.',exEn:'This week is busier than last.',exEs:'Esta semana está más ocupada que la pasada.',exDe:'Diese Woche bin ich beschäftigter als letzte.'},
+  {en:'street',es:'la calle',de:'die Straße',pos:'noun',def:'A public road in a town or city.',exEn:'Our street floods when it rains hard.',exEs:'Nuestra calle se inunda cuando llueve fuerte.',exDe:'Unsere Straße überschwemmt bei starkem Regen.'},
+  {en:'to walk',es:'caminar',de:'zu Fuß gehen',pos:'verb',def:'To move on foot at a normal pace.',exEn:'We walk to school most days.',exEs:'Caminamos a la escuela casi siempre.',exDe:'Wir gehen meistens zu Fuß zur Schule.'},
+  {en:'lucky',es:'afortunado',de:'Glück haben',pos:'adjective',def:'Having good things happen by chance.',exEn:'We were lucky with the weather.',exEs:'Fuimos afortunados con el clima.',exDe:'Wir hatten Glück mit dem Wetter.'},
+  {en:'nostalgia',es:'la nostalgia',de:'die Nostalgie',pos:'noun',def:'A fond, slightly sad longing for the past.',exEn:'Old songs fill him with nostalgia.',exEs:'Las canciones viejas le dan nostalgia.',exDe:'Alte Lieder erfüllen ihn mit Nostalgie.'},
+  {en:'to long for',es:'añorar',de:'sich sehnen nach',pos:'verb',def:'To want something deeply, often something absent.',exEn:'She longs for the mountains in winter.',exEs:'Añora las montañas en invierno.',exDe:'Sie sehnt sich im Winter nach den Bergen.'},
+  {en:'dusk',es:'el atardecer',de:'die Abenddämmerung',pos:'noun',def:'The darker stage of twilight, just after sunset.',exEn:'The birds return at dusk.',exEs:'Los pájaros regresan al atardecer.',exDe:'Die Vögel kehren in der Abenddämmerung zurück.'},
+  {en:'to blossom',es:'florecer',de:'blühen',pos:'verb',def:'To produce flowers; to develop beautifully.',exEn:'The jacarandas blossom in March.',exEs:'Las jacarandas florecen en marzo.',exDe:'Die Jacarandas blühen im März.'},
+  {en:'stubborn',es:'terco',de:'stur',pos:'adjective',def:'Refusing to change your mind.',exEn:'He is stubborn about his coffee.',exEs:'Es terco con su café.',exDe:'Er ist stur, was seinen Kaffee angeht.'},
+  {en:'lightning',es:'el relámpago',de:'der Blitz',pos:'noun',def:'A flash of light in the sky during a storm.',exEn:'Lightning lit up the whole valley.',exEs:'El relámpago iluminó todo el valle.',exDe:'Der Blitz erhellte das ganze Tal.'},
+  {en:'to trust',es:'confiar',de:'vertrauen',pos:'verb',def:'To believe someone is reliable or honest.',exEn:'I trust you with the keys.',exEs:'Confío en ti con las llaves.',exDe:'Ich vertraue dir die Schlüssel an.'},
+  {en:'thoughtful',es:'considerado',de:'aufmerksam',pos:'adjective',def:'Showing care for other people.',exEn:'That was a thoughtful gift.',exEs:'Fue un regalo muy considerado.',exDe:'Das war ein aufmerksames Geschenk.'},
+  {en:'silence',es:'el silencio',de:'die Stille',pos:'noun',def:'Complete absence of sound.',exEn:'The silence after the storm was strange.',exEs:'El silencio tras la tormenta fue extraño.',exDe:'Die Stille nach dem Gewitter war seltsam.'},
+  {en:'wisdom',es:'la sabiduría',de:'die Weisheit',pos:'noun',def:'Good judgement built from experience.',exEn:'Her wisdom comes from years of practice.',exEs:'Su sabiduría viene de años de práctica.',exDe:'Ihre Weisheit kommt aus jahrelanger Übung.'},
+  {en:'to dare',es:'atreverse',de:'sich trauen',pos:'verb',def:'To have the courage to do something risky.',exEn:'Nobody dared to jump first.',exEs:'Nadie se atrevió a saltar primero.',exDe:'Niemand traute sich, als Erster zu springen.'},
+  {en:'eager',es:'ansioso',de:'eifrig',pos:'adjective',def:'Very keen and impatient to do something.',exEn:'They are eager to leave for the beach.',exEs:'Están ansiosos por salir a la playa.',exDe:'Sie warten eifrig auf die Fahrt zum Strand.'},
+  {en:'seed',es:'la semilla',de:'der Samen',pos:'noun',def:'The small part of a plant that grows into a new one.',exEn:'Plant the seeds before the rain.',exEs:'Siembra las semillas antes de la lluvia.',exDe:'Säe die Samen vor dem Regen.'},
+  {en:'to fix',es:'arreglar',de:'reparieren',pos:'verb',def:'To repair something that is broken.',exEn:'Dad fixed the bike in ten minutes.',exEs:'Papá arregló la bici en diez minutos.',exDe:'Papa reparierte das Fahrrad in zehn Minuten.'},
+  {en:'messy',es:'desordenado',de:'unordentlich',pos:'adjective',def:'Untidy, in a state of disorder.',exEn:'The desk is messy but it works.',exEs:'El escritorio está desordenado pero funciona.',exDe:'Der Schreibtisch ist unordentlich, aber es funktioniert.'},
+  {en:'neighbor',es:'el vecino',de:'der Nachbar',pos:'noun',def:'A person who lives near you.',exEn:'Our neighbor watered the plants.',exEs:'Nuestro vecino regó las plantas.',exDe:'Unser Nachbar hat die Pflanzen gegossen.'},
+  {en:'to greet',es:'saludar',de:'begrüßen',pos:'verb',def:'To say hello to someone.',exEn:'Greet your grandmother properly.',exEs:'Saluda bien a tu abuela.',exDe:'Begrüße deine Großmutter ordentlich.'},
+  {en:'polite',es:'educado',de:'höflich',pos:'adjective',def:'Showing good manners toward others.',exEn:'He is polite to everyone.',exEs:'Es educado con todos.',exDe:'Er ist zu allen höflich.'},
+  {en:'puzzle',es:'el rompecabezas',de:'das Puzzle',pos:'noun',def:'A game or problem that tests your cleverness.',exEn:'The puzzle took all afternoon.',exEs:'El rompecabezas tomó toda la tarde.',exDe:'Das Puzzle dauerte den ganzen Nachmittag.'},
+  {en:'to solve',es:'resolver',de:'lösen',pos:'verb',def:'To find the answer to a problem.',exEn:'She solved it before anyone else.',exEs:'Lo resolvió antes que nadie.',exDe:'Sie löste es vor allen anderen.'}
+];
+
+function dayOfYear(d){
+  var start = new Date(d.getFullYear(), 0, 1);
+  var today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((today.getTime() - start.getTime()) / 86400000);
+}
+
+function renderWotd(){
+  var body = document.getElementById('wotdBody');
+  if(!body) return;
+  if(!WORDS || !WORDS.length){ body.innerHTML='<div class="msg-text">No words configured</div>'; return; }
+
+  var now = new Date();
+  var doy = dayOfYear(now);
+  // shift by year so the same calendar day does not repeat the same word every year
+  var idx = (doy + now.getFullYear()) % WORDS.length;
+  var w = WORDS[idx];
+
+  var colors = ['var(--mom)','var(--max)','var(--maya)','var(--matteo)','var(--dad)'];
+  var c = colors[doy % colors.length];
+  var c2 = colors[(doy + 2) % colors.length];
+  var card = document.getElementById('wotdContainer');
+  if(card) card.setAttribute('style', '--c:' + c + ';--c2:' + c2);
+
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var tag = document.getElementById('wotdDay');
+  if(tag) tag.textContent = months[now.getMonth()] + ' ' + now.getDate();
+
+  var html = '';
+  html += '<div class="wotd-pair">';
+  html += '  <div class="wotd-line"><span class="wotd-flag">🇬🇧</span><span class="wotd-word">' + w.en + '</span><span class="wotd-pos">' + w.pos + '</span></div>';
+  html += '  <div class="wotd-line"><span class="wotd-flag">🇲🇽</span><span class="wotd-word es">' + w.es + '</span></div>';
+  html += '  <div class="wotd-line"><span class="wotd-flag">🇩🇪</span><span class="wotd-word de">' + w.de + '</span></div>';
+  html += '</div>';
+  html += '<div class="wotd-def">' + w.def + '</div>';
+  html += '<div class="wotd-ex">';
+  html += '  <div class="wotd-ex-line"><span class="fl">🇬🇧</span><span class="tx">' + w.exEn + '</span></div>';
+  html += '  <div class="wotd-ex-line es"><span class="fl">🇲🇽</span><span class="tx">' + w.exEs + '</span></div>';
+  html += '  <div class="wotd-ex-line de"><span class="fl">🇩🇪</span><span class="tx">' + w.exDe + '</span></div>';
+  html += '</div>';
+
+  body.innerHTML = html;
 }
 
 /* ---------- boot ---------- */
@@ -1071,10 +1099,7 @@ safe(function(){ loadFx(); setInterval(loadFx,3600000); });
 safe(function(){ moonPhase(); setInterval(moonPhase,3600000); });
 safe(function(){ loadTrip(); setInterval(loadTrip,1800000); });
 
-safe(function(){ renderHardcodedWorldCup(); setInterval(renderHardcodedWorldCup,60000); });
+safe(function(){ renderBirthdays(); setInterval(renderBirthdays,3600000); });
+safe(function(){ renderWotd(); setInterval(renderWotd,3600000); });
 safe(startCarousel);
-
-setTimeout(function(){
-  safe(function(){ loadWcScores(); setInterval(loadWcScores,60000); });
-}, 100);
 </script>
