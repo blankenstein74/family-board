@@ -19,6 +19,7 @@
     --max:#ffcf5c;   /* amber */
     --maya:#9bd17a;   /* green */
     --matteo:#d6a3ee;   /* lilac */
+    --leticia:#8aa8f0;   /* periwinkle */
     --all:#f6f0e6;
     --display:"Bricolage Grotesque",sans-serif;
     --body:"Hanken Grotesk",sans-serif;
@@ -140,16 +141,19 @@
 
   /* BIRTHDAY COUNTDOWN CARD */
   .bday{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,8px);position:relative;overflow:hidden}
-  .bday::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--dad),var(--max),var(--maya),var(--matteo),var(--mom))}
-  .bd-list{display:flex;flex-direction:column;gap:clamp(3px,.7vh,6px)}
-  .bd-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(3px,.8vh,7px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s}
+  .bday::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--dad),var(--max),var(--maya),var(--mom),var(--leticia),var(--matteo))}
+  /* 2 columns x 3 rows. auto-flow:column fills down col 1 then col 2, so the
+     soonest birthdays group in the left column. Row count is set from JS. */
+  .bd-list{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;gap:clamp(3px,.7vh,6px) clamp(8px,.9vw,14px);min-width:0}
+  .bd-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:clamp(3px,.8vh,7px) 10px;border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s;min-width:0}
+  .bd-meta{min-width:0}
   .bd-item.today{background:rgba(255,207,92,.12);box-shadow:0 0 0 1.5px var(--c) inset}
   .bd-num{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1rem,2vw,1.4rem);line-height:.82;color:var(--c);min-width:50px;text-align:center}
   .bd-num small{display:block;font-family:var(--body);font-weight:500;font-size:.4em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
   .bd-num.is-today{font-size:clamp(.9rem,1.5vw,1.15rem);line-height:1}
   .bd-name{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.1rem);line-height:1;word-wrap:break-word}
   .bd-date{color:var(--muted);font-weight:500;font-size:.55rem;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
-  .bd-cake{font-size:clamp(.9rem,1.4vw,1.2rem);line-height:1;flex:none;opacity:0}
+  .bd-cake{font-size:clamp(.9rem,1.4vw,1.2rem);line-height:1;opacity:0}
   .bd-item.today .bd-cake{opacity:1}
   .msg-text{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(.75rem,1vw,1.05rem);line-height:1.4;padding:6px}
 
@@ -382,11 +386,12 @@ var CONFIG = {
 
   // BIRTHDAYS — month is 1-12. Year not needed; it rolls forward automatically.
   birthdays: [
-    { name:'Matteo',  month:5,  day:12, c:'var(--matteo)' },
-    { name:'Holger',  month:6,  day:21, c:'var(--dad)'    },
-    { name:'Marlene', month:7,  day:1,  c:'var(--mom)'    },
-    { name:'Maya',    month:7,  day:26, c:'var(--maya)'   },
-    { name:'Max',     month:8,  day:3,  c:'var(--max)'    }
+    { name:'Matteo',  month:5,  day:12, c:'var(--matteo)'  },
+    { name:'Holger',  month:6,  day:21, c:'var(--dad)'     },
+    { name:'Marlene', month:7,  day:1,  c:'var(--mom)'     },
+    { name:'Maya',    month:7,  day:26, c:'var(--maya)'    },
+    { name:'Max',     month:8,  day:3,  c:'var(--max)'     },
+    { name:'Leticia', month:10, day:8,  c:'var(--leticia)' }
   ]
 };
 
@@ -692,6 +697,10 @@ function renderBirthdays() {
 
   rows.sort(function(a, b){ return a.days - b.days; });
 
+  // 2 columns, filled top-to-bottom: rows = half the list, rounded up.
+  // Keeps it 2 columns even if someone gets added later.
+  list.style.gridTemplateRows = 'repeat(' + Math.max(1, Math.ceil(rows.length / 2)) + ', auto)';
+
   var html = '';
   for(var i = 0; i < rows.length; i++) {
     var r = rows[i];
@@ -711,7 +720,7 @@ function renderBirthdays() {
 
     html += '<div class="bd-item' + (isToday ? ' today' : '') + '" style="--c:' + r.c + '">';
     html += '   ' + numHtml;
-    html += '   <div>';
+    html += '   <div class="bd-meta">';
     html += '      <div class="bd-name">' + r.name + '</div>';
     html += '      <div class="bd-date">' + dateStr + '</div>';
     html += '   </div>';
