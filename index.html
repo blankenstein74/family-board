@@ -132,7 +132,7 @@
   .stock-chg.down{color:#ff7a7a}
   .stock-chg .arrow{font-size:.8em}
 
-  /* ---------- CENTER: agenda + chores + carousel ---------- */
+  /* ---------- CENTER: agenda + school run + carousel ---------- */
   .center{grid-area:center;display:grid;grid-template-rows:auto 1fr;gap:clamp(6px, 1vh, 12px);min-width:0;min-height:0; position:relative;}
   .head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5em;gap:6px}
   .head-row h2{font-family:var(--display);font-weight:700;font-size:clamp(.85rem,1.2vw,1.3rem);letter-spacing:-.01em}
@@ -162,31 +162,35 @@
   .carousel-item { grid-area: 1 / 1; width:100%; height:100%; min-height:0; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease, transform 0.8s ease; transform: translateY(10px); z-index: 1;}
   .carousel-item.active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); z-index: 2;}
 
-  .chores{display:flex;flex-direction:column;overflow:hidden;min-width:0; height:100%;}
-  .kid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,.8vw,12px);flex:1;overflow:hidden}
-  .kid{display:flex;flex-direction:column;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);padding:clamp(6px,.9vw,10px);position:relative;overflow:hidden}
-  .kid::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c)}
-  .kid-head{display:flex;align-items:center;gap:6px;margin-bottom:.5em}
-  .avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;background:var(--c);font-size:.75rem;flex:none}
-  .kid-name{font-family:var(--display);font-weight:700;font-size:clamp(.75rem,1vw,1.1rem);line-height:1;min-width:0;word-wrap:break-word}
-  .kid-name small{display:block;color:var(--muted);font-weight:500;font-size:.55em;letter-spacing:.04em;margin-top:2px;font-family:var(--body)}
-  .tasks{display:flex;flex-direction:column;gap:4px;flex:1}
-  .task{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:3px 2px;border-radius:6px;transition:.18s}
-  .task:hover{background:rgba(255,255,255,.05)}
-  .task.dimmed{opacity:0.4; order:10;} 
-  .task.golden{background:rgba(255,207,92,.08)} 
-  .check{width:16px;height:16px;border-radius:5px;border:2px solid var(--c);flex:none;display:grid;place-items:center;transition:.2s}
-  .check svg{width:10px;height:10px;stroke:#1a140f;stroke-width:3.4;fill:none;opacity:0;transform:scale(.4);transition:.2s}
-  .task.done .check{background:var(--c)}
-  .task.done .check svg{opacity:1;transform:scale(1)}
-  .task .label{font-weight:600;font-size:clamp(.65rem,.8vw,.9rem);transition:.2s;word-wrap:break-word;line-height:1.1}
-  .task.golden .label::after{content:" 🌟";font-size:.85em;margin-left:4px}
-  .task.done .label{color:var(--faint);text-decoration:line-through}
-  .task.done.golden .label::after{filter:grayscale(1);opacity:.5}
-  .stars{margin-top:.4em;font-size:.8rem;letter-spacing:1px;min-height:1.2em}
-  .done-badge{position:absolute;inset:auto 8px 8px auto;font-size:.55rem;font-weight:800;letter-spacing:.08em;color:var(--c);opacity:0;transition:.3s}
-  .kid.complete .done-badge{opacity:1}
-  .kid.complete{box-shadow:0 0 0 1.5px var(--c) inset}
+  /* ---------- School run countdown ---------- */
+  .school{display:flex;flex-direction:column;overflow:hidden;min-width:0;height:100%}
+  .school-body{display:flex;flex-direction:column;justify-content:center;flex:1;min-height:0;gap:clamp(8px,1.4vh,18px);overflow:hidden}
+  /* live (active-window) view: a big hero countdown + a per-kid list */
+  .sch-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(2px,.6vh,6px)}
+  .sch-hero-lab{font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:clamp(.6rem,.85vw,.85rem)}
+  .sch-hero-who{font-family:var(--display);font-weight:800;line-height:1;color:var(--c);font-size:clamp(1.1rem,2.2vw,1.8rem)}
+  .sch-hero-time{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;line-height:.9;color:var(--ink);font-size:clamp(2.6rem,7vw,5.4rem)}
+  .sch-hero.urgent .sch-hero-time{color:var(--dad)}
+  .sch-hero-at{font-family:var(--body);font-weight:500;color:var(--faint);font-size:clamp(.62rem,.9vw,.9rem)}
+  .sch-list{display:flex;flex-direction:column;gap:clamp(3px,.7vh,7px)}
+  .sch-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:clamp(4px,.9vh,8px) clamp(8px,1vw,14px);border-radius:12px;background:var(--panel-2);border-left:3px solid var(--c);transition:.3s;min-width:0}
+  .sch-item.next{box-shadow:0 0 0 1.5px var(--c) inset}
+  .sch-item.gone{opacity:.5}
+  .sch-dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#1a140f;background:var(--c);font-size:.7rem;flex:none}
+  .sch-who{font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.1vw,1.15rem);line-height:1;min-width:0;word-wrap:break-word}
+  .sch-who small{display:block;color:var(--muted);font-weight:500;font-size:.6em;letter-spacing:.04em;margin-top:2px;font-family:var(--body)}
+  .sch-when{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(.9rem,1.4vw,1.3rem);color:var(--c);text-align:right;white-space:nowrap}
+  .sch-item.gone .sch-when{color:var(--faint)}
+  .sch-when small{display:block;font-family:var(--body);font-weight:500;font-size:.42em;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+  /* dormant (out-of-window) view */
+  .sch-rest{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex:1;gap:clamp(6px,1.2vh,14px)}
+  .sch-rest-ico{font-size:clamp(2.4rem,5vw,4rem);line-height:1}
+  .sch-rest-lab{font-family:var(--display);font-weight:800;font-size:clamp(1.1rem,2vw,1.7rem);color:var(--ink)}
+  .sch-rest-sub{font-family:var(--body);font-weight:500;color:var(--muted);font-size:clamp(.72rem,1vw,1.05rem);line-height:1.4}
+  .sch-rest-next{display:flex;gap:clamp(10px,1.6vw,22px);margin-top:clamp(2px,.6vh,6px)}
+  .sch-rest-next .c{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .sch-rest-next .c b{font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;font-size:clamp(1rem,1.6vw,1.5rem);line-height:1;color:var(--k)}
+  .sch-rest-next .c span{font-family:var(--body);font-weight:500;font-size:clamp(.6rem,.8vw,.8rem);color:var(--muted)}
 
   /* Word of the Day Content */
   .wotd-card { display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; text-align:left; padding: clamp(14px,1.6vw,22px); height:100%; border-left:5px solid var(--c); overflow:hidden; }
@@ -245,7 +249,6 @@
   @media (max-width:0px){
     .board{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"head" "left" "center" "right";height:auto;min-height:100vh;overflow:auto}
     body{overflow:auto}
-    .kid-grid{grid-template-columns:1fr}
   }
 </style>
 
@@ -264,7 +267,7 @@
     </div>
     <div class="hero-cd">
       <div class="hero-num" id="cdNum">57</div>
-      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Europe trip ✈️</span><small id="cdSub">July 20, 2026</small></div>
+      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Cozumel trip ✈️</span><small id="cdSub">Nov 6, 2026</small></div>
     </div>
   </header>
 
@@ -286,7 +289,7 @@
           <div class="cond" id="wxDesc0" style="font-size:clamp(.55rem,.7vw,.8rem); color:var(--muted); margin-top:4px; line-height:1.1">Loading...</div>
         </div>
         <div class="wx-city-col" style="border-left: 1px solid var(--line); padding-left: 8px;">
-          <div class="wx-meta"><div class="city">Zurich <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
+          <div class="wx-meta"><div class="city">Cozumel <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
           <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
             <span class="ico" id="wxIco1" style="font-size:clamp(1.4rem,2.5vw,2.2rem)">☁️</span>
             <div class="wx-temp" id="wxTemp1" style="font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:800; font-family:var(--display)">--°</div>
@@ -318,12 +321,12 @@
     </div>
 
     <div class="carousel-wrapper" id="lowerCarousel">
-        <div class="card chores carousel-item active delay-4">
+        <div class="card school carousel-item active delay-4" id="schoolCard">
           <div class="head-row">
-            <h2>Chore chart</h2>
-            <div class="legend"><span style="color:var(--faint)">Tap to check off · resets daily</span></div>
+            <h2>School run 🎒</h2>
+            <div class="legend"><span style="color:var(--faint)" id="schLegend">—</span></div>
           </div>
-          <div class="kid-grid" id="kids"></div>
+          <div class="school-body" id="schoolBody"></div>
         </div>
         
         <div class="card wotd-card carousel-item delay-4" id="wotdContainer" style="--c:var(--mom)">
@@ -363,18 +366,18 @@
 var CONFIG = {
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
-    { name:'Zurich',      lat:47.3667, lon:8.55,     tz:'Europe/Zurich'       }
+    { name:'Cozumel',     lat:20.4230, lon:-86.9223, tz:'America/Cancun'      }
   ],
 
-  countdown: { date: '2026-07-20', label: 'Europe trip ✈️' },
-  tripitIcs: 'tripit_Jul20_to_Aug20.ics',
+  countdown: { date: '2026-11-06', label: 'Cozumel trip ✈️' },
+  tripitIcs: 'tripit_Nov06_to_Nov08.ics',
   
   tripFallback: {
-    name:'Madrid Verano 26', dest:'Zurich, Switzerland',
-    start:'2026-07-20', end:'2026-08-20',
+    name:'Cozumel NOV 26', dest:'Cozumel, Mexico',
+    start:'2026-11-06', end:'2026-11-08',
     legs: [
-      { text:'IB308 — MEX to MAD', when:'Mon, Jul 20 · 19:00 CST', icon:'🛫' },
-      { text:'IB1287 — MAD to ZRH', when:'Tue, Jul 21 · 16:40 CEST', icon:'🛫' }
+      { text:'Y4 450 — MEX to CZM', when:'Fri, Nov 6 · 12:10 CST', icon:'🛫' },
+      { text:'Y4 451 — CZM to MEX', when:'Sun, Nov 8 · 16:21 EST', icon:'🛫' }
     ]
   },
 
@@ -415,9 +418,6 @@ function tick(){
   var g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
   document.getElementById('greet').innerHTML=g+', <b>the Blankenstein family</b>';
   
-  if(lastHour !== -1 && lastHour !== h) {
-     renderKids();
-  }
   lastHour = h;
 }
 
@@ -426,133 +426,172 @@ function countdown(){
   var target=new Date(CONFIG.countdown.date+'T00:00:00Z'); 
   var d=Math.max(0,Math.ceil((target.getTime()-new Date().getTime())/86400000));
   document.getElementById('cdNum').textContent=d;
-}
-
-/* ---------- chore chart ---------- */
-var kidsData=[
-  {name:'Max',age:'11',c:'var(--max)',init:'Mx',tasks:[
-    {txt:'Make the bed', time:'morning', type:'all'},
-    {txt:'Feed the dog', time:'morning', type:'all'},
-    {txt:'Homework done', time:'evening', type:'weekday'},
-    {txt:'Yard work', time:'any', type:'weekend'}
-  ]},
-  {name:'Maya',age:'7',c:'var(--maya)',init:'My',tasks:[
-    {txt:'Tidy your room', time:'morning', type:'all'},
-    {txt:'Read 20 minutes', time:'evening', type:'all'},
-    {txt:'Set the table', time:'evening', type:'weekday'},
-    {txt:'Organize books', time:'any', type:'weekend'}
-  ]},
-  {name:'Matteo',age:'6',c:'var(--matteo)',init:'Mt',tasks:[
-    {txt:'Brush teeth', time:'morning', type:'all'},
-    {txt:'Put toys away', time:'evening', type:'all'},
-    {txt:'Water the plant', time:'evening', type:'weekday'},
-    {txt:'Help dust', time:'any', type:'weekend'}
-  ]},
-];
-
-var state={};        
-var memOnly=false;
-
-async function loadState(){
-  var todayKey=new Date().toISOString().slice(0,10);
-  try{
-    if(window.storage && window.storage.get) {
-      var r = await window.storage.get('chores');
-      var parsed=JSON.parse(r.value);
-      state=(parsed.date===todayKey)?parsed.done:{};
-      if(parsed.date!==todayKey) saveState();
-    }
-  }catch(e){ state={}; memOnly=(typeof window.storage==='undefined'); }
-  renderKids();
-}
-
-async function saveState(){
-  var todayKey=new Date().toISOString().slice(0,10);
-  try{ 
-    if(window.storage && window.storage.set) {
-       await window.storage.set('chores',JSON.stringify({date:todayKey,done:state})); 
-    }
-  } catch(e){ memOnly=true; }
-}
-
-function renderKids(){
-  var wrap=document.getElementById('kids');wrap.innerHTML='';
-  var d = new Date();
-  var hr = d.getHours();
-  var todayKey = d.toISOString().slice(0,10);
-  var isWeekend = d.getDay() === 0 || d.getDay() === 6;
-  var dayType = isWeekend ? 'weekend' : 'weekday';
-
-  var getBonusId = function(kidStr, count) {
-     var hash = 0; var s = todayKey + kidStr;
-     for(var i=0; i<s.length; i++) hash = Math.imul(31, hash) + s.charCodeAt(i) | 0;
-     return Math.abs(hash) % count;
-  };
-
-  for(var ki=0; ki<kidsData.length; ki++) {
-    var k = kidsData[ki];
-    var div=document.createElement('div');
-    div.className='kid';div.style.setProperty('--c',k.c);
-    var tasksHTML='';
-    
-    var activeTasks = [];
-    for(var j=0; j<k.tasks.length; j++) {
-        var t = k.tasks[j];
-        if (t.type === 'all' || t.type === dayType) {
-            activeTasks.push({ txt: t.txt, time: t.time, type: t.type, origIdx: j });
-        }
-    }
-    
-    var bonusIndex = activeTasks.length > 0 ? getBonusId(k.name, activeTasks.length) : -1;
-
-    for(var j=0; j<activeTasks.length; j++) {
-      var t2 = activeTasks[j];
-      var id = ki + '-' + t2.origIdx; 
-      var done = state[id] ? 'done' : '';
-      
-      var dimClass = '';
-      if (hr >= 12 && t2.time === 'morning' && !state[id]) dimClass = 'dimmed';
-      if (hr < 12 && t2.time === 'evening') dimClass = 'dimmed';
-
-      var isGolden = j === bonusIndex ? 'golden' : '';
-
-      tasksHTML += '<div class="task ' + done + ' ' + dimClass + ' ' + isGolden + '" data-id="' + id + '">'
-        + '<span class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>'
-        + '<span class="label">' + t2.txt + '</span></div>';
-    }
-
-    div.innerHTML='<div class="kid-head"><div class="avatar">' + k.init + '</div>'
-      + '<div class="kid-name">' + k.name + '<small>age ' + k.age + '</small></div></div>'
-      + '<div class="tasks">' + tasksHTML + '</div>'
-      + '<div class="stars"></div><div class="done-badge">★ All done!</div>';
-    wrap.appendChild(div);
-    updateKidDOM(div);
-  }
-
-  var allTasks = wrap.querySelectorAll('.task');
-  for(var i=0; i<allTasks.length; i++) {
-     allTasks[i].addEventListener('click', function(){
-        var id=this.dataset.id;
-        state[id]=!state[id];
-        if(!state[id]) delete state[id];
-        this.classList.toggle('done');
-        updateKidDOM(this.closest('.kid'));
-        saveState();
-     });
+  // label + date are driven from CONFIG so they can't drift out of sync next trip
+  var lab=document.querySelector('.hero-trip'); if(lab) lab.textContent=CONFIG.countdown.label;
+  var sub=document.getElementById('cdSub');
+  if(sub){
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    sub.textContent=months[target.getUTCMonth()]+' '+target.getUTCDate()+', '+target.getUTCFullYear();
   }
 }
 
-function updateKidDOM(div){
-  var tasks = div.querySelectorAll('.task');
-  var total = tasks.length;
-  var done = div.querySelectorAll('.task.done').length;
-  
-  var starsStr = '';
-  for(var i=0; i<done; i++) starsStr += '★';
-  for(var i=0; i<total-done; i++) starsStr += '☆';
-  
-  div.querySelector('.stars').textContent = starsStr;
-  div.classList.toggle('complete',done===total && total>0);
+/* ---------- School run countdown ----------
+   Replaces the chore board. Activates at 06:00 on school days (Mon-Fri,
+   minus any dates in holidays[]). From activateHour until the last
+   departure (+ a short sendoff grace) it shows a live hero countdown and
+   pins the carousel so it stays on screen. Otherwise it shows a calm
+   "next school day" card and rotates normally with the Word of the day.
+   Times are the dashboard's local time (Mexico City) — the kids leave
+   from home, so local clock is correct. Edit CONFIG.school to change. */
+var SCHOOL = {
+  activateHour: 6,          // live countdown begins at 06:00
+  graceMin: 10,             // keep the "have a great day" sendoff this long after the last departure
+  holidays: [],             // 'YYYY-MM-DD' no-school dates; empty = every weekday is a school day
+  departures: [             // one row per child; same time is fine
+    { who:'Matteo', time:'07:16', c:'var(--matteo)', init:'Mt' },
+    { who:'Maya',   time:'07:25', c:'var(--maya)',   init:'My' },
+    { who:'Max',    time:'07:25', c:'var(--max)',    init:'Mx' }
+  ]
+};
+var schoolActive = false;   // read by the carousel to pin this card
+
+function schIsSchoolDay(d){
+  var dow = d.getDay();
+  if(dow === 0 || dow === 6) return false;               // weekend
+  var y = d.getFullYear(), m = d.getMonth()+1, day = d.getDate();
+  var key = y + '-' + (m<10?'0':'') + m + '-' + (day<10?'0':'') + day;
+  return SCHOOL.holidays.indexOf(key) === -1;            // not a listed holiday
+}
+function schMinsOfDay(hhmm){ var p = hhmm.split(':'); return (+p[0])*60 + (+p[1]); }
+function sch12h(hhmm){
+  var p = hhmm.split(':'); var h = +p[0]; var m = p[1];
+  var ap = h < 12 ? 'AM' : 'PM'; var h12 = h % 12; if(h12 === 0) h12 = 12;
+  return h12 + ':' + m + ' ' + ap;
+}
+function schNextSchoolDay(from){
+  var d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  for(var i=0;i<400;i++){ d.setDate(d.getDate()+1); if(schIsSchoolDay(d)) return d; }
+  return d;
+}
+function schFmtGap(mins){                                 // whole-minute gap -> "1h 04m" / "9m"
+  if(mins >= 60){ var h = Math.floor(mins/60); var m = mins%60; return h + 'h ' + (m<10?'0':'') + m + 'm'; }
+  return mins + 'm';
+}
+
+function renderSchool(){
+  var body = document.getElementById('schoolBody');
+  var legend = document.getElementById('schLegend');
+  if(!body) return;
+  var deps = SCHOOL.departures;
+  if(!deps || !deps.length){ schoolActive = false; body.innerHTML = '<div class="msg-text">No school times set</div>'; return; }
+
+  var now = new Date();
+  var nowMs = now.getTime();
+  var nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+
+  // last departure of the day + grace
+  var lastMin = 0;
+  for(var i=0;i<deps.length;i++){ lastMin = Math.max(lastMin, schMinsOfDay(deps[i].time)); }
+  var windowEnd = lastMin + SCHOOL.graceMin;
+
+  var schoolToday = schIsSchoolDay(now);
+  var active = schoolToday && nowMin >= SCHOOL.activateHour*60 && nowMin < windowEnd;
+  schoolActive = active;
+
+  if(active){
+    // seconds remaining to each departure
+    var rows = [];
+    for(var i=0;i<deps.length;i++){
+      var dep = deps[i];
+      var dt = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var p = dep.time.split(':'); dt.setHours(+p[0], +p[1], 0, 0);
+      rows.push({ who:dep.who, c:dep.c, init:dep.init, time:dep.time, secLeft: Math.round((dt.getTime()-nowMs)/1000) });
+    }
+
+    // next departure = soonest with secLeft > 0; group everyone sharing that time
+    var nextTime = null;
+    for(var i=0;i<rows.length;i++){ if(rows[i].secLeft > 0){ if(nextTime===null || schMinsOfDay(rows[i].time) < schMinsOfDay(nextTime)) nextTime = rows[i].time; } }
+
+    legend.textContent = now.toLocaleDateString('en-US',{weekday:'long'});
+
+    var html = '';
+    if(nextTime !== null){
+      var names = [], heroC = null, heroSec = null;
+      for(var i=0;i<rows.length;i++){ if(rows[i].time === nextTime){ names.push(rows[i].who); if(heroC===null){ heroC = rows[i].c; heroSec = rows[i].secLeft; } } }
+      var whoStr = names.length === 1 ? names[0] : names.slice(0,-1).join(', ') + ' & ' + names[names.length-1];
+      var mm = Math.floor(heroSec/60), ss = heroSec%60;
+      var big = mm >= 60 ? schFmtGap(Math.ceil(heroSec/60)) : (mm + ':' + (ss<10?'0':'') + ss);
+      var urgent = heroSec <= 300;                        // red under 5 minutes
+      html += '<div class="sch-hero' + (urgent?' urgent':'') + '" style="--c:' + heroC + '">';
+      html += '  <div class="sch-hero-lab">' + (urgent ? 'Leave now' : 'Next out the door') + '</div>';
+      html += '  <div class="sch-hero-who">' + whoStr + '</div>';
+      html += '  <div class="sch-hero-time">' + big + '</div>';
+      html += '  <div class="sch-hero-at">leaves at ' + sch12h(nextTime) + '</div>';
+      html += '</div>';
+    } else {
+      // everyone has left (grace period) — send them off
+      html += '<div class="sch-hero" style="--c:var(--maya)">';
+      html += '  <div class="sch-hero-who">All out the door 👋</div>';
+      html += '  <div class="sch-hero-at">Have a great day!</div>';
+      html += '</div>';
+    }
+
+    // per-kid list
+    html += '<div class="sch-list">';
+    for(var i=0;i<rows.length;i++){
+      var r = rows[i];
+      var gone = r.secLeft <= 0;
+      var isNext = (nextTime !== null && r.time === nextTime);
+      var whenHtml;
+      if(gone){ whenHtml = '<div class="sch-when">Left<small>' + sch12h(r.time) + '</small></div>'; }
+      else { whenHtml = '<div class="sch-when">in ' + schFmtGap(Math.ceil(r.secLeft/60)) + '<small>' + sch12h(r.time) + '</small></div>'; }
+      html += '<div class="sch-item' + (isNext?' next':'') + (gone?' gone':'') + '" style="--c:' + r.c + '">';
+      html += '  <div class="sch-dot">' + (gone ? '✓' : r.init) + '</div>';
+      html += '  <div class="sch-who">' + r.who + '</div>';
+      html += '  ' + whenHtml;
+      html += '</div>';
+    }
+    html += '</div>';
+    body.innerHTML = html;
+    return;
+  }
+
+  // ---- dormant view ----
+  // show today's schedule if a school day is still ahead of the window; else next school day
+  var target, rel;
+  if(schoolToday && nowMin < SCHOOL.activateHour*60){ target = now; rel = 'Today'; }
+  else {
+    target = schNextSchoolDay(now);
+    var tom = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1);
+    rel = (target.getFullYear()===tom.getFullYear() && target.getMonth()===tom.getMonth() && target.getDate()===tom.getDate())
+          ? 'Tomorrow' : target.toLocaleDateString('en-US',{weekday:'long'});
+  }
+  legend.textContent = 'Next school day';
+
+  // distinct times, sorted, with the kids at each
+  var times = [];
+  for(var i=0;i<deps.length;i++){
+    var t = deps[i].time, found = null;
+    for(var j=0;j<times.length;j++){ if(times[j].time === t){ found = times[j]; break; } }
+    if(!found){ found = { time:t, who:[], c:deps[i].c }; times.push(found); }
+    found.who.push(deps[i].who);
+  }
+  times.sort(function(a,b){ return schMinsOfDay(a.time) - schMinsOfDay(b.time); });
+
+  var cols = '';
+  for(var i=0;i<times.length;i++){
+    var t = times[i];
+    var nm = t.who.length === 1 ? t.who[0] : t.who.slice(0,-1).join(', ') + ' & ' + t.who[t.who.length-1];
+    cols += '<div class="c" style="--k:' + t.c + '"><b>' + sch12h(t.time) + '</b><span>' + nm + '</span></div>';
+  }
+
+  body.innerHTML =
+    '<div class="sch-rest">' +
+    '  <div class="sch-rest-ico">🎒</div>' +
+    '  <div class="sch-rest-lab">' + rel + '\u2019s school run</div>' +
+    '  <div class="sch-rest-sub">Live countdown starts at ' + sch12h((SCHOOL.activateHour<10?'0':'')+SCHOOL.activateHour+':00') + '</div>' +
+    '  <div class="sch-rest-next">' + cols + '</div>' +
+    '</div>';
 }
 
 /* ---------- live weather ---------- */
@@ -913,13 +952,22 @@ async function loadTrip(){
 function startCarousel() {
     var items = document.querySelectorAll('#lowerCarousel .carousel-item');
     if(items.length < 2) return;
+    var school = document.getElementById('schoolCard');
     var currentIndex = 0;
-    
+
     setInterval(function() {
+        // during the school-run window, pin the school card so the live
+        // countdown never rotates away while the kids are getting ready
+        if(schoolActive && school){
+            for(var i=0;i<items.length;i++) items[i].classList.remove('active');
+            school.classList.add('active');
+            for(var i=0;i<items.length;i++){ if(items[i] === school){ currentIndex = i; break; } }
+            return;
+        }
         items[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % items.length;
         items[currentIndex].classList.add('active');
-    }, 15000); 
+    }, 15000);
 }
 
 /* ---------- word of the day (EN + ES + DE) ----------
@@ -1100,7 +1148,7 @@ function safe(fn){ try{ fn(); }catch(e){} }
 
 safe(function(){ tick(); setInterval(tick,1000); });
 safe(function(){ countdown(); setInterval(countdown,3600000); });
-safe(loadState);
+safe(function(){ renderSchool(); setInterval(renderSchool,1000); });
 safe(function(){ loadWeather(); setInterval(loadWeather,1800000); });
 safe(function(){ loadStock(); setInterval(loadStock,300000); });
 safe(function(){ loadSunAqi(); setInterval(loadSunAqi,1800000); });
