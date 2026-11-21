@@ -267,7 +267,7 @@
     </div>
     <div class="hero-cd">
       <div class="hero-num" id="cdNum">57</div>
-      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Cozumel trip ✈️</span><small id="cdSub">Nov 6, 2026</small></div>
+      <div class="hero-text"><span class="hero-lab">days to</span><span class="hero-trip">Cancún trip ✈️</span><small id="cdSub">Dec 20, 2026</small></div>
     </div>
   </header>
 
@@ -289,7 +289,7 @@
           <div class="cond" id="wxDesc0" style="font-size:clamp(.55rem,.7vw,.8rem); color:var(--muted); margin-top:4px; line-height:1.1">Loading...</div>
         </div>
         <div class="wx-city-col" style="border-left: 1px solid var(--line); padding-left: 8px;">
-          <div class="wx-meta"><div class="city">Cozumel <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
+          <div class="wx-meta"><div class="city">Cancún <small style="color:var(--mom);font-size:.6em;letter-spacing:.05em;background:rgba(63,208,201,0.15);padding:2px 4px;border-radius:4px;vertical-align:middle">TRIP</small></div></div>
           <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
             <span class="ico" id="wxIco1" style="font-size:clamp(1.4rem,2.5vw,2.2rem)">☁️</span>
             <div class="wx-temp" id="wxTemp1" style="font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:800; font-family:var(--display)">--°</div>
@@ -366,18 +366,18 @@
 var CONFIG = {
   weather: [
     { name:'Mexico City', lat:19.4326, lon:-99.1332, tz:'America/Mexico_City' },
-    { name:'Cozumel',     lat:20.4230, lon:-86.9223, tz:'America/Cancun'      }
+    { name:'Cancún',      lat:21.1619, lon:-86.8515, tz:'America/Cancun'      }
   ],
 
-  countdown: { date: '2026-11-06', label: 'Cozumel trip ✈️' },
-  tripitIcs: 'tripit_Nov06_to_Nov08.ics',
-  
+  countdown: { date: '2026-12-20', label: 'Cancún trip ✈️' },
+  tripitIcs: 'tripit_Dec20_to_Jan09.ics',
+
   tripFallback: {
-    name:'Cozumel NOV 26', dest:'Cozumel, Mexico',
-    start:'2026-11-06', end:'2026-11-08',
+    name:'Cancún DIC 26', dest:'Cancún, Mexico',
+    start:'2026-12-20', end:'2027-01-09',
     legs: [
-      { text:'Y4 450 — MEX to CZM', when:'Fri, Nov 6 · 12:10 CST', icon:'🛫' },
-      { text:'Y4 451 — CZM to MEX', when:'Sun, Nov 8 · 16:21 EST', icon:'🛫' }
+      { text:'Y43481 — TLC to CUN', when:'Sun, Dec 20 · 08:25 CST', icon:'🛫' },
+      { text:'Y43480 — CUN to TLC', when:'Sat, Jan 9 · 12:21 EST', icon:'🛫' }
     ]
   },
 
@@ -446,7 +446,12 @@ function countdown(){
 var SCHOOL = {
   activateHour: 6,          // live countdown begins at 06:00
   graceMin: 10,             // keep the "have a great day" sendoff this long after the last departure
-  holidays: [],             // 'YYYY-MM-DD' no-school dates; empty = every weekday is a school day
+  holidays: [               // 'YYYY-MM-DD' no-school dates; empty = every weekday is a school day
+    // Winter break — Cancún family trip Dec 20 2026 – Jan 9 2027
+    '2026-12-21','2026-12-22','2026-12-23','2026-12-24',
+    '2026-12-28','2026-12-29','2026-12-30','2026-12-31',
+    '2027-01-04','2027-01-05','2027-01-06','2027-01-07','2027-01-08'
+  ],
   departures: [             // one row per child; same time is fine
     { who:'Matteo', time:'07:16', c:'var(--matteo)', init:'Mt' },
     { who:'Maya',   time:'07:25', c:'var(--maya)',   init:'My' },
